@@ -128,5 +128,21 @@ class Database {
             return false;
         }
     }
+
+    private boolean addRecordRequest() {
+        return false;
+    }
+
+    private boolean addRegion() {
+        return true;
+    }
+
+    private boolean addCountry() {
+        return true;
+    }
+
+    private boolean addDetail() {
+        return true;
+    }
 }
 
