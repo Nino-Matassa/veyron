@@ -146,3 +146,100 @@ class Database {
     }
 }
 
+class Beanie {
+    public String iso_code = null;
+    public String continent = null;
+    public String location = null;
+    public String date = null;
+    public Integer total_cases = 0;
+    public Integer new_cases = 0;
+    public Double new_cases_smoothed = 0d;
+    public Integer total_deaths = 0;
+    public Integer new_deaths = 0;
+    public Double new_deaths_smoothed = 0d;
+    public Double total_cases_per_million = 0d;
+    public Double new_cases_per_million = 0d;
+    public Double new_cases_smoothed_per_million = 0d;
+    public Double total_deaths_per_million = 0d;
+    public Double new_deaths_per_million = 0d;
+    public Double new_deaths_smoothed_per_million = 0d;
+    public Double reproduction_rate = 0d;
+    public Integer icu_patients = 0;
+    public Double icu_patients_per_million = 0d;
+    public Integer hosp_patients = 0;
+    public Double hosp_patients_per_million = 0d;
+    public Integer weekly_icu_admissions = 0;
+    public Double weekly_icu_admissions_per_million = 0d;
+    public Integer weekly_hosp_admissions = 0;
+    public Double weekly_hosp_admissions_per_million = 0d;
+    public Integer new_tests = 0;
+    public Integer total_tests = 0;
+    public Double total_tests_per_thousand = 0d;
+    public Double new_tests_per_thousand = 0d;
+    public Integer new_tests_smoothed = 0;
+    public Double new_tests_smoothed_per_thousand = 0d;
+    public Double positive_rate = 0d;
+    public Double tests_per_case = 0d;
+    public String tests_units = null;
+    public Integer total_vaccinations = 0;
+    public Integer people_vaccinated = 0;
+    public Integer people_fully_vaccinated = 0;
+    public Integer total_boosters = 0;
+    public Integer new_vaccinations = 0;
+    public Integer new_vaccinations_smoothed = 0;
+    public Double total_vaccinations_per_hundred = 0d;
+    public Double people_vaccinated_per_hundred = 0d;
+    public Double people_fully_vaccinated_per_hundred = 0d;
+    public Double total_boosters_per_hundred = 0d;
+    public Integer new_vaccinations_smoothed_per_million = 0;
+    public Integer new_people_vaccinated_smoothed = 0;
+    public Double new_people_vaccinated_smoothed_per_hundred = 0d;
+    public Double stringency_index = 0d;
+    public Integer population = 0;
+    public Double population_density = 0d;
+    public Integer median_age = 0;
+    public Double aged_65_older = 0d;
+    public Double aged_70_older = 0d;
+    public Double gdp_per_capita = 0d;
+    public Double extreme_poverty = 0d;
+    public Double cardiovasc_death_rate = 0d;
+    public Double diabetes_prevalence = 0d;
+    public Double female_smokers = 0d;
+    public Double male_smokers = 0d;
+    public Double handwashing_facilities = 0d;
+    public Double hospital_beds_per_thousand = 0d;
+    public Double life_expectancy = 0d;
+    public Double human_development_index = 0d;
+    public Double excess_mortality_cumulative_absolute = 0d;
+    public Double excess_mortality_cumulative = 0d;
+    public Double excess_mortality = 0d;
+    public Double excess_mortality_cumulative_per_million = 0d;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
