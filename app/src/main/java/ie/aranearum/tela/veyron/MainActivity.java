@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(view -> {
             Integer versionCode = BuildConfig.VERSION_CODE;
             String versionName = BuildConfig.VERSION_NAME;
-            Snackbar.make(view, "Mailing Overview to nino.matassa@gmail.com"/*versionName + " " + versionCode.toString()*/, Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Mailing Overview to nino.matassa@gmail.com. Version: " + versionName + " " + versionCode.toString(), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         });
         // Download request

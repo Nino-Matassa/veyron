@@ -1,3 +1,5 @@
+import java.time.LocalDateTime
+
 plugins {
     id 'com.android.application'
 }
@@ -8,7 +10,6 @@ plugins {
  * next 680 years.
  */
 def vcode = (int)(((new Date().getTime()/1000) - 1451606400) / 10)
-
 
 android {
     compileSdk 32
@@ -49,4 +50,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    // Added by me
+    implementation group: 'com.opencsv', name: 'opencsv', version: '4.6'
 }

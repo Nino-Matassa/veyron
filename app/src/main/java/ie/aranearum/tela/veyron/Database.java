@@ -20,27 +20,87 @@ class SQLHelper extends SQLiteOpenHelper {
     private final String sqlTableRegion =
             "create table Region ("
                     + "Id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "Region TEXT NOT NULL"
+                    + "continent TEXT NOT NULL"
                     + ");";
     private final String sqlTableCountry =
             "create table Country ("
                     + "Id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "FK_Region INT NOT NULL, "
-                    + "Country TEXT NOT NULL, "
+                    + "FK_Region INT NOT NULL DEFAULT 0, "
+                    + "iso_code TEXT NOT NULL, "
+                    + "location TEXT NOT NULL, "
                     + "FOREIGN KEY (FK_Region) REFERENCES Region(Id)"
                     + ");";
     private final String sqlTableDetail =
             "create table Detail ("
                     + "Id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "FK_Country INT NOT NULL, "
-                    + "Date TEXT NOT NULL, "
-                    + "Code TEXT NOT NULL, "
-                    + "Country TEXT NOT NULL, "
-                    + "Region TEXT NOT NULL, "
-                    + "NewCase INT NOT NULL, "
-                    + "TotalCase INT NOT NULL, "
-                    + "NewDeath INT NOT NULL, "
-                    + "TotalDeath INT NOT NULL, "
+                    + "iso_code TEXT NOT NULL, "
+                    + "continent TEXT NOT NULL, "
+                    + "location TEXT NOT NULL, "
+                    + "date TEXT NOT NULL, "
+                    + "total_cases INT NOT NULL, "
+                    + "new_cases INT NOT NULL, "
+                    + "new_cases_smoothed DECIMAL(10, 5) NOT NULL, "
+                    + "total_deaths INT NOT NULL, "
+                    + "new_deaths INT NOT NULL, "
+                    + "new_deaths_smoothed DECIMAL(10, 5) NOT NULL, "
+                    + "total_cases_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "new_cases_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "new_cases_smoothed_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "total_deaths_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "new_deaths_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "new_deaths_smoothed_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "reproduction_rate DECIMAL(10, 5) NOT NULL, "
+                    + "icu_patients INT NOT NULL, "
+                    + "icu_patients_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "hosp_patients INT NOT NULL, "
+                    + "hosp_patients_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "weekly_icu_admissions INT NOT NULL, "
+                    + "weekly_icu_admissions_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "weekly_hosp_admissions INT NOT NULL, "
+                    + "weekly_hosp_admissions_per_million DECIMAL(10, 5) NOT NULL, "
+                    + "new_tests INT NOT NULL, "
+                    + "total_tests INT NOT NULL, "
+                    + "total_tests_per_thousand DECIMAL(10, 5) NOT NULL, "
+                    + "new_tests_per_thousand DECIMAL(10, 5) NOT NULL, "
+                    + "new_tests_smoothed INT NOT NULL, "
+                    + "new_tests_smoothed_per_thousand DECIMAL(10, 5) NOT NULL, "
+                    + "positive_rate DECIMAL(10, 5) NOT NULL, "
+                    + "tests_per_case DECIMAL(10, 5) NOT NULL, "
+                    + "tests_units TEXT NOT NULL, "
+                    + "total_vaccinations INT NOT NULL, "
+                    + "people_vaccinated INT NOT NULL, "
+                    + "people_fully_vaccinated INT NOT NULL, "
+                    + "total_boosters INT NOT NULL, "
+                    + "new_vaccinations INT NOT NULL, "
+                    + "new_vaccinations_smoothed INT NOT NULL, "
+                    + "total_vaccinations_per_hundred DECIMAL(10, 5) NOT NULL, "
+                    + "people_vaccinated_per_hundred DECIMAL(10, 5) NOT NULL, "
+                    + "people_fully_vaccinated_per_hundred DECIMAL(10, 5) NOT NULL, "
+                    + "total_boosters_per_hundred DECIMAL(10, 5) NOT NULL, "
+                    + "new_vaccinations_smoothed_per_million INT NOT NULL, "
+                    + "new_people_vaccinated_smoothed INT NOT NULL, "
+                    + "new_people_vaccinated_smoothed_per_hundred DECIMAL(10, 5) NOT NULL, "
+                    + "stringency_index DECIMAL(10, 5) NOT NULL, "
+                    + "population INT NOT NULL, "
+                    + "population_density DECIMAL(10, 5) NOT NULL, "
+                    + "median_age INT NOT NULL, "
+                    + "aged_65_older DECIMAL(10, 5) NOT NULL, "
+                    + "aged_70_older DECIMAL(10, 5) NOT NULL, "
+                    + "gdp_per_capita DECIMAL(10, 5) NOT NULL, "
+                    + "extreme_poverty DECIMAL(10, 5) NOT NULL, "
+                    + "cardiovasc_death_rate DECIMAL(10, 5) NOT NULL, "
+                    + "diabetes_prevalence DECIMAL(10, 5) NOT NULL, "
+                    + "female_smokers DECIMAL(10, 5) NOT NULL, "
+                    + "male_smokers DECIMAL(10, 5) NOT NULL, "
+                    + "handwashing_facilities DECIMAL(10, 5) NOT NULL, "
+                    + "hospital_beds_per_thousand DECIMAL(10, 5) NOT NULL, "
+                    + "life_expectancy DECIMAL(10, 5) NOT NULL, "
+                    + "human_development_index DECIMAL(10, 5) NOT NULL, "
+                    + "excess_mortality_cumulative_absolute DECIMAL(10, 5) NOT NULL, "
+                    + "excess_mortality_cumulative DECIMAL(10, 5) NOT NULL, "
+                    + "excess_mortality DECIMAL(10, 5) NOT NULL, "
+                    + "excess_mortality_cumulative_per_million DECIMAL(10, 5) NOT NULL, "
                     + "FOREIGN KEY (FK_Country) REFERENCES Country(Id)"
                     + ");";
 
@@ -94,8 +154,13 @@ class Database {
         String currentCountry = null;
         String previousCountry = null;
         if (!buildFromScratch) { // then set the date to the last date updated for that country
-            ; // countryXDate = ?
+            ; // set countryXDate = the last updated detail date...
         }
+        // from here on anything > countryXDate
+        // Open CSV
+        // Process CSV
+        // Close CSV
+        // Can csv be read in reverse order?
         return true;
     }
 

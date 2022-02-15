@@ -1,3 +1,4 @@
 Reading a CSV file in Java using OpenCSV
 https://www.geeksforgeeks.org/reading-csv-file-java-using-opencsv/
 
+Added to Gradle: compile group: 'com.opencsv', name: 'opencsv', version: '4.1'

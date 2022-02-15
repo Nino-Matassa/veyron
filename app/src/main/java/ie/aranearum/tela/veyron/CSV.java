@@ -24,7 +24,7 @@ public class CSV extends Thread {
 
     public CSV(@NonNull Context context, boolean invalidate) {
         this.invalidate = invalidate;
-        this.csvFileName = context.getFilesDir().getPath().toString() + "/" + Constants.NAMECSV;
+        this.csvFileName = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         this.csvFile = new File(csvFileName);
     }
 
