@@ -1,31 +1,6 @@
 Reading a CSV file in Java using OpenCSV
-https://www.geeksforgeeks.org/reading-csv-file-java-using-opencsv/
+*https://www.geeksforgeeks.org/reading-csv-file-java-using-opencsv/
+*Added to Gradle: compile group: 'com.opencsv', name: 'opencsv', version: '4.1'
+*https://www.how2shout.com/linux/how-to-install-anbox-on-ubuntu-20-04-lts-focal-fossa/
 
-Added to Gradle: compile group: 'com.opencsv', name: 'opencsv', version: '4.1'
 
-private void populateTable() {
-    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-	String sqlDetail = "select Date, Country, Region, NewCase from Detail where FK_Country = #1 order by date desc".replace("#1", String.valueOf(countryId));
-	Cursor cDetail = db.rawQuery(sqlDetail, null);
-    cDetail.moveToFirst();
-	Region = cDetail.getString(cDetail.getColumnIndex("Region"));
-	Country = cDetail.getString(cDetail.getColumnIndex("Country"));
-	do {
-	  String date = cDetail.getString(cDetail.getColumnIndex("Date"));
-	  try {
-		date = new SimpleDateFormat("yyyy-MM-dd").parse(date).toString();
-		String[] arrDate = date.split(" ");
-		date = arrDate[0] + " " + arrDate[1] + " " + arrDate[2] + " " + arrDate[5];
-	  } catch (Exception e) {
-		Log.d(Constants.UICase24Hour, e.toString());
-	  }
-	  int case24 = cDetail.getInt(cDetail.getColumnIndex("NewCase"));
-
-	  metaField = new MetaField(regionId, countryId, Constants.UICase24Hour);
-	  metaField.key = date;
-	  metaField.value = String.valueOf(formatter.format(case24));// + " " + Constants.proportional + " " + String.valueOf(formatter.format(Math.log(case24)));
-	  metaFields.add(metaField);
-	} while(cDetail.moveToNext());
-    setTableLayout(populateTable(metaFields));
-  }
-}

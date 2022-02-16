@@ -1,5 +1,6 @@
 package ie.aranearum.tela.veyron;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -16,6 +17,7 @@ import com.opencsv.CSVReaderBuilder;
 import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 class SQLHelper extends SQLiteOpenHelper {
     public SQLHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -135,6 +137,9 @@ class Database {
 
     private static SQLiteDatabase instance = null;
     private static boolean dbHasContent = true;
+    private static HashMap<String, Long> hashMapRegion = null;
+    private static HashMap<String, Long> hashMapCountry = null;
+    private static HashMap<String, LocalDate> hashMapCountryXDate = null;
 
     public static SQLiteDatabase getInstance(Context context, boolean invalidate) {
         if (invalidate) {
@@ -161,13 +166,14 @@ class Database {
     Open the CSV, skip the first line, and for every line populate a new Beanie() and call
     addRecordRequest().
      */
-    private static boolean populate(Context context, boolean buildFromScratch) { // all records
+    private static boolean populate(Context context, boolean populateUnpopulated) { // all records
         LocalDate countryXDate = LocalDate.of(1966, 12, 25); // All entries must be from and including than this date
-        String currentCountry = null;
-        String previousCountry = null;
-
-
-
+        Long RegionId = 0L;
+        Long CountryId = 0L;
+        String Code = null;
+        String Region = null;
+        String Country = null;
+        String strDate = null;
         try {
             String csvFileName = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
             FileReader filereader = new FileReader(csvFileName);
@@ -175,88 +181,112 @@ class Database {
             CSVReader csvReader = new CSVReaderBuilder(filereader).withSkipLines(1).build();
             String[] nextRecord;
 
-            // Stop after the first 1000 entries
-            //Integer i = 0; // for debugging
             while ((nextRecord = csvReader.readNext()) != null) {
-                /*i++; // for debugging
-                if (i > 100) // for debugging
-                    break; // for debugging*/
-                if (!buildFromScratch) {
-                    ; // And this is a new country then get last updated date
-                }
+                //if (populateUnpopulated) {
+                    Code = nextRecord[0];
+                    Region = nextRecord[1];
+                    Country = nextRecord[2];
+                    strDate = nextRecord[3];
+                    /*
+                    No matter what, make sure RegionId & CountryId are populated in db and hashmaps
+
+                    If Region exists in the db, populate hashmap with region/id, same for Country
+                    If Region ¬Exists in db, populate db with Region then populate hashmap with region/id, same again for Country
+                    Set RegionId = hashmap.Region
+                    Set CountryId = hashmap.Country
+                     */
+                    if (hashMapRegion.containsKey(Region)) {
+                        RegionId = hashMapRegion.get(Region);
+                    } else {
+                        RegionId = addRegion(Region);
+                        hashMapRegion.put(Region, RegionId);
+                    }
+                    if (hashMapCountry.containsKey(Country)) {
+                        CountryId = hashMapCountry.get(Country);
+                    } else {
+                        CountryId = addCountry(Country, Code);
+                        hashMapCountry.put(Country, CountryId);
+                    }
+                    if(hashMapCountryXDate.containsKey(Country)) {
+                        countryXDate = hashMapCountryXDate.get(Country);
+                    } else {
+                        // select max(Date) from Detail where FK_Country = 65 // Can answer be null if nothing exists?
+                        String sql = "select max(Date) from Detail where FK_Country = " + hashMapCountry.get(Country).toString();
+                        Cursor c = instance.rawQuery(sql, null);
+                        c.moveToFirst();
+                    }
+                    //continue; // and the date <= countryXDate then continue to next iteration
+                //}
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
                 beanie.continent = nextRecord[1];
                 beanie.location = nextRecord[2];
                 beanie.date = nextRecord[3];
-                beanie.total_cases = nextRecord[4].isEmpty() ? 0d:Double.parseDouble(nextRecord[4]);
-                beanie.new_cases = nextRecord[5].isEmpty() ? 0d:Double.parseDouble(nextRecord[5]);
-                beanie.new_cases_smoothed = nextRecord[6].isEmpty() ? 0d:Double.parseDouble(nextRecord[6]);
-                beanie.total_deaths = nextRecord[7].isEmpty() ? 0d:Double.parseDouble(nextRecord[7]);
-                beanie.new_deaths = nextRecord[8].isEmpty() ? 0d:Double.parseDouble(nextRecord[8]);
-                beanie.new_deaths_smoothed = nextRecord[9].isEmpty() ? 0d:Double.parseDouble(nextRecord[9]);
-                beanie.total_cases_per_million = nextRecord[10].isEmpty() ? 0d:Double.parseDouble(nextRecord[10]);
-                beanie.new_cases_per_million = nextRecord[11].isEmpty() ? 0d:Double.parseDouble(nextRecord[11]);
-                beanie.new_cases_smoothed_per_million = nextRecord[12].isEmpty() ? 0d:Double.parseDouble(nextRecord[12]);
-                beanie.total_deaths_per_million = nextRecord[13].isEmpty() ? 0d:Double.parseDouble(nextRecord[13]);
-                beanie.new_deaths_per_million = nextRecord[14].isEmpty() ? 0d:Double.parseDouble(nextRecord[14]);
-                beanie.new_deaths_smoothed_per_million = nextRecord[15].isEmpty() ? 0d:Double.parseDouble(nextRecord[15]);
-                beanie.reproduction_rate = nextRecord[16].isEmpty() ? 0d:Double.parseDouble(nextRecord[16]);
-                beanie.icu_patients = nextRecord[17].isEmpty() ? 0:Double.parseDouble(nextRecord[17]);
-                beanie.icu_patients_per_million = nextRecord[18].isEmpty() ? 0d:Double.parseDouble(nextRecord[18]);
-                beanie.hosp_patients = nextRecord[19].isEmpty() ? 0:Double.parseDouble(nextRecord[19]);
-                beanie.hosp_patients_per_million = nextRecord[20].isEmpty() ? 0d:Double.parseDouble(nextRecord[20]);
-                beanie.weekly_icu_admissions = nextRecord[21].isEmpty() ? 0:Double.parseDouble(nextRecord[21]);
-                beanie.weekly_icu_admissions_per_million = nextRecord[22].isEmpty() ? 0d:Double.parseDouble(nextRecord[22]);
-                beanie.weekly_hosp_admissions = nextRecord[24].isEmpty() ? 0:Double.parseDouble(nextRecord[23]);
-                beanie.weekly_hosp_admissions_per_million = nextRecord[24].isEmpty() ? 0d:Double.parseDouble(nextRecord[24]);
-                beanie.new_tests = nextRecord[25].isEmpty() ? 0:Double.parseDouble(nextRecord[25]);
-                beanie.total_tests = nextRecord[26].isEmpty() ? 0:Double.parseDouble(nextRecord[26]);
-                beanie.total_tests_per_thousand = nextRecord[27].isEmpty() ? 0d:Double.parseDouble(nextRecord[27]);
-                beanie.new_tests_per_thousand = nextRecord[28].isEmpty() ? 0d:Double.parseDouble(nextRecord[28]);
-                beanie.new_tests_smoothed = nextRecord[29].isEmpty() ? 0:Double.parseDouble(nextRecord[29]);
-                beanie.new_tests_smoothed_per_thousand = nextRecord[30].isEmpty() ? 0d:Double.parseDouble(nextRecord[30]);
-                beanie.positive_rate = nextRecord[31].isEmpty() ? 0d:Double.parseDouble(nextRecord[31]);
-                beanie.tests_per_case = nextRecord[32].isEmpty() ? 0d:Double.parseDouble(nextRecord[32]);
+                beanie.total_cases = nextRecord[4].isEmpty() ? 0d : Double.parseDouble(nextRecord[4]);
+                beanie.new_cases = nextRecord[5].isEmpty() ? 0d : Double.parseDouble(nextRecord[5]);
+                beanie.new_cases_smoothed = nextRecord[6].isEmpty() ? 0d : Double.parseDouble(nextRecord[6]);
+                beanie.total_deaths = nextRecord[7].isEmpty() ? 0d : Double.parseDouble(nextRecord[7]);
+                beanie.new_deaths = nextRecord[8].isEmpty() ? 0d : Double.parseDouble(nextRecord[8]);
+                beanie.new_deaths_smoothed = nextRecord[9].isEmpty() ? 0d : Double.parseDouble(nextRecord[9]);
+                beanie.total_cases_per_million = nextRecord[10].isEmpty() ? 0d : Double.parseDouble(nextRecord[10]);
+                beanie.new_cases_per_million = nextRecord[11].isEmpty() ? 0d : Double.parseDouble(nextRecord[11]);
+                beanie.new_cases_smoothed_per_million = nextRecord[12].isEmpty() ? 0d : Double.parseDouble(nextRecord[12]);
+                beanie.total_deaths_per_million = nextRecord[13].isEmpty() ? 0d : Double.parseDouble(nextRecord[13]);
+                beanie.new_deaths_per_million = nextRecord[14].isEmpty() ? 0d : Double.parseDouble(nextRecord[14]);
+                beanie.new_deaths_smoothed_per_million = nextRecord[15].isEmpty() ? 0d : Double.parseDouble(nextRecord[15]);
+                beanie.reproduction_rate = nextRecord[16].isEmpty() ? 0d : Double.parseDouble(nextRecord[16]);
+                beanie.icu_patients = nextRecord[17].isEmpty() ? 0 : Double.parseDouble(nextRecord[17]);
+                beanie.icu_patients_per_million = nextRecord[18].isEmpty() ? 0d : Double.parseDouble(nextRecord[18]);
+                beanie.hosp_patients = nextRecord[19].isEmpty() ? 0 : Double.parseDouble(nextRecord[19]);
+                beanie.hosp_patients_per_million = nextRecord[20].isEmpty() ? 0d : Double.parseDouble(nextRecord[20]);
+                beanie.weekly_icu_admissions = nextRecord[21].isEmpty() ? 0 : Double.parseDouble(nextRecord[21]);
+                beanie.weekly_icu_admissions_per_million = nextRecord[22].isEmpty() ? 0d : Double.parseDouble(nextRecord[22]);
+                beanie.weekly_hosp_admissions = nextRecord[24].isEmpty() ? 0 : Double.parseDouble(nextRecord[23]);
+                beanie.weekly_hosp_admissions_per_million = nextRecord[24].isEmpty() ? 0d : Double.parseDouble(nextRecord[24]);
+                beanie.new_tests = nextRecord[25].isEmpty() ? 0 : Double.parseDouble(nextRecord[25]);
+                beanie.total_tests = nextRecord[26].isEmpty() ? 0 : Double.parseDouble(nextRecord[26]);
+                beanie.total_tests_per_thousand = nextRecord[27].isEmpty() ? 0d : Double.parseDouble(nextRecord[27]);
+                beanie.new_tests_per_thousand = nextRecord[28].isEmpty() ? 0d : Double.parseDouble(nextRecord[28]);
+                beanie.new_tests_smoothed = nextRecord[29].isEmpty() ? 0 : Double.parseDouble(nextRecord[29]);
+                beanie.new_tests_smoothed_per_thousand = nextRecord[30].isEmpty() ? 0d : Double.parseDouble(nextRecord[30]);
+                beanie.positive_rate = nextRecord[31].isEmpty() ? 0d : Double.parseDouble(nextRecord[31]);
+                beanie.tests_per_case = nextRecord[32].isEmpty() ? 0d : Double.parseDouble(nextRecord[32]);
                 beanie.tests_units = nextRecord[33];
-                beanie.total_vaccinations = nextRecord[34].isEmpty() ? 0:Double.parseDouble(nextRecord[34]);
-                beanie.people_vaccinated = nextRecord[35].isEmpty() ? 0:Double.parseDouble(nextRecord[35]);
-                beanie.people_fully_vaccinated = nextRecord[36].isEmpty() ? 0:Double.parseDouble(nextRecord[36]);
-                beanie.total_boosters = nextRecord[37].isEmpty() ? 0:Double.parseDouble(nextRecord[37]);
-                beanie.new_vaccinations = nextRecord[38].isEmpty() ? 0:Double.parseDouble(nextRecord[38]);
-                beanie.new_vaccinations_smoothed = nextRecord[39].isEmpty() ? 0:Double.parseDouble(nextRecord[39]);
-                beanie.total_vaccinations_per_hundred = nextRecord[40].isEmpty() ? 0d:Double.parseDouble(nextRecord[40]);
-                beanie.people_vaccinated_per_hundred = nextRecord[41].isEmpty() ? 0d:Double.parseDouble(nextRecord[41]);
-                beanie.people_fully_vaccinated_per_hundred = nextRecord[42].isEmpty() ? 0d:Double.parseDouble(nextRecord[42]);
-                beanie.total_boosters_per_hundred = nextRecord[43].isEmpty() ? 0d:Double.parseDouble(nextRecord[43]);
-                beanie.new_vaccinations_smoothed_per_million = nextRecord[44].isEmpty() ? 0:Double.parseDouble(nextRecord[44]);
-                beanie.new_people_vaccinated_smoothed = nextRecord[45].isEmpty() ? 0:Double.parseDouble(nextRecord[45]);
-                beanie.new_people_vaccinated_smoothed_per_hundred = nextRecord[46].isEmpty() ? 0d:Double.parseDouble(nextRecord[46]);
-                beanie.stringency_index = nextRecord[47].isEmpty() ? 0d:Double.parseDouble(nextRecord[47]);
-                beanie.population = nextRecord[48].isEmpty() ? 0:Double.parseDouble(nextRecord[48]);
-                beanie.population_density = nextRecord[49].isEmpty() ? 0d:Double.parseDouble(nextRecord[49]);
-                beanie.median_age = nextRecord[50].isEmpty() ? 0:Double.parseDouble(nextRecord[50]);
-                beanie.aged_65_older = nextRecord[51].isEmpty() ? 0d:Double.parseDouble(nextRecord[51]);
-                beanie.aged_70_older = nextRecord[52].isEmpty() ? 0d:Double.parseDouble(nextRecord[52]);
-                beanie.gdp_per_capita = nextRecord[53].isEmpty() ? 0d:Double.parseDouble(nextRecord[53]);
-                beanie.extreme_poverty = nextRecord[54].isEmpty() ? 0d:Double.parseDouble(nextRecord[54]);
-                beanie.cardiovasc_death_rate = nextRecord[55].isEmpty() ? 0d:Double.parseDouble(nextRecord[55]);
-                beanie.diabetes_prevalence = nextRecord[56].isEmpty() ? 0d:Double.parseDouble(nextRecord[56]);
-                beanie.female_smokers = nextRecord[57].isEmpty() ? 0d:Double.parseDouble(nextRecord[57]);
-                beanie.male_smokers = nextRecord[58].isEmpty() ? 0d:Double.parseDouble(nextRecord[58]);
-                beanie.handwashing_facilities = nextRecord[59].isEmpty() ? 0d:Double.parseDouble(nextRecord[59]);
-                beanie.hospital_beds_per_thousand = nextRecord[60].isEmpty() ? 0d:Double.parseDouble(nextRecord[60]);
-                beanie.life_expectancy = nextRecord[61].isEmpty() ? 0d:Double.parseDouble(nextRecord[61]);
-                beanie.human_development_index = nextRecord[62].isEmpty() ? 0d:Double.parseDouble(nextRecord[62]);
-                beanie.excess_mortality_cumulative_absolute = nextRecord[63].isEmpty() ? 0d:Double.parseDouble(nextRecord[63]);
-                beanie.excess_mortality_cumulative = nextRecord[64].isEmpty() ? 0d:Double.parseDouble(nextRecord[64]);
-                beanie.excess_mortality = nextRecord[65].isEmpty() ? 0d:Double.parseDouble(nextRecord[65]);
-                beanie.excess_mortality_cumulative_per_million = nextRecord[66].isEmpty() ? 0d:Double.parseDouble(nextRecord[66]);
+                beanie.total_vaccinations = nextRecord[34].isEmpty() ? 0 : Double.parseDouble(nextRecord[34]);
+                beanie.people_vaccinated = nextRecord[35].isEmpty() ? 0 : Double.parseDouble(nextRecord[35]);
+                beanie.people_fully_vaccinated = nextRecord[36].isEmpty() ? 0 : Double.parseDouble(nextRecord[36]);
+                beanie.total_boosters = nextRecord[37].isEmpty() ? 0 : Double.parseDouble(nextRecord[37]);
+                beanie.new_vaccinations = nextRecord[38].isEmpty() ? 0 : Double.parseDouble(nextRecord[38]);
+                beanie.new_vaccinations_smoothed = nextRecord[39].isEmpty() ? 0 : Double.parseDouble(nextRecord[39]);
+                beanie.total_vaccinations_per_hundred = nextRecord[40].isEmpty() ? 0d : Double.parseDouble(nextRecord[40]);
+                beanie.people_vaccinated_per_hundred = nextRecord[41].isEmpty() ? 0d : Double.parseDouble(nextRecord[41]);
+                beanie.people_fully_vaccinated_per_hundred = nextRecord[42].isEmpty() ? 0d : Double.parseDouble(nextRecord[42]);
+                beanie.total_boosters_per_hundred = nextRecord[43].isEmpty() ? 0d : Double.parseDouble(nextRecord[43]);
+                beanie.new_vaccinations_smoothed_per_million = nextRecord[44].isEmpty() ? 0 : Double.parseDouble(nextRecord[44]);
+                beanie.new_people_vaccinated_smoothed = nextRecord[45].isEmpty() ? 0 : Double.parseDouble(nextRecord[45]);
+                beanie.new_people_vaccinated_smoothed_per_hundred = nextRecord[46].isEmpty() ? 0d : Double.parseDouble(nextRecord[46]);
+                beanie.stringency_index = nextRecord[47].isEmpty() ? 0d : Double.parseDouble(nextRecord[47]);
+                beanie.population = nextRecord[48].isEmpty() ? 0 : Double.parseDouble(nextRecord[48]);
+                beanie.population_density = nextRecord[49].isEmpty() ? 0d : Double.parseDouble(nextRecord[49]);
+                beanie.median_age = nextRecord[50].isEmpty() ? 0 : Double.parseDouble(nextRecord[50]);
+                beanie.aged_65_older = nextRecord[51].isEmpty() ? 0d : Double.parseDouble(nextRecord[51]);
+                beanie.aged_70_older = nextRecord[52].isEmpty() ? 0d : Double.parseDouble(nextRecord[52]);
+                beanie.gdp_per_capita = nextRecord[53].isEmpty() ? 0d : Double.parseDouble(nextRecord[53]);
+                beanie.extreme_poverty = nextRecord[54].isEmpty() ? 0d : Double.parseDouble(nextRecord[54]);
+                beanie.cardiovasc_death_rate = nextRecord[55].isEmpty() ? 0d : Double.parseDouble(nextRecord[55]);
+                beanie.diabetes_prevalence = nextRecord[56].isEmpty() ? 0d : Double.parseDouble(nextRecord[56]);
+                beanie.female_smokers = nextRecord[57].isEmpty() ? 0d : Double.parseDouble(nextRecord[57]);
+                beanie.male_smokers = nextRecord[58].isEmpty() ? 0d : Double.parseDouble(nextRecord[58]);
+                beanie.handwashing_facilities = nextRecord[59].isEmpty() ? 0d : Double.parseDouble(nextRecord[59]);
+                beanie.hospital_beds_per_thousand = nextRecord[60].isEmpty() ? 0d : Double.parseDouble(nextRecord[60]);
+                beanie.life_expectancy = nextRecord[61].isEmpty() ? 0d : Double.parseDouble(nextRecord[61]);
+                beanie.human_development_index = nextRecord[62].isEmpty() ? 0d : Double.parseDouble(nextRecord[62]);
+                beanie.excess_mortality_cumulative_absolute = nextRecord[63].isEmpty() ? 0d : Double.parseDouble(nextRecord[63]);
+                beanie.excess_mortality_cumulative = nextRecord[64].isEmpty() ? 0d : Double.parseDouble(nextRecord[64]);
+                beanie.excess_mortality = nextRecord[65].isEmpty() ? 0d : Double.parseDouble(nextRecord[65]);
+                beanie.excess_mortality_cumulative_per_million = nextRecord[66].isEmpty() ? 0d : Double.parseDouble(nextRecord[66]);
 
-                if (!buildFromScratch) {
-                    continue; // and the date <= countryXDate then continue to next iteration
-                }
-                boolean b = addRecordRequest(beanie);
+                boolean b = addRecord(beanie, RegionId, CountryId);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -265,7 +295,7 @@ class Database {
     }
 
     private static boolean populateUnpopulated(Context context) { // some records
-        populate(context, false);
+        populate(context, true);
         return true;
     }
 
@@ -274,7 +304,7 @@ class Database {
         if (dbHasContent) {
             populateUnpopulated(context);
         } else {
-            populate(context, true);
+            populate(context, false);
             dbHasContent = true;
         }
         return true;
@@ -294,90 +324,98 @@ class Database {
         }
     }
 
-    private static boolean addRecordRequest(Beanie beanie) {
+    private static boolean addRecord(Beanie beanie, Long RegionId, Long CountryId) {
+
         return false;
     }
 
-    private Integer addRegion(String Region) {
-        Integer Id = 0;
+    private static Long addRegion(@NonNull String Region) {
+        ContentValues values = new ContentValues();
+        values.put("continent", Region);
+        Long Id = instance.insert("Region", null, values);
         return Id;
     }
 
-    private Integer addCountry(String Country) {
-        Integer Id = 0;
+    private static Long addCountry(@NonNull String Country, @NonNull String Code) {
+        ContentValues values = new ContentValues();
+        values.put("location", Country);
+        values.put("iso_code", Code);
+        Long Id = instance.insert("Country", null, values);
         return Id;
     }
 
-    private boolean addDetail() {
-        String sql = "insert into Detail"
-                + ",iso_code"
-                + ",continent"
-                + ",location"
-                + ",date"
-                + ",total_cases"
-                + ",new_cases"
-                + ",new_cases_smoothed"
-                + ",total_deaths"
-                + ",new_deaths"
-                + ",new_deaths_smoothed"
-                + ",total_cases_per_million"
-                + ",new_cases_per_million"
-                + ",new_cases_smoothed_per_million"
-                + ",total_deaths_per_million"
-                + ",new_deaths_per_million"
-                + ",new_deaths_smoothed_per_million"
-                + ",reproduction_rate"
-                + ",icu_patients"
-                + ",icu_patients_per_million"
-                + ",hosp_patients"
-                + ",hosp_patients_per_million"
-                + ",weekly_icu_admissions"
-                + ",weekly_icu_admissions_per_million"
-                + ",weekly_hosp_admissions"
-                + ",weekly_hosp_admissions_per_million"
-                + ",new_tests"
-                + ",total_tests"
-                + ",total_tests_per_thousand"
-                + ",new_tests_per_thousand"
-                + ",new_tests_smoothed"
-                + ",new_tests_smoothed_per_thousand"
-                + ",positive_rate"
-                + ",tests_per_case"
-                + ",tests_units"
-                + ",total_vaccinations"
-                + ",people_vaccinated"
-                + ",people_fully_vaccinated"
-                + ",total_boosters"
-                + ",new_vaccinations"
-                + ",new_vaccinations_smoothed"
-                + ",total_vaccinations_per_hundred"
-                + ",people_vaccinated_per_hundred"
-                + ",people_fully_vaccinated_per_hundred"
-                + ",total_boosters_per_hundred"
-                + ",new_vaccinations_smoothed_per_million"
-                + ",new_people_vaccinated_smoothed"
-                + ",new_people_vaccinated_smoothed_per_hundred"
-                + ",stringency_index"
-                + ",population"
-                + ",population_density"
-                + ",median_age"
-                + ",aged_65_older"
-                + ",aged_70_older"
-                + ",gdp_per_capita"
-                + ",extreme_poverty"
-                + ",cardiovasc_death_rate"
-                + ",diabetes_prevalence"
-                + ",female_smokers"
-                + ",male_smokers"
-                + ",handwashing_facilities"
-                + ",hospital_beds_per_thousand"
-                + ",life_expectancy"
-                + ",human_development_index"
-                + ",excess_mortality_cumulative_absolute"
-                + ",excess_mortality_cumulative"
-                + ",excess_mortality"
-                + ",excess_mortality_cumulative_per_million";
-        return true;
+    private static Long addDetail(Beanie beanie) {
+        ContentValues values = new ContentValues();
+        values.put("iso_code", beanie.iso_code);
+        values.put("continent", beanie.continent);
+        values.put("location", beanie.location);
+        values.put("date", beanie.date);
+        values.put("total_cases", beanie.total_cases);
+        values.put("new_cases", beanie.new_cases);
+        values.put("new_cases_smoothed", beanie.new_cases_smoothed);
+        values.put("total_deaths", beanie.total_deaths);
+        values.put("new_deaths", beanie.new_deaths);
+        values.put("new_deaths_smoothed", beanie.new_deaths_smoothed);
+        values.put("total_cases_per_million", beanie.total_cases_per_million);
+        values.put("new_cases_per_million", beanie.new_cases_per_million);
+        values.put("new_cases_smoothed_per_million", beanie.new_cases_smoothed_per_million);
+        values.put("total_deaths_per_million", beanie.total_deaths_per_million);
+        values.put("new_deaths_per_million", beanie.new_deaths_per_million);
+        values.put("new_deaths_smoothed_per_million", beanie.new_deaths_smoothed_per_million);
+        values.put("reproduction_rate", beanie.reproduction_rate);
+        values.put("icu_patients", beanie.icu_patients);
+        values.put("icu_patients_per_million", beanie.icu_patients_per_million);
+        values.put("hosp_patients", beanie.hosp_patients);
+        values.put("hosp_patients_per_million", beanie.hosp_patients_per_million);
+        values.put("weekly_icu_admissions", beanie.weekly_icu_admissions);
+        values.put("weekly_icu_admissions_per_million", beanie.weekly_icu_admissions_per_million);
+        values.put("weekly_hosp_admissions", beanie.weekly_hosp_admissions);
+        values.put("weekly_hosp_admissions_per_million", beanie.weekly_hosp_admissions_per_million);
+        values.put("new_tests", beanie.new_tests);
+        values.put("total_tests", beanie.total_tests);
+        values.put("total_tests_per_thousand", beanie.total_tests_per_thousand);
+        values.put("new_tests_per_thousand", beanie.new_tests_per_thousand);
+        values.put("new_tests_smoothed", beanie.new_tests_smoothed);
+        values.put("new_tests_smoothed_per_thousand", beanie.new_tests_smoothed_per_thousand);
+        values.put("positive_rate", beanie.positive_rate);
+        values.put("tests_per_case", beanie.tests_per_case);
+        values.put("tests_units", beanie.tests_units);
+        values.put("total_vaccinations", beanie.total_vaccinations);
+        values.put("people_vaccinated", beanie.people_vaccinated);
+        values.put("people_fully_vaccinated", beanie.people_fully_vaccinated);
+        values.put("total_boosters", beanie.total_boosters);
+        values.put("new_vaccinations", beanie.new_vaccinations);
+        values.put("new_vaccinations_smoothed", beanie.new_vaccinations_smoothed);
+        values.put("total_vaccinations_per_hundred", beanie.total_vaccinations_per_hundred);
+        values.put("people_vaccinated_per_hundred", beanie.people_vaccinated_per_hundred);
+        values.put("people_fully_vaccinated_per_hundred", beanie.people_fully_vaccinated_per_hundred);
+        values.put("total_boosters_per_hundred", beanie.total_boosters_per_hundred);
+        values.put("new_vaccinations_smoothed_per_million", beanie.new_vaccinations_smoothed_per_million);
+        values.put("new_people_vaccinated_smoothed", beanie.new_people_vaccinated_smoothed);
+        values.put("new_people_vaccinated_smoothed_per_hundred", beanie.new_people_vaccinated_smoothed_per_hundred);
+        values.put("stringency_index", beanie.stringency_index);
+        values.put("population", beanie.population);
+        values.put("population_density", beanie.population_density);
+        values.put("median_age", beanie.median_age);
+        values.put("aged_65_older", beanie.aged_65_older);
+        values.put("aged_70_older", beanie.aged_70_older);
+        values.put("gdp_per_capita", beanie.gdp_per_capita);
+        values.put("extreme_poverty", beanie.extreme_poverty);
+        values.put("cardiovasc_death_rate", beanie.cardiovasc_death_rate);
+        values.put("diabetes_prevalence", beanie.diabetes_prevalence);
+        values.put("female_smokers", beanie.female_smokers);
+        values.put("male_smokers", beanie.male_smokers);
+        values.put("handwashing_facilities", beanie.handwashing_facilities);
+        values.put("hospital_beds_per_thousand", beanie.hospital_beds_per_thousand);
+        values.put("life_expectancy", beanie.life_expectancy);
+        values.put("human_development_index", beanie.human_development_index);
+        values.put("excess_mortality_cumulative_absolute", beanie.excess_mortality_cumulative_absolute);
+        values.put("excess_mortality_cumulative", beanie.excess_mortality_cumulative);
+        values.put("excess_mortality", beanie.excess_mortality);
+        values.put("excess_mortality_cumulative_per_million", beanie.excess_mortality_cumulative_per_million);
+
+        Long Id = instance.insert("Detail", null, values);
+        return Id;
     }
 }
 
