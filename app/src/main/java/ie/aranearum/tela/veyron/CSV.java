@@ -39,14 +39,12 @@ public class CSV extends Thread {
 
     private boolean outdated() {
         try {
-            URL url = new URL(Constants.OWIDCSV);
-            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
             Timestamp csvTimeStamp = new Timestamp(csvFile.lastModified());
 
             LocalDate csvLastModified = csvTimeStamp.toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate();
             LocalDate today = LocalDate.now();
 
-            if (today.getDayOfYear() > csvLastModified.getDayOfYear()) {
+            if(today.compareTo(csvLastModified) > 0) {
                 return true;
             }
         } catch (Exception e) {
