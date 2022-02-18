@@ -17,7 +17,9 @@ import com.opencsv.CSVReaderBuilder;
 import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 
 class SQLHelper extends SQLiteOpenHelper {
     public SQLHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -167,13 +169,16 @@ class Database {
     addRecordRequest().
      */
     private static boolean populate(Context context, boolean populateUnpopulated) { // all records
-        LocalDate countryXDate = LocalDate.of(1966, 12, 25); // All entries must be from and including than this date
+        LocalDate countryXDate = null;
         Long RegionId = 0L;
         Long CountryId = 0L;
         String Code = null;
         String Region = null;
         String Country = null;
         String strDate = null;
+        hashMapCountry = new HashMap<String, Long>();
+        hashMapRegion = new HashMap<String, Long>();
+        hashMapCountryXDate = new HashMap<String, LocalDate>();
         try {
             String csvFileName = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
             FileReader filereader = new FileReader(csvFileName);
@@ -181,8 +186,10 @@ class Database {
             CSVReader csvReader = new CSVReaderBuilder(filereader).withSkipLines(1).build();
             String[] nextRecord;
 
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+
             while ((nextRecord = csvReader.readNext()) != null) {
-                //if (populateUnpopulated) {
+                if (/*populateUnpopulated*/true) {
                     Code = nextRecord[0];
                     Region = nextRecord[1];
                     Country = nextRecord[2];
@@ -210,13 +217,12 @@ class Database {
                     if(hashMapCountryXDate.containsKey(Country)) {
                         countryXDate = hashMapCountryXDate.get(Country);
                     } else {
-                        // select max(Date) from Detail where FK_Country = 65 // Can answer be null if nothing exists?
-                        String sql = "select max(Date) from Detail where FK_Country = " + hashMapCountry.get(Country).toString();
-                        Cursor c = instance.rawQuery(sql, null);
-                        c.moveToFirst();
+                        countryXDate = getLastUpdate(Country);
                     }
-                    //continue; // and the date <= countryXDate then continue to next iteration
-                //}
+                    if(LocalDate.parse(strDate, dateTimeFormatter).compareTo(countryXDate) <= 0) {
+                        continue;
+                    }
+                }
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
                 beanie.continent = nextRecord[1];
@@ -327,6 +333,26 @@ class Database {
     private static boolean addRecord(Beanie beanie, Long RegionId, Long CountryId) {
 
         return false;
+    }
+
+    private static LocalDate getLastUpdate(String Country) {
+        Long Id = hashMapCountry.get(Country);
+        String sqlCheckForRecords = "select count(Id) as n from Detail where FK_Country = " + Id.toString();
+        Cursor cCount = instance.rawQuery(sqlCheckForRecords, null);
+        cCount.moveToFirst();
+        if(cCount.getInt(cCount.getColumnIndex("n")) == 0) {
+            return LocalDate.of(1966, 12, 25);
+        } else {
+            String sql = "select max(date) as date from Detail where FK_Country = " + Id.toString();
+            Cursor cMaxDate = instance.rawQuery(sql, null);
+            cMaxDate.moveToFirst();
+            String strDate = cMaxDate.getString(cMaxDate.getColumnIndex("date"));
+            //strDate = "2021-11-05"; // test
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+            LocalDate localDate = LocalDate.parse(strDate, dateTimeFormatter);
+            hashMapCountryXDate.put(Country, localDate);
+            return localDate;
+        }
     }
 
     private static Long addRegion(@NonNull String Region) {
