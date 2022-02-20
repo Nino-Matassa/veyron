@@ -3,4 +3,5 @@ Reading a CSV file in Java using OpenCSV
 *Added to Gradle: compile group: 'com.opencsv', name: 'opencsv', version: '4.1'
 *https://www.how2shout.com/linux/how-to-install-anbox-on-ubuntu-20-04-lts-focal-fossa/
 
-
+CSV contains these lines from approx 729 - 1466, they are currently being ignored because they are unreadable.
+OWID_AFR,,Africa,2022-02-16,11119460.0,14624.0,13286.286,245052.0,282.0,334.286,8095.791,10.647,9.673,178.416,0.205,0.243,,,,,,,,,,,,,,,,,,,375605505.0,231312199.0,158579575.0,3117143.0,1054543.0,1026903.0,27.35,16.84,11.55,0.23,748.0,500560.0,0.036,,1373486472.0,,,,,,,,,,,,,,,,,,

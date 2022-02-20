@@ -146,13 +146,14 @@ class Database {
         if (invalidate) {
             delete(context);
         }
+        String s = context.getDatabasePath(Constants.dbName).toString();
         File fPathDB = null;
         if (instance == null) {
             if (exists(context)) {
                 fPathDB = context.getDatabasePath(Constants.dbName);
                 instance = SQLiteDatabase.openDatabase(fPathDB.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
             } else {
-                instance = new SQLHelper(context, null, null, 1).getWritableDatabase();
+                instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
         if(invalidate || populate)
@@ -187,32 +188,58 @@ class Database {
 
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
 
-            Integer first100 = 100; // Debugging
-
             while ((nextRecord = csvReader.readNext()) != null) {
-                if(--first100 == 0) break; // Debugging
                 Code = nextRecord[0];
                 Region = nextRecord[1];
                 Country = nextRecord[2];
                 strDate = nextRecord[3];
+                /*
+                OWID_AFR,,Africa,2022-02-16,11119460.0,14624.0,13286.286,245052.0,282.0,334.286,8095.791,10.647,9.673,178.416,0.205,0.243,,,,,,,,,,,,,,,,,,,375605505.0,231312199.0,158579575.0,3117143.0,1054543.0,1026903.0,27.35,16.84,11.55,0.23,748.0,500560.0,0.036,,1373486472.0,,,,,,,,,,,,,,,,,,
+                What appears to be corrupted lines are being ignored, the Region field is null so the following 2 lines ignore it.
+                Also, not all data is being being populated, no idea why yet.
+                 */
+                if(Region.isEmpty())
+                    continue;
                 if (hashMapRegion.containsKey(Region)) {
                     RegionId = hashMapRegion.get(Region);
                 } else {
-                    RegionId = addRegion(Region);
-                    hashMapRegion.put(Region, RegionId);
+                    String sqlRegionExists = "select count(Id) as n from Region where continent = '#1'".replace("#1", Region);
+                    Cursor cRegionExists = instance.rawQuery(sqlRegionExists, null);
+                    cRegionExists.moveToFirst();
+                    if(cRegionExists.getInt(cRegionExists.getColumnIndex("n")) == 0) {
+                        RegionId = addRegion(Region);
+                        hashMapRegion.put(Region, RegionId);
+                    } else {
+                        String sqlRegion = "select Id from Region where continent = '#1'".replace("#1", Region);
+                        Cursor cRegion = instance.rawQuery(sqlRegion, null);
+                        cRegion.moveToFirst();
+                        RegionId = cRegion.getLong(cRegion.getColumnIndex("Id"));
+                        hashMapRegion.put(Region, RegionId);
+                    }
                 }
                 if (hashMapCountry.containsKey(Country)) {
                     CountryId = hashMapCountry.get(Country);
                 } else {
-                    CountryId = addCountry(Country, Code);
-                    hashMapCountry.put(Country, CountryId);
+                    String sqlCountryExists = "select count(Id) as n from Country where location = '#1'".replace("#1", Country);
+                    Cursor cCountryExists = instance.rawQuery(sqlCountryExists, null);
+                    cCountryExists.moveToFirst();
+                    if(cCountryExists.getInt(cCountryExists.getColumnIndex("n")) == 0) {
+                        CountryId = addCountry(Country, Code, RegionId);
+                        hashMapCountry.put(Country, CountryId);
+                    } else {
+                        String sqlCountry = "select Id from Country where location = '#1'".replace("#1", Country);
+                        Cursor cCountry = instance.rawQuery(sqlCountry, null);
+                        cCountry.moveToFirst();
+                        CountryId = cCountry.getLong(cCountry.getColumnIndex("Id"));
+                        hashMapCountry.put(Country, CountryId);
+                    }
                 }
                 if (hashMapCountryXDate.containsKey(Country)) {
                     countryMaxDate = hashMapCountryXDate.get(Country);
                 } else {
                     countryMaxDate = getLastUpdate(Country);
                 }
-                if(countryMaxDate.compareTo(LocalDate.parse(strDate, dateTimeFormatter)) > 0) // test...
+                if(countryMaxDate.compareTo(LocalDate.parse(strDate, dateTimeFormatter)) >= 0) // test...
                     continue;;
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
@@ -317,7 +344,6 @@ class Database {
             Cursor cMaxDate = instance.rawQuery(sql, null);
             cMaxDate.moveToFirst();
             String strDate = cMaxDate.getString(cMaxDate.getColumnIndex("date"));
-            //strDate = "2021-11-05"; // test
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
             LocalDate localDate = LocalDate.parse(strDate, dateTimeFormatter);
             hashMapCountryXDate.put(Country, localDate);
@@ -328,15 +354,26 @@ class Database {
     private static Long addRegion(@NonNull String Region) {
         ContentValues values = new ContentValues();
         values.put("continent", Region);
-        Long Id = instance.insert("Region", null, values);
+        Long Id = null;
+        try {
+            Id = instance.insert("Region", null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Id;
     }
 
-    private static Long addCountry(@NonNull String Country, @NonNull String Code) {
+    private static Long addCountry(@NonNull String Country, @NonNull String Code, @Nullable Long RegionId) {
         ContentValues values = new ContentValues();
+        values.put("FK_Region", RegionId);
         values.put("location", Country);
         values.put("iso_code", Code);
-        Long Id = instance.insert("Country", null, values);
+        Long Id = null;
+        try {
+            Id = instance.insert("Country", null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Id;
     }
 
@@ -411,7 +448,12 @@ class Database {
         values.put("excess_mortality", beanie.excess_mortality);
         values.put("excess_mortality_cumulative_per_million", beanie.excess_mortality_cumulative_per_million);
 
-        Long Id = instance.insert("Detail", null, values);
+        Long Id = null;
+        try {
+            Id = instance.insert("Detail", null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Id;
     }
 }
