@@ -146,7 +146,6 @@ class Database {
         if (invalidate) {
             delete(context);
         }
-        String s = context.getDatabasePath(Constants.dbName).toString();
         File fPathDB = null;
         if (instance == null) {
             if (exists(context)) {
