@@ -190,7 +190,7 @@ class Database {
             while ((nextRecord = csvReader.readNext()) != null) {
                 Code = nextRecord[0];
                 Region = nextRecord[1];
-                Country = nextRecord[2].replace("'", "''");
+                Country = nextRecord[2].replace("'", "-");
                 strDate = nextRecord[3];
                 /*
                 OWID_AFR,,Africa,2022-02-16,11119460.0,14624.0,13286.286,245052.0,282.0,334.286,8095.791,10.647,9.673,178.416,0.205,0.243,,,,,,,,,,,,,,,,,,,375605505.0,231312199.0,158579575.0,3117143.0,1054543.0,1026903.0,27.35,16.84,11.55,0.23,748.0,500560.0,0.036,,1373486472.0,,,,,,,,,,,,,,,,,,
@@ -243,7 +243,7 @@ class Database {
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
                 beanie.continent = nextRecord[1];
-                beanie.location = nextRecord[2].replace("'", "''");
+                beanie.location = nextRecord[2].replace("'", "-");
                 beanie.date = nextRecord[3];
                 beanie.total_cases = nextRecord[4].isEmpty() ? 0d : Double.parseDouble(nextRecord[4]);
                 beanie.new_cases = nextRecord[5].isEmpty() ? 0d : Double.parseDouble(nextRecord[5]);
