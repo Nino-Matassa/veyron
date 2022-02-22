@@ -42,7 +42,19 @@ public class UIMessage {
     }
 
     public static void informationBox(final Context context, final String msg) {
-        ((Activity)context).runOnUiThread(new Runnable() {
+        if(msg == null) {
+            alertDialog.dismiss();
+            return;
+        }
+        if(builder == null) {
+            builder = new AlertDialog.Builder(context);
+            alertDialog = builder.create();
+        }
+        alertDialog.setMessage(msg);
+        TextView textView = (TextView)alertDialog.findViewById(android.R.id.message);
+        //textView.setGravity(Gravity.CENTER);
+        alertDialog.show();
+        /*((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(msg == null) {
@@ -58,7 +70,7 @@ public class UIMessage {
                 textView.setGravity(Gravity.CENTER);
                 alertDialog.show();
             }
-        });
+        });*/
     }
 
     public static String abbreviate(String text, int length) {

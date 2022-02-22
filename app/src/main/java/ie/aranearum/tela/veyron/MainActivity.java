@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         } finally {
             db = Database.getInstance(MainActivity.this, false, false);
         }
+        UITerra uiTerra = new UITerra(MainActivity.this);
     }
 
     @Override

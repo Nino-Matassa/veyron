@@ -50,7 +50,10 @@ public class UITerra extends UI implements IRegisterOnStack {
     }
 
     private void uiHandler() {
-        Handler handler = new Handler(Looper.getMainLooper());
+        populateTerra();
+        setHeader("Terra", "General");
+        UIMessage.informationBox(context, null);
+        /*Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -58,17 +61,17 @@ public class UITerra extends UI implements IRegisterOnStack {
                 setHeader("Terra", "General");
                 UIMessage.informationBox(context, null);
             }
-        }, Constants.delayMilliSeconds);
+        }, Constants.delayMilliSeconds);*/
     }
 
     private void populateTerra() {
         String filePath = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         File csv = new File(filePath);
         lastUpdated = new Date(csv.lastModified()).toString();
-        String[] arrDate = lastUpdated.split(" ");
-        lastUpdated = arrDate[0] + " " + arrDate[2] + " " + arrDate[3] + " " + arrDate[5];
+        //String[] arrDate = lastUpdated.split(" ");
+        //lastUpdated = arrDate[0] + " " + arrDate[2] + " " + arrDate[3] + " " + arrDate[5];
 
-        String sql = "select (select count(Id) from country) as nCountry, Country, TotalCase, CasePer100000, Case7Day, Case24Hour, TotalDeath, DeathPer100000, Death7Day, Death24Hour, Source from overview where region = 'Terra'";
+        /*String sql = "select (select count(Id) from country) as nCountry, Country, TotalCase, CasePer100000, Case7Day, Case24Hour, TotalDeath, DeathPer100000, Death7Day, Death24Hour, Source from overview where region = 'Terra'";
         Cursor cTerra = db.rawQuery(sql, null);
         cTerra.moveToFirst();
 
@@ -84,7 +87,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         population = totalCase / casePer100000 * Constants.oneHundredThousand;
         precentInfected = totalCase / population * 100;
         infectionsCurve = Math.log((double)case24Hour);
-        nCountry = cTerra.getInt(cTerra.getColumnIndex("nCountry"));
+        nCountry = cTerra.getInt(cTerra.getColumnIndex("nCountry"));*/
 
         MetaField metaField = new MetaField();
         /*metaField.key = "Population";

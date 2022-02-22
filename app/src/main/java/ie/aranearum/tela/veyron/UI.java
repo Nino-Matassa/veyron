@@ -51,8 +51,8 @@ public class UI {
         String filePath = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         File csv = new File(filePath);
         String lastUpdated = new Date(csv.lastModified()).toString();
-        String[] arrDate = lastUpdated.split(" ");
-        lastUpdated = arrDate[0] + " " + arrDate[1]+ " " + arrDate[2] + " " + arrDate[3] + " " + arrDate[5];
+        //String[] arrDate = lastUpdated.split(" ");
+        //lastUpdated = arrDate[0] + " " + arrDate[1]+ " " + arrDate[2] + " " + arrDate[3] + " " + arrDate[5];
         setFooter(lastUpdated);
     }
 
