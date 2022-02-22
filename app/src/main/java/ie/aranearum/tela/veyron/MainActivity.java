@@ -13,6 +13,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Stack;
+
 import ie.aranearum.tela.veyron.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     private SQLiteDatabase db = null;
+
+    public static Stack<UIHistory> stack = new Stack<UIHistory>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
