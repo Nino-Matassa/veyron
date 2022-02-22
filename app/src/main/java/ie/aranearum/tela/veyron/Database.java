@@ -155,18 +155,11 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(invalidate || populate)
+        if(invalidate || populate || CSV.outdated())
             populateRequest(context);
         return instance;
     }
 
-    /*
-    When populating only unpopulated data, which is most of the time, reset countryXDate for each country
-    to the last used date for that country an add data where the date is > countryXDate.
-
-    Open the CSV, skip the first line, and for every line populate a new Beanie() and call
-    addRecordRequest().
-     */
     private static boolean populateRequest(Context context) {
         LocalDate countryMaxDate = null;
         Long RegionId = 0L;
@@ -238,7 +231,7 @@ class Database {
                 } else {
                     countryMaxDate = getLastUpdate(Country);
                 }
-                if(countryMaxDate.compareTo(LocalDate.parse(strDate, dateTimeFormatter)) >= 0) // test...
+                if(countryMaxDate.compareTo(LocalDate.parse(strDate, dateTimeFormatter)) >= 0)
                     continue;;
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];

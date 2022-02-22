@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            db = Database.getInstance(MainActivity.this, false, true); // set invalidate to true till db is working ok
+            db = Database.getInstance(MainActivity.this, false, false);
         }
     }
 
