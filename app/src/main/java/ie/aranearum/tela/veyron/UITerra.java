@@ -1,5 +1,6 @@
 package ie.aranearum.tela.veyron;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
@@ -8,6 +9,8 @@ import android.os.Looper;
 
 import java.io.File;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class UITerra extends UI implements IRegisterOnStack {
@@ -15,22 +18,6 @@ public class UITerra extends UI implements IRegisterOnStack {
     private Context context = null;
     private DecimalFormat formatter = null;
     private UIHistory uiHistory = null;
-
-    private String country = null;
-    private Integer totalCase = null;
-    private Double casePer100000 = 0.0;
-    private Integer case7Day = 0;
-    private Integer case24Hour = 0;
-    private Integer totalDeath = 0;
-    private Double deathPer100000 = 0.0;
-    private Integer death7Day = 0;
-    private Integer death24Hour = 0;
-    private String lastUpdated = null;
-    private Double precentInfected = 0.0;
-    private Double population = 0.0;
-    private Double infectionsCurve = 0.0;
-    private Integer nCountry = 0;
-
 
     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
     public UITerra(Context context) {
@@ -51,195 +38,158 @@ public class UITerra extends UI implements IRegisterOnStack {
 
     private void uiHandler() {
         populateTerra();
-        setHeader("Terra", "General");
+        setHeader("Terra", "Overview");
         UIMessage.informationBox(context, null);
-        /*Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                populateTerra();
-                setHeader("Terra", "General");
-                UIMessage.informationBox(context, null);
-            }
-        }, Constants.delayMilliSeconds);*/
     }
 
     private void populateTerra() {
         String filePath = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         File csv = new File(filePath);
-        lastUpdated = new Date(csv.lastModified()).toString();
-        //String[] arrDate = lastUpdated.split(" ");
-        //lastUpdated = arrDate[0] + " " + arrDate[2] + " " + arrDate[3] + " " + arrDate[5];
+        String lastUpdated = new Date(csv.lastModified()).toString();
+        String[] aDate = lastUpdated.split("-");
+        LocalDate localDate = LocalDate.of(Integer.valueOf(aDate[0]), Integer.valueOf(aDate[1]), Integer.valueOf(aDate[2]));
+        lastUpdated = localDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
 
-        /*String sql = "select (select count(Id) from country) as nCountry, Country, TotalCase, CasePer100000, Case7Day, Case24Hour, TotalDeath, DeathPer100000, Death7Day, Death24Hour, Source from overview where region = 'Terra'";
-        Cursor cTerra = db.rawQuery(sql, null);
-        cTerra.moveToFirst();
+        String sqlPopulation = "select sum(population) as Population from Detail where date = (select max(date) from Detail)";
+        Cursor cPopulation = db.rawQuery(sqlPopulation, null);
+        cPopulation.moveToFirst();
+        @SuppressLint("Range") Double Population = cPopulation.getDouble(cPopulation.getColumnIndex("Population"));
 
-        country = cTerra.getString(cTerra.getColumnIndex("Country"));
-        totalCase = cTerra.getInt(cTerra.getColumnIndex("TotalCase"));
-        casePer100000 = cTerra.getDouble(cTerra.getColumnIndex("CasePer100000"));
-        case7Day = cTerra.getInt(cTerra.getColumnIndex("Case7Day"));
-        case24Hour = cTerra.getInt(cTerra.getColumnIndex("Case24Hour"));
-        totalDeath = cTerra.getInt(cTerra.getColumnIndex("TotalDeath"));
-        deathPer100000 = cTerra.getDouble(cTerra.getColumnIndex("DeathPer100000"));
-        death7Day = cTerra.getInt(cTerra.getColumnIndex("Death7Day"));
-        death24Hour = cTerra.getInt(cTerra.getColumnIndex("Death24Hour"));
-        population = totalCase / casePer100000 * Constants.oneHundredThousand;
-        precentInfected = totalCase / population * 100;
-        infectionsCurve = Math.log((double)case24Hour);
-        nCountry = cTerra.getInt(cTerra.getColumnIndex("nCountry"));*/
+        String sqlOverview = "select sum(new_cases) as TotalCase,\n" +
+                " sum(new_cases_per_million) as TotalCasePerMillion,\n" +
+                " sum(new_deaths) as TotalDeath,\n" +
+                " sum(new_deaths_per_million) as TotalDeathPerMillion,\n" +
+                " sum(reproduction_rate) as ReproductionRate,\n" +
+                " count(Id) as n\n" +
+                " from Detail";
+        Cursor cOverview = db.rawQuery(sqlOverview, null);
+        cOverview.moveToFirst();
+
+        @SuppressLint("Range") Double TotalCase = cOverview.getDouble(cOverview.getColumnIndex("TotalCase"));
+        @SuppressLint("Range") Double TotalCasePerMillion = cOverview.getDouble(cOverview.getColumnIndex("TotalCasePerMillion"));
+        @SuppressLint("Range") Double TotalDeath = cOverview.getDouble(cOverview.getColumnIndex("TotalDeath"));
+        @SuppressLint("Range") Double TotalDeathPerMillion = cOverview.getDouble(cOverview.getColumnIndex("TotalDeathPerMillion"));
+        @SuppressLint("Range") Double ReproductionRate = cOverview.getDouble(cOverview.getColumnIndex("ReproductionRate"));
+        @SuppressLint("Range") Double CountId = cOverview.getDouble(cOverview.getColumnIndex("n"));
+
+        String sqlNewCases = "select sum(new_cases) as NewCase,\n" +
+                " sum(new_cases_per_million) as NewCasePerMillion,\n" +
+                " sum(new_deaths) as NewDeath,\n" +
+                " sum(new_deaths_per_million) as NewDeathPerMillion,\n" +
+                " sum(icu_patients) as ICUPatient,\n" +
+                " sum(icu_patients_per_million) as ICUPatientPerMillion,\n" +
+                " sum(hosp_patients) as HospitalPatient,\n" +
+                " sum(hosp_patients_per_million) as HospitalPatientPerMillion\n" +
+                " from Detail where date = (select max(date) from Detail)";
+        Cursor cNewCases = db.rawQuery(sqlNewCases, null);
+        cNewCases.moveToFirst();
+        @SuppressLint("Range") Double NewCase = cNewCases.getDouble(cNewCases.getColumnIndex("NewCase"));
+        @SuppressLint("Range") Double NewCasePerMillion = cNewCases.getDouble(cNewCases.getColumnIndex("NewCasePerMillion"));
+        @SuppressLint("Range") Double NewDeath = cNewCases.getDouble(cNewCases.getColumnIndex("NewDeath"));
+        @SuppressLint("Range") Double NewDeathPerMillion = cNewCases.getDouble(cNewCases.getColumnIndex("NewDeathPerMillion"));
+        @SuppressLint("Range") Double ICUPatient = cNewCases.getDouble(cNewCases.getColumnIndex("ICUPatient"));
+        @SuppressLint("Range") Double ICUPatientPerMillion = cNewCases.getDouble(cNewCases.getColumnIndex("ICUPatientPerMillion"));
+        @SuppressLint("Range") Double HospitalPatient = cNewCases.getDouble(cNewCases.getColumnIndex("HospitalPatient"));
+        @SuppressLint("Range") Double HospitalPatientPerMillion = cNewCases.getDouble(cNewCases.getColumnIndex("HospitalPatientPerMillion"));
 
         MetaField metaField = new MetaField();
-        /*metaField.key = "Population";
-        metaField.value = String.valueOf(formatter.format(Math.round(population)));
-        metaField.underlineKey = true;
+
+        metaField.key = "Population";
+        metaField.value = String.valueOf(formatter.format(Math.round(Population)));
+        metaField.underlineKey = false;
         metaField.UI = Constants.UIRegion;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraActiveCases);
-        metaField.key = "Active Cases";
-        String sqlActiveCases = "select Date, sum(NewCase) as CaseX from Detail group by date order by date desc limit 29";
-        Cursor cActiveCases = db.rawQuery(sqlActiveCases, null);
-        ArrayList<CaseRangeTotal> fieldTotals = new CaseRangeCalculation().calculate(cActiveCases, Constants.moonPhase);
-        int activeCases = fieldTotals.get(0).total;
-
-        metaField.value = String.valueOf(formatter.format(activeCases));
-        metaField.underlineKey = true;
-        metaField.underlineValue = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Total Case";
+        metaField.value = String.valueOf(formatter.format(Math.round(TotalCase)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraActiveCasesPerX);
-        metaField.key = "Active Cases/" + Constants.roman100000;
-        Double activeCases_C = (activeCases / population * Constants.oneHundredThousand) / nCountry;
-        metaField.value = String.valueOf(formatter.format(activeCases_C));
-        metaField.underlineKey = true;
-        metaField.underlineValue = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Total Case" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(Math.round(TotalCasePerMillion)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraTotalCases);
-        metaField.key = "Total Cases";
-        metaField.value = String.valueOf(formatter.format(totalCase));
-        metaField.underlineKey = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "New Case";
+        metaField.value = String.valueOf(formatter.format(Math.round(NewCase)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraCase24H);
-        metaField.key = "Case24H";
-        metaField.value = String.valueOf(formatter.format(case24Hour));
-        metaField.underlineKey = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "New Case" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(Math.round(NewCasePerMillion)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraCase7D);
-        metaField.key = "Case7D";
-        metaField.value = String.valueOf(formatter.format(case7Day));
-        metaField.underlineKey = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Total Death";
+        metaField.value = String.valueOf(formatter.format(Math.round(TotalDeath)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraTotalDeaths);
-        metaField.key = "Total Deaths";
-        metaField.value = String.valueOf(formatter.format(totalDeath));
-        metaField.underlineKey = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Total Death" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(Math.round(TotalDeathPerMillion)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraDeath24H);
-        metaField.key = "Death24H";
-        metaField.value = String.valueOf(formatter.format(death24Hour));
-        metaField.underlineKey = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "New Death";
+        metaField.value = String.valueOf(formatter.format(Math.round(NewDeath)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraDeath7D);
-        metaField.key = "Death7D";
-        metaField.value = String.valueOf(formatter.format(death7Day));
-        metaField.underlineKey = true;
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "New Death" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(Math.round(NewDeathPerMillion)));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerraTotalInfected);
-        metaField.key = "Total Infected";
-        metaField.value = String.valueOf(formatter.format(precentInfected)) + "%";
-        metaField.underlineKey = true;
-        metaFields.add(metaField);
-
-        String sqlRNought = "select Date, sum(NewCase) as CaseX from Detail group by Date order by Date desc limit 29";
-        Cursor cRNought = db.rawQuery(sqlRNought, null);
-
-        ArrayList<RNoughtAverage> rNoughtAverage = new RNoughtCalculation().calculate(cRNought, Constants.moonPhase);
-        Double rNought = rNoughtAverage.get(0).average;
-        metaField = new MetaField(0, 0, Constants.UITerraRNought);
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
-        metaField.value = String.valueOf(formatter.format(rNought));
-        metaField.underlineKey = true;
-        metaField.underlineValue = true;
-        metaFields.add(metaField);
-        metaField = new MetaField();
-
-        String sqlVaccineEntries = "select count(Id) as Id from Vaccine";
-        Cursor cVaccineEntries = db.rawQuery(sqlVaccineEntries, null);
-        cVaccineEntries.moveToFirst();
-        Long nEntries = cVaccineEntries.getLong(cVaccineEntries.getColumnIndex("Id"));
-        String sqlVaccine = "select sum(totalvaccinations) as TotalVaccinations, sum(totalpersons) as TotalPersons, sum(totalvaccinationsper100) as TotalVaccinationsPer100, sum(totalpersonsper100) as TotalPersonsPer100, sum(FullyVaccinated) as FullyVaccinated, sum(fullyvaccinatedper100) as FullyVaccinatedPer100 from vaccine";
-        Cursor cVaccine = db.rawQuery(sqlVaccine, null);
-        cVaccine.moveToFirst();
-
-        Long TotalVaccinations = 0L;
-        Long TotalPersons = 0L;
-        Double TotalVaccinationsPer100 = 0.0;
-        Double TotalPersonsPer100 = 0.0;
-        Long FullyVaccinated = 0L;
-        Double FullyVaccinatedPer100 = 0.0;
-
-        TotalVaccinations = cVaccine.getLong(cVaccine.getColumnIndex("TotalVaccinations"));
-        TotalPersons = cVaccine.getLong(cVaccine.getColumnIndex("TotalPersons"));
-        TotalVaccinationsPer100 = cVaccine.getDouble(cVaccine.getColumnIndex("TotalVaccinationsPer100"))/nEntries;
-        TotalPersonsPer100 = cVaccine.getDouble(cVaccine.getColumnIndex("TotalPersonsPer100"))/nEntries;
-        FullyVaccinated = cVaccine.getLong(cVaccine.getColumnIndex("FullyVaccinated"));
-        FullyVaccinatedPer100 = cVaccine.getDouble(cVaccine.getColumnIndex("FullyVaccinatedPer100"))/nEntries;
-
-        metaField = new MetaField(0, 0, Constants.UITerra);
-        metaField.key = "";
-        metaField.value = "";
+        metaField.value = String.valueOf(formatter.format(Math.round(ReproductionRate/CountId)));
         metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerra);
-        metaField.key = "Vaccine Information";
-        metaField.value = "Data";
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "ICU Patients";
+        metaField.value = String.valueOf(formatter.format(Math.round(ICUPatient)));
         metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerra);
-        metaField.key = "Total Doses";
-        metaField.value = String.valueOf(formatter.format(TotalVaccinations));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "ICU Patients" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(Math.round(ICUPatientPerMillion)));
         metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerra);
-        metaField.key = "Dose/100";
-        metaField.value = String.valueOf(formatter.format(TotalVaccinationsPer100));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Hospital Patients";
+        metaField.value = String.valueOf(formatter.format(Math.round(HospitalPatient)));
         metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        metaField = new MetaField(0, 0, Constants.UITerra);
-        metaField.key = "Vaccinated";
-        metaField.value = String.valueOf(formatter.format(TotalPersons));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Hospital Patients" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(Math.round(HospitalPatientPerMillion)));
         metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
-
-        metaField = new MetaField(0, 0, Constants.UITerra);
-        metaField.key = "Fully Vaccinated";
-        metaField.value = String.valueOf(formatter.format(FullyVaccinated));
-        metaField.underlineKey = false;
-        metaFields.add(metaField);
-
-        metaField = new MetaField(0, 0, Constants.UITerra);
-        metaField.key = "Vaccinated";
-        metaField.value = String.valueOf(formatter.format(TotalPersonsPer100)) + "%";
-        metaField.underlineKey = false;
-        metaFields.add(metaField);
-
-        metaField = new MetaField(0, 0, Constants.UITerraFullyVaccinated);
-        metaField.key = "Fully Vaccinated";
-        metaField.value = String.valueOf(formatter.format(FullyVaccinatedPer100)) + "%";
-        metaField.underlineKey = true;
-        metaFields.add(metaField);*/
 
         metaField = new MetaField(0, 0, Constants.UITerra);
         metaField.key = "";

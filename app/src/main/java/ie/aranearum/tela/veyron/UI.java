@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class UI {
@@ -51,8 +53,9 @@ public class UI {
         String filePath = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         File csv = new File(filePath);
         String lastUpdated = new Date(csv.lastModified()).toString();
-        //String[] arrDate = lastUpdated.split(" ");
-        //lastUpdated = arrDate[0] + " " + arrDate[1]+ " " + arrDate[2] + " " + arrDate[3] + " " + arrDate[5];
+        String[] aDate = lastUpdated.split("-");
+        LocalDate localDate = LocalDate.of(Integer.valueOf(aDate[0]), Integer.valueOf(aDate[1]), Integer.valueOf(aDate[2]));
+        lastUpdated = localDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
         setFooter(lastUpdated);
     }
 
