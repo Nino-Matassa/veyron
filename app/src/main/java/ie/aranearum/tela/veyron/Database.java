@@ -479,7 +479,7 @@ class Beanie {
     public Double new_tests_smoothed_per_thousand = 0d;
     public Double positive_rate = 0d;
     public Double tests_per_case = 0d;
-    public String tests_units = null;
+    public String tests_units = null; // for country data only...
     public Double total_vaccinations = 0d;
     public Double people_vaccinated = 0d;
     public Double people_fully_vaccinated = 0d;
