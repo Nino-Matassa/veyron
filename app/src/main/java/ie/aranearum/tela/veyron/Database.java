@@ -1,5 +1,6 @@
 package ie.aranearum.tela.veyron;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,7 +20,6 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Locale;
 
 class SQLHelper extends SQLiteOpenHelper {
     public SQLHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -146,10 +146,9 @@ class Database {
         if (invalidate) {
             delete(context);
         }
-        File fPathDB = null;
         if (instance == null) {
             if (exists(context)) {
-                fPathDB = context.getDatabasePath(Constants.dbName);
+                File fPathDB = context.getDatabasePath(Constants.dbName);
                 instance = SQLiteDatabase.openDatabase(fPathDB.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
             } else {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
@@ -160,6 +159,7 @@ class Database {
         return instance;
     }
 
+    @SuppressLint("Range")
     private static boolean populateRequest(Context context) {
         LocalDate countryMaxDate = null;
         Long RegionId = 0L;
@@ -174,7 +174,6 @@ class Database {
         try {
             String csvFileName = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
             FileReader filereader = new FileReader(csvFileName);
-            //CSVReader csvReader = new CSVReader(filereader);
             CSVReader csvReader = new CSVReaderBuilder(filereader).withSkipLines(1).build();
             String[] nextRecord;
 
@@ -185,11 +184,6 @@ class Database {
                 Region = nextRecord[1];
                 Country = nextRecord[2].replace("'", "-");
                 strDate = nextRecord[3];
-                /*
-                OWID_AFR,,Africa,2022-02-16,11119460.0,14624.0,13286.286,245052.0,282.0,334.286,8095.791,10.647,9.673,178.416,0.205,0.243,,,,,,,,,,,,,,,,,,,375605505.0,231312199.0,158579575.0,3117143.0,1054543.0,1026903.0,27.35,16.84,11.55,0.23,748.0,500560.0,0.036,,1373486472.0,,,,,,,,,,,,,,,,,,
-                What appears to be corrupted lines are being ignored, the Region field is null so the following 2 lines ignore it.
-                Also, not all data is being being populated, no idea why yet.
-                 */
                 if(Region.isEmpty())
                     continue;
                 if (hashMapRegion.containsKey(Region)) {
@@ -324,6 +318,7 @@ class Database {
         }
     }
 
+    @SuppressLint("Range")
     private static LocalDate getLastUpdate(String Country) {
         Long Id = hashMapCountry.get(Country);
         String sqlCheckForRecords = "select count(Id) as n from Detail where FK_Country = " + Id.toString();
