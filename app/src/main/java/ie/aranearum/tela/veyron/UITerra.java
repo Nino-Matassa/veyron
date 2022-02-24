@@ -56,7 +56,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         cPopulation.moveToFirst();
         @SuppressLint("Range") Double Population = cPopulation.getDouble(cPopulation.getColumnIndex("Population"));
         metaField.key = "Population";
-        metaField.value = String.valueOf(formatter.format(Math.round(Population)));
+        metaField.value = String.valueOf(formatter.format(Population));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIRegion;
         metaFields.add(metaField);
@@ -70,7 +70,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double TotalCase = cTotalCase.getDouble(cTotalCase.getColumnIndex("TotalCase"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "Total Case";
-        metaField.value = String.valueOf(formatter.format(Math.round(TotalCase)));
+        metaField.value = String.valueOf(formatter.format(TotalCase));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -99,7 +99,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double NewCase = cNewCase.getDouble(cNewCase.getColumnIndex("NewCase"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "New Case";
-        metaField.value = String.valueOf(formatter.format(Math.round(NewCase)));
+        metaField.value = String.valueOf(formatter.format(NewCase));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -127,7 +127,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double NewCaseSmoothed = cNewCaseSmoothed.getDouble(cNewCaseSmoothed.getColumnIndex("NewCaseSmoothed"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "New Case" + Constants.smoothed;
-        metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
+        metaField.value = String.valueOf(formatter.format(NewCaseSmoothed));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -155,7 +155,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double TotalDeath = cTotalDeath.getDouble(cTotalDeath.getColumnIndex("TotalDeath"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "Total Death";
-        metaField.value = String.valueOf(formatter.format(Math.round(TotalDeath)));
+        metaField.value = String.valueOf(formatter.format(TotalDeath));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -183,7 +183,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double NewDeath = cNewDeath.getDouble(cNewDeath.getColumnIndex("NewDeath"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "New Death";
-        metaField.value = String.valueOf(formatter.format(Math.round(NewDeath)));
+        metaField.value = String.valueOf(formatter.format(NewDeath));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -239,7 +239,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double ReproductionRate = cReproductionRate.getDouble(cReproductionRate.getColumnIndex("ReproductionRate"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
-        metaField.value = String.valueOf(formatter.format(Math.round(ReproductionRate)));
+        metaField.value = String.valueOf(formatter.format(ReproductionRate));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -253,7 +253,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double ICUPatient = cICUPatient.getDouble(cICUPatient.getColumnIndex("ICUPatient"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "ICU Patients";
-        metaField.value = String.valueOf(formatter.format(Math.round(ICUPatient)));
+        metaField.value = String.valueOf(formatter.format(ICUPatient));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -281,7 +281,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double HospitalPatient = cHospitalPatient.getDouble(cHospitalPatient.getColumnIndex("HospitalPatient"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "Hospital Patients";
-        metaField.value = String.valueOf(formatter.format(Math.round(HospitalPatient)));
+        metaField.value = String.valueOf(formatter.format(HospitalPatient));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -309,7 +309,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double WeeklyICUAdmission = cWeeklyICUAdmission.getDouble(cWeeklyICUAdmission.getColumnIndex("WeeklyICUAdmission"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "Weekly ICU";
-        metaField.value = String.valueOf(formatter.format(Math.round(WeeklyICUAdmission)));
+        metaField.value = String.valueOf(formatter.format(WeeklyICUAdmission));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -337,7 +337,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double WeeklyHospitalAdmission = cWeeklyHospitalAdmission.getDouble(cWeeklyHospitalAdmission.getColumnIndex("WeeklyHospitalAdmission"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
         metaField.key = "Weekly Hospital";
-        metaField.value = String.valueOf(formatter.format(Math.round(WeeklyHospitalAdmission)));
+        metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmission));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
@@ -467,6 +467,119 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
+
+        String sqlTotalVaccination = "select\n" +
+                " sum(total_vaccinations)\n" +
+                " as TotalVaccination\n" +
+                " from Detail where date = (select max(date) from Detail where total_vaccinations > 0)";
+        Cursor cTotalVaccination = db.rawQuery(sqlTotalVaccination, null);
+        cTotalVaccination.moveToFirst();
+        @SuppressLint("Range") Double TotalVaccination = cTotalVaccination.getDouble(cTotalVaccination.getColumnIndex("TotalVaccination"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Total Vaccinations";
+        metaField.value = String.valueOf(formatter.format(TotalVaccination));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlPeopleVaccinated = "select\n" +
+                " sum(people_vaccinated)\n" +
+                " as PeopleVaccinated\n" +
+                " from Detail where date = (select max(date) from Detail where people_vaccinated > 0)";
+        Cursor cPeopleVaccinated = db.rawQuery(sqlPeopleVaccinated, null);
+        cPeopleVaccinated.moveToFirst();
+        @SuppressLint("Range") Double PeopleVaccinated = cPeopleVaccinated.getDouble(cPeopleVaccinated.getColumnIndex("PeopleVaccinated"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Vaccinated";
+        metaField.value = String.valueOf(formatter.format(PeopleVaccinated));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlPeopleFullyVaccinated = "select\n" +
+                " sum(people_fully_vaccinated)\n" +
+                " as PeopleFullyVaccinated\n" +
+                " from Detail where date = (select max(date) from Detail where people_fully_vaccinated > 0)";
+        Cursor cPeopleFullyVaccinated = db.rawQuery(sqlPeopleFullyVaccinated, null);
+        cPeopleFullyVaccinated.moveToFirst();
+        @SuppressLint("Range") Double PeopleFullyVaccinated = cPeopleFullyVaccinated.getDouble(cPeopleFullyVaccinated.getColumnIndex("PeopleFullyVaccinated"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Fully Vaccinated";
+        metaField.value = String.valueOf(formatter.format(PeopleFullyVaccinated));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlTotalBooster = "select\n" +
+                " sum(total_boosters)\n" +
+                " as TotalBooster\n" +
+                " from Detail where date = (select max(date) from Detail where total_boosters > 0)";
+        Cursor cTotalBooster = db.rawQuery(sqlTotalBooster, null);
+        cTotalBooster.moveToFirst();
+        @SuppressLint("Range") Double TotalBooster = cTotalBooster.getDouble(cTotalBooster.getColumnIndex("TotalBooster"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Total Booster";
+        metaField.value = String.valueOf(formatter.format(TotalBooster));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlNewVaccination = "select\n" +
+                " sum(new_vaccinations)\n" +
+                " as NewVaccination\n" +
+                " from Detail where date = (select max(date) from Detail where new_vaccinations > 0)";
+        Cursor cNewVaccination = db.rawQuery(sqlNewVaccination, null);
+        cNewVaccination.moveToFirst();
+        @SuppressLint("Range") Double NewVaccination = cNewVaccination.getDouble(cNewVaccination.getColumnIndex("NewVaccination"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "New Vaccination";
+        metaField.value = String.valueOf(formatter.format(NewVaccination));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlNewVaccinationSmoothed = "select\n" +
+                " sum(new_vaccinations_smoothed)\n" +
+                " as NewVaccinationSmoothed\n" +
+                " from Detail where date = (select max(date) from Detail where new_vaccinations_smoothed > 0)";
+        Cursor cNewVaccinationSmoothed = db.rawQuery(sqlNewVaccinationSmoothed, null);
+        cNewVaccinationSmoothed.moveToFirst();
+        @SuppressLint("Range") Double NewVaccinationSmoothed = cNewVaccinationSmoothed.getDouble(cNewVaccinationSmoothed.getColumnIndex("NewVaccinationSmoothed"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "New Vaccination" + Constants.smoothed;
+        metaField.value = String.valueOf(formatter.format(NewVaccinationSmoothed));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlTotalVaccinationPerHundred = "select\n" +
+                " sum(total_vaccinations_per_hundred)/(select count(Id) from Country)\n" +
+                " as TotalVaccinationPerHundred\n" +
+                " from Detail where date = (select max(date) from Detail where total_vaccinations_per_hundred > 0)";
+        Cursor cTotalVaccinationPerHundred = db.rawQuery(sqlTotalVaccinationPerHundred, null);
+        cTotalVaccinationPerHundred.moveToFirst();
+        @SuppressLint("Range") Double TotalVaccinationPerHundred = cTotalVaccinationPerHundred.getDouble(cTotalVaccinationPerHundred.getColumnIndex("TotalVaccinationPerHundred"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Total Vaccination" + Constants.roman100;
+        metaField.value = String.valueOf(formatter.format(TotalVaccinationPerHundred));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlPeopleVaccinatedPerHundred = "select\n" +
+                " sum(people_vaccinated_per_hundred)/(select count(Id) from Country)\n" +
+                " as PeopleVaccinatedPerHundred\n" +
+                " from Detail where date = (select max(date) from Detail where people_vaccinated_per_hundred > 0)";
+        Cursor cPeopleVaccinatedPerHundred = db.rawQuery(sqlPeopleVaccinatedPerHundred, null);
+        cPeopleVaccinatedPerHundred.moveToFirst();
+        @SuppressLint("Range") Double PeopleVaccinatedPerHundred = cPeopleVaccinatedPerHundred.getDouble(cPeopleVaccinatedPerHundred.getColumnIndex("PeopleVaccinatedPerHundred"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Vaccinated" + Constants.roman100;
+        metaField.value = String.valueOf(formatter.format(PeopleVaccinatedPerHundred));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
 
         metaField = new MetaField(0, 0, Constants.UITerra);
         metaField.key = "";

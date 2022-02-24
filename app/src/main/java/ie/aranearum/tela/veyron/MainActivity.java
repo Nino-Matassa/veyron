@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //UIMessage.informationBox(MainActivity.this, "Overview");
         UITerra uiTerra = new UITerra(MainActivity.this);
+        //Toast.makeText(MainActivity.this, "UITerra", Toast.LENGTH_LONG).show();
     }
 
     @Override
