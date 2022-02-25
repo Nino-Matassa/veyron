@@ -580,6 +580,271 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
+        String sqlStringencyIndex = "select \n" +
+                " sum(stringency_index)--/(select count(Id) from Country)\n" + // Use division
+                " as StringencyIndex\n" +
+                " from Detail where date = (select max(date) from Detail where stringency_index > 0)";
+        Cursor cStringencyIndex = db.rawQuery(sqlStringencyIndex, null);
+        cStringencyIndex.moveToFirst();
+        @SuppressLint("Range") Double StringencyIndex = cStringencyIndex.getDouble(cStringencyIndex.getColumnIndex("StringencyIndex"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Stringency Index";
+        metaField.value = String.valueOf(formatter.format(StringencyIndex));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlPopulationDensity = "select \n" +
+                " sum(population_density)/(select count(Id) from Country)\n" +
+                " as PopulationDensity\n" +
+                " from Detail where date = (select max(date) from Detail where population_density > 0)";
+        Cursor cPopulationDensity = db.rawQuery(sqlPopulationDensity, null);
+        cPopulationDensity.moveToFirst();
+        @SuppressLint("Range") Double PopulationDensity = cPopulationDensity.getDouble(cPopulationDensity.getColumnIndex("PopulationDensity"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Population Density";
+        metaField.value = String.valueOf(formatter.format(PopulationDensity));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlMedianAge = "select \n" +
+                " sum(median_age)/(select count(Id) from Country)\n" +
+                " as MedianAge\n" +
+                " from Detail where date = (select max(date) from Detail where median_age > 0)";
+        Cursor cMedianAge = db.rawQuery(sqlMedianAge, null);
+        cMedianAge.moveToFirst();
+        @SuppressLint("Range") Double MedianAge = cMedianAge.getDouble(cMedianAge.getColumnIndex("MedianAge"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Median Age";
+        metaField.value = String.valueOf(formatter.format(MedianAge));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlAged65Older = "select \n" +
+                " sum(aged_65_older)/(select count(Id) from Country)\n" +
+                " as Aged65Older\n" +
+                " from Detail where date = (select max(date) from Detail where aged_65_older > 0)";
+        Cursor cAged65Older = db.rawQuery(sqlAged65Older, null);
+        cAged65Older.moveToFirst();
+        @SuppressLint("Range") Double Aged65Older = cAged65Older.getDouble(cAged65Older.getColumnIndex("Aged65Older"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Aged65Older";
+        metaField.value = String.valueOf(formatter.format(Aged65Older));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlAged70Older = "select \n" +
+                " sum(aged_70_older)/(select count(Id) from Country)\n" +
+                " as Aged70Older\n" +
+                " from Detail where date = (select max(date) from Detail where aged_70_older > 0)";
+        Cursor cAged70Older = db.rawQuery(sqlAged70Older, null);
+        cAged70Older.moveToFirst();
+        @SuppressLint("Range") Double Aged70Older = cAged70Older.getDouble(cAged70Older.getColumnIndex("Aged70Older"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Aged70Older";
+        metaField.value = String.valueOf(formatter.format(Aged70Older));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlGDPPerCapita = "select \n" +
+                " sum(gdp_per_capita)/(select count(Id) from Country)\n" +
+                " as GDPPerCapita\n" +
+                " from Detail where date = (select max(date) from Detail where gdp_per_capita > 0)";
+        Cursor cGDPPerCapita = db.rawQuery(sqlGDPPerCapita, null);
+        cGDPPerCapita.moveToFirst();
+        @SuppressLint("Range") Double GDPPerCapita = cGDPPerCapita.getDouble(cGDPPerCapita.getColumnIndex("GDPPerCapita"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "GDP Per Capita";
+        metaField.value = String.valueOf(formatter.format(GDPPerCapita));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlExtremePoverty = "select \n" +
+                " sum(extreme_poverty)/(select count(Id) from Country)\n" +
+                " as ExtremePoverty\n" +
+                " from Detail where date = (select max(date) from Detail where extreme_poverty > 0)";
+        Cursor cExtremePoverty = db.rawQuery(sqlExtremePoverty, null);
+        cExtremePoverty.moveToFirst();
+        @SuppressLint("Range") Double ExtremePoverty = cExtremePoverty.getDouble(cExtremePoverty.getColumnIndex("ExtremePoverty"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Extreme Poverty";
+        metaField.value = String.valueOf(formatter.format(ExtremePoverty));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlCardiovascularDeathRate = "select \n" +
+                " sum(cardiovasc_death_rate)/(select count(Id) from Country)\n" +
+                " as CardiovascularDeathRate\n" +
+                " from Detail where date = (select max(date) from Detail where cardiovasc_death_rate > 0)";
+        Cursor cCardiovascularDeathRate = db.rawQuery(sqlCardiovascularDeathRate, null);
+        cCardiovascularDeathRate.moveToFirst();
+        @SuppressLint("Range") Double CardiovascularDeathRate = cCardiovascularDeathRate.getDouble(cCardiovascularDeathRate.getColumnIndex("CardiovascularDeathRate"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Cardiovascular Death Rate";
+        metaField.value = String.valueOf(formatter.format(CardiovascularDeathRate));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlDiabetesPrevalence = "select \n" +
+                " sum(diabetes_prevalence)/(select count(Id) from Country)\n" +
+                " as DiabetesPrevalence\n" +
+                " from Detail where date = (select max(date) from Detail where diabetes_prevalence > 0)";
+        Cursor cDiabetesPrevalence = db.rawQuery(sqlDiabetesPrevalence, null);
+        cDiabetesPrevalence.moveToFirst();
+        @SuppressLint("Range") Double DiabetesPrevalence = cDiabetesPrevalence.getDouble(cDiabetesPrevalence.getColumnIndex("DiabetesPrevalence"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Diabetes Prevalence%";
+        metaField.value = String.valueOf(formatter.format(DiabetesPrevalence));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlFemaleSmoker = "select \n" +
+                " sum(female_smokers)/(select count(Id) from Country)\n" +
+                " as FemaleSmoker\n" +
+                " from Detail where date = (select max(date) from Detail where female_smokers > 0)";
+        Cursor cFemaleSmoker = db.rawQuery(sqlFemaleSmoker, null);
+        cFemaleSmoker.moveToFirst();
+        @SuppressLint("Range") Double FemaleSmoker = cFemaleSmoker.getDouble(cFemaleSmoker.getColumnIndex("FemaleSmoker"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Female Smoker%";
+        metaField.value = String.valueOf(formatter.format(FemaleSmoker));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlMaleSmoker = "select \n" +
+                " sum(male_smokers)/(select count(Id) from Country)\n" +
+                " as MaleSmoker\n" +
+                " from Detail where date = (select max(date) from Detail where male_smokers > 0)";
+        Cursor cMaleSmoker = db.rawQuery(sqlMaleSmoker, null);
+        cMaleSmoker.moveToFirst();
+        @SuppressLint("Range") Double MaleSmoker = cMaleSmoker.getDouble(cMaleSmoker.getColumnIndex("MaleSmoker"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Male Smoker%";
+        metaField.value = String.valueOf(formatter.format(MaleSmoker));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlHandwashingFacilities = "select \n" +
+                " sum(handwashing_facilities)/(select count(Id) from Country)\n" +
+                " as HandwashingFacilities\n" +
+                " from Detail where date = (select max(date) from Detail where handwashing_facilities > 0)";
+        Cursor cHandwashingFacilities = db.rawQuery(sqlHandwashingFacilities, null);
+        cHandwashingFacilities.moveToFirst();
+        @SuppressLint("Range") Double HandwashingFacilities = cHandwashingFacilities.getDouble(cHandwashingFacilities.getColumnIndex("HandwashingFacilities"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Handwashing Facilities%";
+        metaField.value = String.valueOf(formatter.format(HandwashingFacilities));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlHospitalBedsPerThousand = "select \n" +
+                " sum(hospital_beds_per_thousand)/(select count(Id) from Country)\n" +
+                " as HospitalBedsPerThousand\n" +
+                " from Detail where date = (select max(date) from Detail where hospital_beds_per_thousand > 0)";
+        Cursor cHospitalBedsPerThousand = db.rawQuery(sqlHospitalBedsPerThousand, null);
+        cHospitalBedsPerThousand.moveToFirst();
+        @SuppressLint("Range") Double HospitalBedsPerThousand = cHospitalBedsPerThousand.getDouble(cHospitalBedsPerThousand.getColumnIndex("HospitalBedsPerThousand"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "HospitalBeds" + Constants.roman1000;
+        metaField.value = String.valueOf(formatter.format(HospitalBedsPerThousand));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlLifeExpectancy = "select \n" +
+                " sum(life_expectancy)/(select count(Id) from Country)\n" +
+                " as LifeExpectancy\n" +
+                " from Detail where date = (select max(date) from Detail where life_expectancy > 0)";
+        Cursor cLifeExpectancy = db.rawQuery(sqlLifeExpectancy, null);
+        cLifeExpectancy.moveToFirst();
+        @SuppressLint("Range") Double LifeExpectancy = cLifeExpectancy.getDouble(cLifeExpectancy.getColumnIndex("LifeExpectancy"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Life Expectancy";
+        metaField.value = String.valueOf(formatter.format(LifeExpectancy));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlHumanDevelopmentIndex = "select \n" +
+                " sum(human_development_index)/(select count(Id) from Country)\n" +
+                " as HumanDevelopmentIndex\n" +
+                " from Detail where date = (select max(date) from Detail where human_development_index > 0)";
+        Cursor cHumanDevelopmentIndex = db.rawQuery(sqlHumanDevelopmentIndex, null);
+        cHumanDevelopmentIndex.moveToFirst();
+        @SuppressLint("Range") Double HumanDevelopmentIndex = cHumanDevelopmentIndex.getDouble(cHumanDevelopmentIndex.getColumnIndex("HumanDevelopmentIndex"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Human Development Index";
+        metaField.value = String.valueOf(formatter.format(HumanDevelopmentIndex));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlExcessMortalityCumulativeAbsolute = "select \n" +
+                " sum(excess_mortality_cumulative_absolute)/(select count(Id) from Country)\n" +
+                " as ExcessMortalityCumulativeAbsolute\n" +
+                " from Detail where date = (select max(date) from Detail where excess_mortality_cumulative_absolute > 0)";
+        Cursor cExcessMortalityCumulativeAbsolute = db.rawQuery(sqlExcessMortalityCumulativeAbsolute, null);
+        cExcessMortalityCumulativeAbsolute.moveToFirst();
+        @SuppressLint("Range") Double ExcessMortalityCumulativeAbsolute = cExcessMortalityCumulativeAbsolute.getDouble(cExcessMortalityCumulativeAbsolute.getColumnIndex("ExcessMortalityCumulativeAbsolute"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Excess Mortality Cumulative Absolute";
+        metaField.value = String.valueOf(formatter.format(ExcessMortalityCumulativeAbsolute));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlExcessMortalityCumulative = "select \n" +
+                " sum(excess_mortality_cumulative)/(select count(Id) from Country)\n" +
+                " as ExcessMortalityCumulative\n" +
+                " from Detail where date = (select max(date) from Detail where excess_mortality_cumulative > 0)";
+        Cursor cExcessMortalityCumulative = db.rawQuery(sqlExcessMortalityCumulative, null);
+        cExcessMortalityCumulative.moveToFirst();
+        @SuppressLint("Range") Double ExcessMortalityCumulative = cExcessMortalityCumulative.getDouble(cExcessMortalityCumulative.getColumnIndex("ExcessMortalityCumulative"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Excess Mortality Cumulative";
+        metaField.value = String.valueOf(formatter.format(ExcessMortalityCumulative));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlExcessMortality = "select \n" +
+                " sum(excess_mortality)/(select count(Id) from Country)\n" +
+                " as ExcessMortality\n" +
+                " from Detail where date = (select max(date) from Detail where excess_mortality > 0)";
+        Cursor cExcessMortality = db.rawQuery(sqlExcessMortality, null);
+        cExcessMortality.moveToFirst();
+        @SuppressLint("Range") Double ExcessMortality = cExcessMortality.getDouble(cExcessMortality.getColumnIndex("ExcessMortality"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Excess Mortality";
+        metaField.value = String.valueOf(formatter.format(ExcessMortality));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
+
+        String sqlExcessMortalityCumulativePerMillion = "select \n" +
+                " sum(excess_mortality_cumulative_per_million)/(select count(Id) from Country)\n" +
+                " as ExcessMortalityCumulativePerMillion\n" +
+                " from Detail where date = (select max(date) from Detail where excess_mortality_cumulative_per_million > 0)";
+        Cursor cExcessMortalityCumulativePerMillion = db.rawQuery(sqlExcessMortalityCumulativePerMillion, null);
+        cExcessMortalityCumulativePerMillion.moveToFirst();
+        @SuppressLint("Range") Double ExcessMortalityCumulativePerMillion = cExcessMortalityCumulativePerMillion.getDouble(cExcessMortalityCumulativePerMillion.getColumnIndex("ExcessMortalityCumulativePerMillion"));
+        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField.key = "Excess Mortality Cumulative" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(ExcessMortalityCumulativePerMillion));
+        metaField.underlineKey = false;
+        metaField.UI = Constants.UIFieldXHistory;
+        metaFields.add(metaField);
 
         metaField = new MetaField(0, 0, Constants.UITerra);
         metaField.key = "";
@@ -591,3 +856,19 @@ public class UITerra extends UI implements IRegisterOnStack {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
