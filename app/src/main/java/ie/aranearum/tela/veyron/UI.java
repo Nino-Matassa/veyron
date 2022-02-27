@@ -174,88 +174,10 @@ public class UI {
                 @Override
                 public void onClick(View view) {
                     if(metaField.underlineKey) {
-
-                    }
-                    /*if (metaField.underlineKey) {
                         if (metaField.UI.equals(Constants.UIRegion)) {
-                            new UIRegion(context, metaField.regionId, metaField.countryId);
+                            new UIRegion(context);
                         }
-                        if (metaField.UI.equals(Constants.UICountryByRegion)) {
-                            new UICountryByRegion(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UICountry)) {
-                            new UICountry(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UICase24Hour)) {
-                            new UICase24Hour(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UIDeath24Hour)) {
-                            new UIDeath24Hour(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITotalPercentInfected)) {
-                            new UITotalPercentInfected(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UIRNought)) {
-                            new UIRNought(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraRNought)) {
-                            new UITerraRNought(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraTotalCases)) {
-                            new UITerraTotalCases(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraTotalDeaths)) {
-                            new UITerraTotalDeaths(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraCase24H)) {
-                            new UITerraCase24H(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraCase7D)) {
-                            new UITerraCase7D(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraDeath24H)) {
-                            new UITerraDeath24H(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraDeath7D)) {
-                            new UITerraDeath7D(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraTotalInfected)) {
-                            new UITerraTotalInfected(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITotalCase)) {
-                            new UITotalCase(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITotalDeath)) {
-                            new UITotalDeath(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UICasePerX)) {
-                            new UICasePerX(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UIDeathPerX)) {
-                            new UIDeathPerX(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UICase7Day)) {
-                            new UICase7Day(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UIDeath7Day)) {
-                            new UIDeath7Day(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraActiveCases)) {
-                            new UITerraActiveCases(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UITerraActiveCasesPerX)) {
-                            new UITerraActiveCasesPerX(context, metaField.regionId, metaField.countryId);
-                        }
-                        if (metaField.UI.equals(Constants.UIActiveCases)) {
-                            new UIActiveCases(context, metaField.regionId, metaField.countryId);
-                        }
-                        if(metaField.UI.equals(Constants.UITerraFullyVaccinated)) {
-                            new UITerraFullyVaccinated(context, metaField.regionId, metaField.countryId);
-                        }
-                        if(metaField.UI.equals(Constants.UIActiveCaseAverage)) {
-                            new UIActiveCaseAverage(context, metaField.regionId, metaField.countryId);
-                        }
-                    }*/
+                    }
                 }
             });
             textViewValue.setOnClickListener(new View.OnClickListener() {

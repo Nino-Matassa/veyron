@@ -57,11 +57,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double Population = cPopulation.getDouble(cPopulation.getColumnIndex("Population"));
         metaField.key = "Population";
         metaField.value = String.valueOf(formatter.format(Population));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
         metaField.UI = Constants.UIRegion;
         metaFields.add(metaField);
 
-        String sqlTotalCase = "select \n" +
+        /*String sqlTotalCase = "select \n" +
                 " sum(total_cases) \n" +
                 " as TotalCase\n" +
                 " from Detail where date = (select max(date) from Detail where total_cases > 0)";
@@ -73,7 +73,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalCase));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlTotalCasePerMillion = "select \n" +
                 " sum(total_cases_per_million)/(select count(Id) from Country)\n" +
@@ -90,7 +90,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaFields.add(metaField);
 
 
-        String sqlNewCase = "select \n" +
+        /*String sqlNewCase = "select \n" +
                 " sum(new_cases)\n" +
                 " as NewCase\n" +
                 " from Detail where date = (select max(date) from Detail where new_cases > 0)";
@@ -102,7 +102,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewCase));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlNewCasePerMillion = "select \n" +
                 " sum(new_cases_per_million)/(select count(Id) from Country)\n" +
@@ -118,7 +118,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlNewCaseSmoothed = "select \n" +
+        /*String sqlNewCaseSmoothed = "select \n" +
                 " sum(new_cases_smoothed)\n" +
                 " as NewCaseSmoothed\n" +
                 " from Detail where date = (select max(date) from Detail where new_cases_smoothed > 0)";
@@ -144,9 +144,9 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewCaseSmoothedPerMillion));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
-        String sqlTotalDeath = "select \n" +
+        /*String sqlTotalDeath = "select \n" +
                 " sum(total_deaths)\n" +
                 " as TotalDeath\n" +
                 " from Detail where date = (select max(date) from Detail where total_deaths > 0)";
@@ -158,7 +158,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalDeath));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlTotalDeathPerMillion = "select \n" +
                 " sum(total_deaths_per_million)/(select count(Id) from Country)\n" +
@@ -174,7 +174,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlNewDeath = "select \n" +
+        /*String sqlNewDeath = "select \n" +
                 " sum(new_deaths)\n" +
                 " as NewDeath\n" +
                 " from Detail where date = (select max(date) from Detail where new_deaths > 0)";
@@ -186,7 +186,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewDeath));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlNewDeathPerMillion = "select \n" +
                 " sum(new_deaths_per_million)/(select count(Id) from Country)\n" +
@@ -202,7 +202,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlNewDeathSmoothed = "select \n" +
+        /*String sqlNewDeathSmoothed = "select \n" +
                 " sum(new_deaths_smoothed)\n" +
                 " as NewDeathSmoothed\n" +
                 " from Detail where date = (select max(date) from Detail where new_deaths_smoothed > 0)";
@@ -228,7 +228,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewDeathSmoothedPerMillion));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlReproductionRate = "select \n" +
                 " sum(reproduction_rate)/(select count(Id) from Detail where reproduction_rate > 0) \n" +
@@ -244,7 +244,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlICUPatient = "select \n" +
+        /*String sqlICUPatient = "select \n" +
                 " sum(icu_patients)\n" +
                 " as ICUPatient\n" +
                 " from Detail where date = (select max(date) from Detail where icu_patients > 0)";
@@ -256,7 +256,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(ICUPatient));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlICUPatientPerMillion = "select \n" +
                 " sum(icu_patients_per_million)/(select count(Id) from Country)\n" +
@@ -272,7 +272,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlHospitalPatient = "select \n" +
+        /*String sqlHospitalPatient = "select \n" +
                 " sum(hosp_patients)\n" +
                 " as HospitalPatient\n" +
                 " from Detail where date = (select max(date) from Detail where hosp_patients > 0)";
@@ -284,7 +284,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(HospitalPatient));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlHospitalPatientPerMillion = "select \n" +
                 " sum(hosp_patients_per_million)/(select count(Id) from Country)\n" +
@@ -300,7 +300,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlWeeklyICUAdmission = "select \n" +
+        /*String sqlWeeklyICUAdmission = "select \n" +
                 " sum(weekly_icu_admissions)\n" +
                 " as WeeklyICUAdmission\n" +
                 " from Detail where date = (select max(date) from Detail where weekly_icu_admissions > 0)";
@@ -312,7 +312,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmission));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlWeeklyICUAdmissionPerMillion = "select \n" +
                 " sum(weekly_icu_admissions_per_million)/(select count(Id) from Country)\n" +
@@ -328,7 +328,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlWeeklyHospitalAdmission = "select \n" +
+        /*String sqlWeeklyHospitalAdmission = "select \n" +
                 " sum(weekly_hosp_admissions)\n" +
                 " as WeeklyHospitalAdmission\n" +
                 " from Detail where date = (select max(date) from Detail where weekly_hosp_admissions > 0)";
@@ -340,7 +340,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmission));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlWeeklyHospitalAdmissionPerMillion = "select \n" +
                 " sum(weekly_hosp_admissions_per_million)/(select count(Id) from Country)\n" +
@@ -356,7 +356,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlNewTest = "select \n" +
+        /*String sqlNewTest = "select \n" +
                 " sum(new_tests)\n" +
                 " as NewTest\n" +
                 " from Detail where date = (select max(date) from Detail where new_tests > 0)";
@@ -382,7 +382,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalTest));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlTotalTestPerThousand = "select \n" +
                 " sum(total_tests_per_thousand)/(select count(Id) from Country)\n" +
@@ -412,7 +412,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlNewTestSmoothed = "select \n" +
+        /*String sqlNewTestSmoothed = "select \n" +
                 " sum(new_tests_smoothed)--/(select count(Id) from Country)\n" +
                 " as NewTestSmoothed\n" +
                 " from Detail where date = (select max(date) from Detail where new_tests_smoothed > 0)";
@@ -438,7 +438,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewTestSmoothedPerThousand));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlPositiveRate = "select \n" +
                 " sum(positive_rate)\n" +
@@ -448,7 +448,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         cPositiveRate.moveToFirst();
         @SuppressLint("Range") Double PositiveRate = cPositiveRate.getDouble(cPositiveRate.getColumnIndex("PositiveRate"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
-        metaField.key = "Positive Rate";
+        metaField.key = "Positive Rate%";
         metaField.value = String.valueOf(formatter.format(PositiveRate));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
@@ -468,7 +468,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlTotalVaccination = "select\n" +
+        /*String sqlTotalVaccination = "select\n" +
                 " sum(total_vaccinations)\n" +
                 " as TotalVaccination\n" +
                 " from Detail where date = (select max(date) from Detail where total_vaccinations > 0)";
@@ -536,9 +536,9 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewVaccination));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
-        String sqlNewVaccinationSmoothed = "select\n" +
+        /*String sqlNewVaccinationSmoothed = "select\n" +
                 " sum(new_vaccinations_smoothed)\n" +
                 " as NewVaccinationSmoothed\n" +
                 " from Detail where date = (select max(date) from Detail where new_vaccinations_smoothed > 0)";
@@ -550,7 +550,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewVaccinationSmoothed));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlTotalVaccinationPerHundred = "select\n" +
                 " sum(total_vaccinations_per_hundred)/(select count(Id) from Country)\n" +
@@ -580,7 +580,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlStringencyIndex = "select \n" +
+        /*String sqlStringencyIndex = "select \n" +
                 " sum(stringency_index)--/(select count(Id) from Country)\n" + // Use division
                 " as StringencyIndex\n" +
                 " from Detail where date = (select max(date) from Detail where stringency_index > 0)";
@@ -606,9 +606,9 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(PopulationDensity));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
-        String sqlMedianAge = "select \n" +
+        /*String sqlMedianAge = "select \n" +
                 " sum(median_age)/(select count(Id) from Country)\n" +
                 " as MedianAge\n" +
                 " from Detail where date = (select max(date) from Detail where median_age > 0)";
@@ -620,7 +620,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(MedianAge));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlAged65Older = "select \n" +
                 " sum(aged_65_older)/(select count(Id) from Country)\n" +
@@ -630,7 +630,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         cAged65Older.moveToFirst();
         @SuppressLint("Range") Double Aged65Older = cAged65Older.getDouble(cAged65Older.getColumnIndex("Aged65Older"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
-        metaField.key = "Aged65Older";
+        metaField.key = "Aged65Older%";
         metaField.value = String.valueOf(formatter.format(Aged65Older));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
@@ -644,13 +644,13 @@ public class UITerra extends UI implements IRegisterOnStack {
         cAged70Older.moveToFirst();
         @SuppressLint("Range") Double Aged70Older = cAged70Older.getDouble(cAged70Older.getColumnIndex("Aged70Older"));
         metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
-        metaField.key = "Aged70Older";
+        metaField.key = "Aged70Older%";
         metaField.value = String.valueOf(formatter.format(Aged70Older));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlGDPPerCapita = "select \n" +
+        /*String sqlGDPPerCapita = "select \n" +
                 " sum(gdp_per_capita)/(select count(Id) from Country)\n" +
                 " as GDPPerCapita\n" +
                 " from Detail where date = (select max(date) from Detail where gdp_per_capita > 0)";
@@ -676,9 +676,9 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(ExtremePoverty));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
-        String sqlCardiovascularDeathRate = "select \n" +
+        /*String sqlCardiovascularDeathRate = "select \n" +
                 " sum(cardiovasc_death_rate)/(select count(Id) from Country)\n" +
                 " as CardiovascularDeathRate\n" +
                 " from Detail where date = (select max(date) from Detail where cardiovasc_death_rate > 0)";
@@ -690,7 +690,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(CardiovascularDeathRate));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlDiabetesPrevalence = "select \n" +
                 " sum(diabetes_prevalence)/(select count(Id) from Country)\n" +
@@ -734,7 +734,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlHandwashingFacilities = "select \n" +
+        /*String sqlHandwashingFacilities = "select \n" +
                 " sum(handwashing_facilities)/(select count(Id) from Country)\n" +
                 " as HandwashingFacilities\n" +
                 " from Detail where date = (select max(date) from Detail where handwashing_facilities > 0)";
@@ -746,7 +746,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(HandwashingFacilities));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         String sqlHospitalBedsPerThousand = "select \n" +
                 " sum(hospital_beds_per_thousand)/(select count(Id) from Country)\n" +
@@ -776,7 +776,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlHumanDevelopmentIndex = "select \n" +
+        /*String sqlHumanDevelopmentIndex = "select \n" +
                 " sum(human_development_index)/(select count(Id) from Country)\n" +
                 " as HumanDevelopmentIndex\n" +
                 " from Detail where date = (select max(date) from Detail where human_development_index > 0)";
@@ -817,8 +817,8 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
-
-        String sqlExcessMortality = "select \n" +
+*/
+        /*String sqlExcessMortality = "select \n" +
                 " sum(excess_mortality)/(select count(Id) from Country)\n" +
                 " as ExcessMortality\n" +
                 " from Detail where date = (select max(date) from Detail where excess_mortality > 0)";
@@ -830,9 +830,9 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(ExcessMortality));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
-        String sqlExcessMortalityCumulativePerMillion = "select \n" +
+        /*String sqlExcessMortalityCumulativePerMillion = "select \n" +
                 " sum(excess_mortality_cumulative_per_million)/(select count(Id) from Country)\n" +
                 " as ExcessMortalityCumulativePerMillion\n" +
                 " from Detail where date = (select max(date) from Detail where excess_mortality_cumulative_per_million > 0)";
@@ -844,7 +844,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(ExcessMortalityCumulativePerMillion));
         metaField.underlineKey = false;
         metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
         metaField = new MetaField(0, 0, Constants.UITerra);
         metaField.key = "";
