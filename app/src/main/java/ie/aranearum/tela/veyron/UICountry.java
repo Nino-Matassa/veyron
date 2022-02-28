@@ -1,0 +1,84 @@
+package ie.aranearum.tela.veyron;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.icu.text.DecimalFormat;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class UICountry extends UI implements IRegisterOnStack {
+    private Context context = null;
+    private DecimalFormat formatter = null;
+    private UIHistory uiHistory = null;
+    private int regionId = 0;
+    private int countryId = 0;
+    private String region = null;
+
+    public UICountry(Context context, int regionId) {
+        super(context, Constants.UICountry);
+        this.context = context;
+        this.regionId = regionId;
+        formatter = new DecimalFormat("#,###.##");
+        UIMessage.informationBox(context, "Country by region.");
+
+        uiHandler();
+    }
+
+    private void uiHandler() {
+        populateRegion();
+        setHeader(region, "Population");
+        registerOnStack();
+        UIMessage.informationBox(context, null);
+    }
+
+    @Override
+    public void registerOnStack() {
+        uiHistory = new UIHistory(regionId, countryId, Constants.UICountry);
+        MainActivity.stack.add(uiHistory);
+    }
+
+
+    private void populateRegion() {
+        ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
+        MetaField metaField = null;
+        String sqlCountry = "select Region.continent as Region, Country.location as Country, Country.id as CountryId, population as Population from Detail\n" +
+                " join Country on Country.Id = Detail.FK_Country\n" +
+                " join Region on Region.Id = Country.FK_Region\n" +
+                " where Region.Id = '#1' and date = (select max(date) from Detail)";
+        sqlCountry = sqlCountry.replace("#1", String.valueOf(regionId));
+        Cursor cCountry = db.rawQuery(sqlCountry, null);
+        cCountry.moveToFirst();
+        region = cCountry.getString(cCountry.getColumnIndex("Region"));
+        try {
+            do {
+                metaField = new MetaField(regionId, countryId, Constants.UICountry);
+                String key = cCountry.getString(cCountry.getColumnIndex("Country"));
+                Double value = cCountry.getDouble(cCountry.getColumnIndex("Population"));
+                countryId = cCountry.getInt(cCountry.getColumnIndex("CountryId"));
+                metaField.key = key;
+                metaField.value = String.valueOf(formatter.format(Math.round(value)));
+                metaField.underlineKey = true;
+                metaField.UI = Constants.UICountry;
+                metaField.regionId = regionId;
+                metaField.countryId = countryId;
+                metaFields.add(metaField);
+            } while(cCountry.moveToNext());
+        } catch (Exception e) {
+            Log.d("UICountry", e.toString());
+        }
+        metaFields.sort(new sortStats());
+        setTableLayout(populateTable(metaFields));
+    }
+    class sortStats implements Comparator<MetaField> {
+        @Override
+        public int compare(@NonNull MetaField mfA, MetaField mfB) {
+            Double dA = Double.parseDouble(mfA.value.replace(",", ""));
+            Double dB = Double.parseDouble(mfB.value.replace(",", ""));
+            return dB.compareTo(dA);
+        }
+    }
+}

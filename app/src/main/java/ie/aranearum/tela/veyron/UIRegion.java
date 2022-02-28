@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -29,15 +31,6 @@ public class UIRegion extends UI implements IRegisterOnStack {
         populateRegion();
         setHeader(Region, "Population");
         UIMessage.informationBox(context, null);
-        /*Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                populateRegion();
-                setHeader(Region, "Population");
-                UIMessage.informationBox(context, null);
-            }
-        }, Constants.delayMilliSeconds);*/
     }
 
     @Override
@@ -56,7 +49,7 @@ public class UIRegion extends UI implements IRegisterOnStack {
             metaField = new MetaField(regionId, countryId, Constants.UIRegion);
             metaField.key = cRegion.getString(cRegion.getColumnIndex("Region"));
             metaField.underlineKey = true;
-            metaField.UI = Constants.UIRegion;
+            metaField.UI = Constants.UICountry;
             metaField.regionId = cRegion.getInt(cRegion.getColumnIndex("Id"));
             String sqlOverview = "select\n" +
                     " sum(population) as population from Detail\n" +
@@ -74,7 +67,7 @@ public class UIRegion extends UI implements IRegisterOnStack {
     }
     class sortStats implements Comparator<MetaField> {
         @Override
-        public int compare(MetaField mfA, MetaField mfB) {
+        public int compare(@NonNull MetaField mfA, MetaField mfB) {
             Double dA = Double.parseDouble(mfA.value.replace(",", ""));
             Double dB = Double.parseDouble(mfB.value.replace(",", ""));
             return dB.compareTo(dA);

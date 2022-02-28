@@ -177,6 +177,9 @@ public class UI {
                         if (metaField.UI.equals(Constants.UIRegion)) {
                             new UIRegion(context);
                         }
+                        if(metaField.UI.equals(Constants.UICountry)) {
+                            new UICountry(context, metaField.regionId);
+                        }
                     }
                 }
             });
