@@ -4,17 +4,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
 
-import androidx.annotation.NonNull;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class UICountryX extends UI implements IRegisterOnStack {
     private Context context = null;
     private DecimalFormat formatter = null;
     private UIHistory uiHistory = null;
-    private Long regionId = 0l;
-    private Long countryId = 0l;
+    private Long RegionId = 0l;
+    private Long CountryId = 0l;
     private String Region = null;
     private String Country = null;
     private String lastUpdated = null;
@@ -22,7 +21,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
     public UICountryX(Context context, Long countryId) {
         super(context, Constants.UICountryX);
         this.context = context;
-        this.countryId = countryId;
+        this.CountryId = countryId;
         formatter = new DecimalFormat("#,###.##");
         UIMessage.informationBox(context, Country + " " + lastUpdated);
         registerOnStack();
@@ -31,7 +30,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
 
     @Override
     public void registerOnStack() {
-        uiHistory = new UIHistory(regionId, countryId, Constants.UIRegion);
+        uiHistory = new UIHistory(RegionId, CountryId, Constants.UIRegion);
         MainActivity.stack.add(uiHistory);
     }
 
@@ -53,23 +52,94 @@ public class UICountryX extends UI implements IRegisterOnStack {
                 " join Country on Country.id = Detail.FK_Country\n" +
                 " join Region on Region.Id = Country.FK_Region\n" +
                 " where Country.Id = '#1' order by date desc limit 1";
-        sqlCountry = sqlCountry.replace("#1", String.valueOf(countryId));
+        sqlCountry = sqlCountry.replace("#1", String.valueOf(CountryId));
         Cursor cCountry = db.rawQuery(sqlCountry, null);
         cCountry.moveToFirst();
         Region = cCountry.getString(cCountry.getColumnIndex("Region"));
+        RegionId = cCountry.getLong(cCountry.getColumnIndex("RegionId"));
         Country = cCountry.getString(cCountry.getColumnIndex("Country"));
+        CountryId = cCountry.getLong(cCountry.getColumnIndex("CountryId"));
+
+        String Date = cCountry.getString(cCountry.getColumnIndex("date"));
+        LocalDate localDate = LocalDate.parse(Date);
+        Date = localDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Date";
+        metaField.value = Date;
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
 
         Double Population = cCountry.getDouble(cCountry.getColumnIndex("population"));
-        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Population";
         metaField.value = String.valueOf(formatter.format(Population));
         metaField.underlineKey = false;
         metaFields.add(metaField);
 
         Double TotalCase = cCountry.getDouble(cCountry.getColumnIndex("total_cases"));
-        Double TotalDeath = cCountry.getDouble(cCountry.getColumnIndex("total_deaths"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Total Case";
+        metaField.value = String.valueOf(formatter.format(TotalCase));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
 
-        metaField = new MetaField(0L, 0L, Constants.UITerra);
+        Double NewCase = cCountry.getDouble(cCountry.getColumnIndex("new_cases"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "New Case";
+        metaField.value = String.valueOf(formatter.format(NewCase));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        Double TotalDeath = cCountry.getDouble(cCountry.getColumnIndex("total_deaths"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Total Death";
+        metaField.value = String.valueOf(formatter.format(TotalDeath));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        Double NewDeath = cCountry.getDouble(cCountry.getColumnIndex("new_deaths"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "New Death";
+        metaField.value = String.valueOf(formatter.format(NewDeath));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        Double TotalCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("total_cases_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Total Case" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(TotalCasePerMillion));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        Double TotalDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("total_deaths_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Total Death" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(TotalDeathPerMillion));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        Double NewCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("new_cases_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "New Case" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        Double NewDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("new_deaths_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "New Death" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(NewDeathPerMillion));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        Double ReproductionRate = cCountry.getDouble(cCountry.getColumnIndex("reproduction_rate"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = Constants.rNought;
+        metaField.value = String.valueOf(formatter.format(ReproductionRate));
+        metaField.underlineKey = false;
+        metaFields.add(metaField);
+
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "";
         metaField.value = "";
         metaField.underlineKey = false;
