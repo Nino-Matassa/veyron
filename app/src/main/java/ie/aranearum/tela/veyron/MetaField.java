@@ -5,11 +5,11 @@ public class MetaField {
     public String value = null;
     public boolean underlineKey = false;
     public boolean underlineValue = false;
-    public int regionId = 0;
-    public int countryId = 0;
-    public String UI = "Country Name?"; //Constants.UICountry;
+    public Long regionId = 0L;
+    public Long countryId = 0L;
+    public String UI = null;
 
-    public MetaField(int regionId, int countryId, String UI) {
+    public MetaField(Long regionId, Long countryId, String UI) {
         this.regionId = regionId;
         this.countryId = countryId;
         this.UI = UI;

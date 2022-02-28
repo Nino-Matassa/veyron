@@ -32,7 +32,7 @@ public class UITerra extends UI implements IRegisterOnStack {
 
     @Override
     public void registerOnStack() {
-        uiHistory = new UIHistory(0, 0, Constants.UITerra);
+        uiHistory = new UIHistory(0L, 0L, Constants.UITerra);
         MainActivity.stack.add(uiHistory);
     }
 
@@ -50,7 +50,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         LocalDate localDate = LocalDate.of(Integer.valueOf(aDate[0]), Integer.valueOf(aDate[1]), Integer.valueOf(aDate[2]));
         lastUpdated = localDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
 
-        MetaField metaField = new MetaField(0, 0, Constants.UIRegion);
+        MetaField metaField = new MetaField(0L, 0L, Constants.UIRegion);
         String sqlPopulation = "select sum(population) as Population from Detail where date = (select max(date) from Detail)";
         Cursor cPopulation = db.rawQuery(sqlPopulation, null);
         cPopulation.moveToFirst();
@@ -58,7 +58,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Population";
         metaField.value = String.valueOf(formatter.format(Population));
         metaField.underlineKey = true;
-        metaField.UI = Constants.UIRegion;
+        ////metaField.UI = Constants.UIRegion;
         metaFields.add(metaField);
 
         /*String sqlTotalCase = "select \n" +
@@ -72,7 +72,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Total Case";
         metaField.value = String.valueOf(formatter.format(TotalCase));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlTotalCasePerMillion = "select \n" +
@@ -82,11 +82,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cTotalCasePerMillion = db.rawQuery(sqlTotalCasePerMillion, null);
         cTotalCasePerMillion.moveToFirst();
         @SuppressLint("Range") Double TotalCasePerMillion = cTotalCasePerMillion.getDouble(cTotalCasePerMillion.getColumnIndex("TotalCasePerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalCasePerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
 
@@ -101,7 +101,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Case";
         metaField.value = String.valueOf(formatter.format(NewCase));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlNewCasePerMillion = "select \n" +
@@ -111,11 +111,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cNewCasePerMillion = db.rawQuery(sqlNewCasePerMillion, null);
         cNewCasePerMillion.moveToFirst();
         @SuppressLint("Range") Double NewCasePerMillion = cNewCasePerMillion.getDouble(cNewCasePerMillion.getColumnIndex("NewCasePerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlNewCaseSmoothed = "select \n" +
@@ -129,7 +129,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Case" + Constants.smoothed;
         metaField.value = String.valueOf(formatter.format(NewCaseSmoothed));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlNewCaseSmoothedPerMillion = "select \n" +
@@ -143,7 +143,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Case" + Constants.smoothed + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewCaseSmoothedPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         /*String sqlTotalDeath = "select \n" +
@@ -157,7 +157,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Total Death";
         metaField.value = String.valueOf(formatter.format(TotalDeath));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlTotalDeathPerMillion = "select \n" +
@@ -167,11 +167,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cTotalDeathPerMillion = db.rawQuery(sqlTotalDeathPerMillion, null);
         cTotalDeathPerMillion.moveToFirst();
         @SuppressLint("Range") Double TotalDeathPerMillion = cTotalDeathPerMillion.getDouble(cTotalDeathPerMillion.getColumnIndex("TotalDeathPerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalDeathPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlNewDeath = "select \n" +
@@ -185,7 +185,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Death";
         metaField.value = String.valueOf(formatter.format(NewDeath));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlNewDeathPerMillion = "select \n" +
@@ -195,11 +195,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cNewDeathPerMillion = db.rawQuery(sqlNewDeathPerMillion, null);
         cNewDeathPerMillion.moveToFirst();
         @SuppressLint("Range") Double NewDeathPerMillion = cNewDeathPerMillion.getDouble(cNewDeathPerMillion.getColumnIndex("NewDeathPerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewDeathPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlNewDeathSmoothed = "select \n" +
@@ -213,7 +213,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Death" + Constants.smoothed;
         metaField.value = String.valueOf(formatter.format(NewDeathSmoothed));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlNewDeathSmoothedPerMillion = "select \n" +
@@ -227,7 +227,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Death" + Constants.smoothed + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewDeathSmoothedPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlReproductionRate = "select \n" +
@@ -237,11 +237,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cReproductionRate = db.rawQuery(sqlReproductionRate, null);
         cReproductionRate.moveToFirst();
         @SuppressLint("Range") Double ReproductionRate = cReproductionRate.getDouble(cReproductionRate.getColumnIndex("ReproductionRate"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlICUPatient = "select \n" +
@@ -255,7 +255,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "ICU Patients";
         metaField.value = String.valueOf(formatter.format(ICUPatient));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlICUPatientPerMillion = "select \n" +
@@ -265,11 +265,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cICUPatientPerMillion = db.rawQuery(sqlICUPatientPerMillion, null);
         cICUPatientPerMillion.moveToFirst();
         @SuppressLint("Range") Double ICUPatientPerMillion = cICUPatientPerMillion.getDouble(cICUPatientPerMillion.getColumnIndex("ICUPatientPerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "ICU Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(ICUPatientPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlHospitalPatient = "select \n" +
@@ -283,7 +283,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Hospital Patients";
         metaField.value = String.valueOf(formatter.format(HospitalPatient));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlHospitalPatientPerMillion = "select \n" +
@@ -293,11 +293,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cHospitalPatientPerMillion = db.rawQuery(sqlHospitalPatientPerMillion, null);
         cHospitalPatientPerMillion.moveToFirst();
         @SuppressLint("Range") Double HospitalPatientPerMillion = cHospitalPatientPerMillion.getDouble(cHospitalPatientPerMillion.getColumnIndex("HospitalPatientPerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Hospital Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(HospitalPatientPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlWeeklyICUAdmission = "select \n" +
@@ -311,7 +311,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Weekly ICU";
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmission));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlWeeklyICUAdmissionPerMillion = "select \n" +
@@ -321,11 +321,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cWeeklyICUAdmissionPerMillion = db.rawQuery(sqlWeeklyICUAdmissionPerMillion, null);
         cWeeklyICUAdmissionPerMillion.moveToFirst();
         @SuppressLint("Range") Double WeeklyICUAdmissionPerMillion = cWeeklyICUAdmissionPerMillion.getDouble(cWeeklyICUAdmissionPerMillion.getColumnIndex("WeeklyICUAdmissionPerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Weekly ICU" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlWeeklyHospitalAdmission = "select \n" +
@@ -339,7 +339,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Weekly Hospital";
         metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmission));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlWeeklyHospitalAdmissionPerMillion = "select \n" +
@@ -349,11 +349,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cWeeklyHospitalAdmissionPerMillion = db.rawQuery(sqlWeeklyHospitalAdmissionPerMillion, null);
         cWeeklyHospitalAdmissionPerMillion.moveToFirst();
         @SuppressLint("Range") Double WeeklyHospitalAdmissionPerMillion = cWeeklyHospitalAdmissionPerMillion.getDouble(cWeeklyHospitalAdmissionPerMillion.getColumnIndex("WeeklyHospitalAdmissionPerMillion"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Weekly Hospital" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissionPerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlNewTest = "select \n" +
@@ -367,7 +367,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Test";
         metaField.value = String.valueOf(formatter.format(NewTest));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlTotalTest = "select \n" +
@@ -381,7 +381,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Total Test";
         metaField.value = String.valueOf(formatter.format(TotalTest));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlTotalTestPerThousand = "select \n" +
@@ -391,11 +391,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cTotalTestPerThousand = db.rawQuery(sqlTotalTestPerThousand, null);
         cTotalTestPerThousand.moveToFirst();
         @SuppressLint("Range") Double TotalTestPerThousand = cTotalTestPerThousand.getDouble(cTotalTestPerThousand.getColumnIndex("TotalTestPerThousand"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(TotalTestPerThousand));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlNewTestPerThousand = "select \n" +
@@ -405,11 +405,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cNewTestPerThousand = db.rawQuery(sqlNewTestPerThousand, null);
         cNewTestPerThousand.moveToFirst();
         @SuppressLint("Range") Double NewTestPerThousand = cNewTestPerThousand.getDouble(cNewTestPerThousand.getColumnIndex("NewTestPerThousand"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(NewTestPerThousand));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlNewTestSmoothed = "select \n" +
@@ -423,7 +423,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Test" + Constants.smoothed;
         metaField.value = String.valueOf(formatter.format(NewTestSmoothed));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlNewTestSmoothedPerThousand = "select \n" +
@@ -437,7 +437,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Test" + Constants.smoothed + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(NewTestSmoothedPerThousand));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlPositiveRate = "select \n" +
@@ -447,11 +447,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cPositiveRate = db.rawQuery(sqlPositiveRate, null);
         cPositiveRate.moveToFirst();
         @SuppressLint("Range") Double PositiveRate = cPositiveRate.getDouble(cPositiveRate.getColumnIndex("PositiveRate"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Positive Rate%";
         metaField.value = String.valueOf(formatter.format(PositiveRate));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlTestPerCase = "select \n" +
@@ -461,11 +461,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cTestPerCase = db.rawQuery(sqlTestPerCase, null);
         cTestPerCase.moveToFirst();
         @SuppressLint("Range") Double TestPerCase = cTestPerCase.getDouble(cTestPerCase.getColumnIndex("TestPerCase"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Test Per Case";
         metaField.value = String.valueOf(formatter.format(TestPerCase));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlTotalVaccination = "select\n" +
@@ -479,7 +479,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Total Vaccinations";
         metaField.value = String.valueOf(formatter.format(TotalVaccination));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlPeopleVaccinated = "select\n" +
@@ -493,7 +493,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Vaccinated";
         metaField.value = String.valueOf(formatter.format(PeopleVaccinated));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlPeopleFullyVaccinated = "select\n" +
@@ -507,7 +507,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Fully Vaccinated";
         metaField.value = String.valueOf(formatter.format(PeopleFullyVaccinated));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlTotalBooster = "select\n" +
@@ -521,7 +521,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Total Booster";
         metaField.value = String.valueOf(formatter.format(TotalBooster));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlNewVaccination = "select\n" +
@@ -535,7 +535,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Vaccination";
         metaField.value = String.valueOf(formatter.format(NewVaccination));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         /*String sqlNewVaccinationSmoothed = "select\n" +
@@ -549,7 +549,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Vaccination" + Constants.smoothed;
         metaField.value = String.valueOf(formatter.format(NewVaccinationSmoothed));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlTotalVaccinationPerHundred = "select\n" +
@@ -559,11 +559,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cTotalVaccinationPerHundred = db.rawQuery(sqlTotalVaccinationPerHundred, null);
         cTotalVaccinationPerHundred.moveToFirst();
         @SuppressLint("Range") Double TotalVaccinationPerHundred = cTotalVaccinationPerHundred.getDouble(cTotalVaccinationPerHundred.getColumnIndex("TotalVaccinationPerHundred"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Vaccination" + Constants.roman100;
         metaField.value = String.valueOf(formatter.format(TotalVaccinationPerHundred));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlPeopleVaccinatedPerHundred = "select\n" +
@@ -573,11 +573,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cPeopleVaccinatedPerHundred = db.rawQuery(sqlPeopleVaccinatedPerHundred, null);
         cPeopleVaccinatedPerHundred.moveToFirst();
         @SuppressLint("Range") Double PeopleVaccinatedPerHundred = cPeopleVaccinatedPerHundred.getDouble(cPeopleVaccinatedPerHundred.getColumnIndex("PeopleVaccinatedPerHundred"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Vaccinated" + Constants.roman100;
         metaField.value = String.valueOf(formatter.format(PeopleVaccinatedPerHundred));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlStringencyIndex = "select \n" +
@@ -591,7 +591,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Stringency Index";
         metaField.value = String.valueOf(formatter.format(StringencyIndex));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlPopulationDensity = "select \n" +
@@ -605,7 +605,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Population Density";
         metaField.value = String.valueOf(formatter.format(PopulationDensity));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         /*String sqlMedianAge = "select \n" +
@@ -619,7 +619,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Median Age";
         metaField.value = String.valueOf(formatter.format(MedianAge));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlAged65Older = "select \n" +
@@ -629,11 +629,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cAged65Older = db.rawQuery(sqlAged65Older, null);
         cAged65Older.moveToFirst();
         @SuppressLint("Range") Double Aged65Older = cAged65Older.getDouble(cAged65Older.getColumnIndex("Aged65Older"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Aged65Older%";
         metaField.value = String.valueOf(formatter.format(Aged65Older));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlAged70Older = "select \n" +
@@ -643,11 +643,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cAged70Older = db.rawQuery(sqlAged70Older, null);
         cAged70Older.moveToFirst();
         @SuppressLint("Range") Double Aged70Older = cAged70Older.getDouble(cAged70Older.getColumnIndex("Aged70Older"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Aged70Older%";
         metaField.value = String.valueOf(formatter.format(Aged70Older));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlGDPPerCapita = "select \n" +
@@ -661,7 +661,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "GDP Per Capita";
         metaField.value = String.valueOf(formatter.format(GDPPerCapita));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlExtremePoverty = "select \n" +
@@ -675,7 +675,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Extreme Poverty";
         metaField.value = String.valueOf(formatter.format(ExtremePoverty));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         /*String sqlCardiovascularDeathRate = "select \n" +
@@ -689,7 +689,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Cardiovascular Death Rate";
         metaField.value = String.valueOf(formatter.format(CardiovascularDeathRate));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlDiabetesPrevalence = "select \n" +
@@ -699,11 +699,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cDiabetesPrevalence = db.rawQuery(sqlDiabetesPrevalence, null);
         cDiabetesPrevalence.moveToFirst();
         @SuppressLint("Range") Double DiabetesPrevalence = cDiabetesPrevalence.getDouble(cDiabetesPrevalence.getColumnIndex("DiabetesPrevalence"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Diabetes Prevalence%";
         metaField.value = String.valueOf(formatter.format(DiabetesPrevalence));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlFemaleSmoker = "select \n" +
@@ -713,11 +713,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cFemaleSmoker = db.rawQuery(sqlFemaleSmoker, null);
         cFemaleSmoker.moveToFirst();
         @SuppressLint("Range") Double FemaleSmoker = cFemaleSmoker.getDouble(cFemaleSmoker.getColumnIndex("FemaleSmoker"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Female Smoker%";
         metaField.value = String.valueOf(formatter.format(FemaleSmoker));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlMaleSmoker = "select \n" +
@@ -727,11 +727,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cMaleSmoker = db.rawQuery(sqlMaleSmoker, null);
         cMaleSmoker.moveToFirst();
         @SuppressLint("Range") Double MaleSmoker = cMaleSmoker.getDouble(cMaleSmoker.getColumnIndex("MaleSmoker"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Male Smoker%";
         metaField.value = String.valueOf(formatter.format(MaleSmoker));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlHandwashingFacilities = "select \n" +
@@ -745,7 +745,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Handwashing Facilities%";
         metaField.value = String.valueOf(formatter.format(HandwashingFacilities));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         String sqlHospitalBedsPerThousand = "select \n" +
@@ -755,11 +755,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cHospitalBedsPerThousand = db.rawQuery(sqlHospitalBedsPerThousand, null);
         cHospitalBedsPerThousand.moveToFirst();
         @SuppressLint("Range") Double HospitalBedsPerThousand = cHospitalBedsPerThousand.getDouble(cHospitalBedsPerThousand.getColumnIndex("HospitalBedsPerThousand"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "HospitalBeds" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(HospitalBedsPerThousand));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlLifeExpectancy = "select \n" +
@@ -769,11 +769,11 @@ public class UITerra extends UI implements IRegisterOnStack {
         Cursor cLifeExpectancy = db.rawQuery(sqlLifeExpectancy, null);
         cLifeExpectancy.moveToFirst();
         @SuppressLint("Range") Double LifeExpectancy = cLifeExpectancy.getDouble(cLifeExpectancy.getColumnIndex("LifeExpectancy"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Life Expectancy";
         metaField.value = String.valueOf(formatter.format(LifeExpectancy));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         /*String sqlHumanDevelopmentIndex = "select \n" +
@@ -787,7 +787,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Human Development Index";
         metaField.value = String.valueOf(formatter.format(HumanDevelopmentIndex));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlExcessMortalityCumulativeAbsolute = "select \n" +
@@ -801,7 +801,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Excess Mortality Cumulative Absolute";
         metaField.value = String.valueOf(formatter.format(ExcessMortalityCumulativeAbsolute));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
         String sqlExcessMortalityCumulative = "select \n" +
@@ -815,7 +815,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Excess Mortality Cumulative";
         metaField.value = String.valueOf(formatter.format(ExcessMortalityCumulative));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 */
         /*String sqlExcessMortality = "select \n" +
@@ -829,7 +829,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Excess Mortality";
         metaField.value = String.valueOf(formatter.format(ExcessMortality));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
         /*String sqlExcessMortalityCumulativePerMillion = "select \n" +
@@ -843,10 +843,10 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Excess Mortality Cumulative" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(ExcessMortalityCumulativePerMillion));
         metaField.underlineKey = false;
-        metaField.UI = Constants.UIFieldXHistory;
+        //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        metaField = new MetaField(0, 0, Constants.UITerra);
+        metaField = new MetaField(0L, 0L, Constants.UITerra);
         metaField.key = "";
         metaField.value = "";
         metaField.underlineKey = false;

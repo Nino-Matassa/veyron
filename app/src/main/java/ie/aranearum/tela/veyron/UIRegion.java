@@ -13,8 +13,8 @@ public class UIRegion extends UI implements IRegisterOnStack {
     private Context context = null;
     private DecimalFormat formatter = null;
     private UIHistory uiHistory = null;
-    private int regionId = 0;
-    private int countryId = 0;
+    private Long regionId = 0L;
+    private Long countryId = 0L;
     private String Region = "Terra";
 
     public UIRegion(Context context) {
@@ -46,11 +46,10 @@ public class UIRegion extends UI implements IRegisterOnStack {
         cRegion.moveToFirst();
         MetaField metaField = null;
         do {
-            metaField = new MetaField(regionId, countryId, Constants.UIRegion);
+            metaField = new MetaField(regionId, countryId, Constants.UICountry);
             metaField.key = cRegion.getString(cRegion.getColumnIndex("Region"));
             metaField.underlineKey = true;
-            metaField.UI = Constants.UICountry;
-            metaField.regionId = cRegion.getInt(cRegion.getColumnIndex("Id"));
+            metaField.regionId = cRegion.getLong(cRegion.getColumnIndex("Id"));
             String sqlOverview = "select\n" +
                     " sum(population) as population from Detail\n" +
                     " join Country on Country.Id = Detail.FK_Country\n" +

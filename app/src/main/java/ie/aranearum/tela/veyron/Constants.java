@@ -21,6 +21,7 @@ public class Constants {
     public static final String UITerra = "UITerra";
     public static final String UIRegion = "UIRegion";
     public static final String UICountry = "UICountry";
+    public static final String UICountryX = "UICountryX";
     public static final String UIFieldXHistory = "UIFieldXHistory";
 
     // Database field name translations...

@@ -180,6 +180,9 @@ public class UI {
                         if(metaField.UI.equals(Constants.UICountry)) {
                             new UICountry(context, metaField.regionId);
                         }
+                        if(metaField.UI.equals(Constants.UICountryX)) {
+                            new UICountryX(context, metaField.countryId);
+                        }
                     }
                 }
             });

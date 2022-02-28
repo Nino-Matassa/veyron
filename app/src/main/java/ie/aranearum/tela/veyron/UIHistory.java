@@ -1,21 +1,21 @@
 package ie.aranearum.tela.veyron;
 
 public class UIHistory {
-    private int regionId = 0;
-    private int countryId = 0;
+    private Long regionId = 0L;
+    private Long countryId = 0L;
     private String UIX = null;
 
-    public UIHistory(int regionId, int countryId, String uiX) {
+    public UIHistory(Long regionId, Long countryId, String uiX) {
         this.regionId = regionId;
         this.countryId = countryId;
         this.UIX = uiX;
     }
 
-    public int getRegionId() {
+    public Long getRegionId() {
         return regionId;
     }
 
-    public int getCountryId() {
+    public Long getCountryId() {
         return countryId;
     }
 

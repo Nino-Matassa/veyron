@@ -14,11 +14,11 @@ public class UICountry extends UI implements IRegisterOnStack {
     private Context context = null;
     private DecimalFormat formatter = null;
     private UIHistory uiHistory = null;
-    private int regionId = 0;
-    private int countryId = 0;
+    private Long regionId = 0L;
+    private Long countryId = 0L;
     private String region = null;
 
-    public UICountry(Context context, int regionId) {
+    public UICountry(Context context, Long regionId) {
         super(context, Constants.UICountry);
         this.context = context;
         this.regionId = regionId;
@@ -55,14 +55,13 @@ public class UICountry extends UI implements IRegisterOnStack {
         region = cCountry.getString(cCountry.getColumnIndex("Region"));
         try {
             do {
-                metaField = new MetaField(regionId, countryId, Constants.UICountry);
+                metaField = new MetaField(regionId, countryId, Constants.UICountryX);
                 String key = cCountry.getString(cCountry.getColumnIndex("Country"));
                 Double value = cCountry.getDouble(cCountry.getColumnIndex("Population"));
-                countryId = cCountry.getInt(cCountry.getColumnIndex("CountryId"));
+                countryId = cCountry.getLong(cCountry.getColumnIndex("CountryId"));
                 metaField.key = key;
                 metaField.value = String.valueOf(formatter.format(Math.round(value)));
                 metaField.underlineKey = true;
-                metaField.UI = Constants.UICountry;
                 metaField.regionId = regionId;
                 metaField.countryId = countryId;
                 metaFields.add(metaField);
