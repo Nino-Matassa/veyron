@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
-import android.os.Handler;
-import android.os.Looper;
 
 import java.io.File;
 import java.sql.Date;

@@ -132,7 +132,19 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.underlineKey = false;
         metaFields.add(metaField);
 
-        Double ReproductionRate = cCountry.getDouble(cCountry.getColumnIndex("reproduction_rate"));
+        String sqlRNought = "select \n" +
+                " Country.Id as CountryId,\n" +
+                " Region.Id as RegionId,\n" +
+                " Country.location as Country,\n" +
+                " Region.continent as Region,\n" +
+                " * from Detail\n" +
+                " join Country on Country.id = Detail.FK_Country\n" +
+                " join Region on Region.Id = Country.FK_Region\n" +
+                " where Country.Id = '#1' and reproduction_rate > 0 order by date desc limit 1";
+        sqlRNought = sqlRNought.replace("#1", String.valueOf(CountryId));
+        Cursor cReproductionRate = db.rawQuery(sqlRNought, null);
+        cReproductionRate.moveToFirst();
+        Double ReproductionRate = cReproductionRate.getDouble(cReproductionRate.getColumnIndex("reproduction_rate"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));

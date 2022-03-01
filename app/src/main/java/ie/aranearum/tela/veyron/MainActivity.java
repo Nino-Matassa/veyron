@@ -53,13 +53,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            db = Database.getInstance(MainActivity.this, false, false);
+            db = Database.getInstance(MainActivity.this, false, true);
         }
-        //UIMessage.informationBox(MainActivity.this, "Overview");
         UITerra uiTerra = new UITerra(MainActivity.this);
-        //UIRegion uiRegion = new UIRegion(MainActivity.this);
-
-        //Toast.makeText(MainActivity.this, "UITerra", Toast.LENGTH_LONG).show();
     }
 
     @Override
