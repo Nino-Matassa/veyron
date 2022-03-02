@@ -19,6 +19,8 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private String Country = null;
     private String lastUpdated = null;
 
+    LambdaXHistory lambdaXHistory;
+
     public UICountryX(Context context, Long countryId) {
         super(context, Constants.UICountryX);
         this.context = context;
@@ -168,4 +170,29 @@ public class UICountryX extends UI implements IRegisterOnStack {
 
         setTableLayout(populateTable(metaFields));
     }
- }
+
+    /*LambdaXHistory lambdaXHistory = (String fieldName)->{
+        ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
+        return metaFields;
+    };*/
+
+    private void defineLambda(Constants.lambdaType lambda) {
+        switch (lambda) {
+            case Simple:
+                lambdaXHistory = (String fieldName) -> {
+                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
+                    return metaFields;
+                };
+            case RNought:
+                lambdaXHistory = (String fieldName) -> {
+                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
+                    return metaFields;
+                };
+        }
+    }
+}
+
+interface LambdaXHistory {
+    ArrayList<MetaField> populateHistory(String fieldName);
+}
+
