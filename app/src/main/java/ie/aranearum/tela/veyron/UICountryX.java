@@ -3,6 +3,7 @@ package ie.aranearum.tela.veyron;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
+import android.util.Log;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -143,8 +144,16 @@ public class UICountryX extends UI implements IRegisterOnStack {
                 " where Country.Id = '#1' and reproduction_rate > 0 order by date desc limit 1";
         sqlRNought = sqlRNought.replace("#1", String.valueOf(CountryId));
         Cursor cReproductionRate = db.rawQuery(sqlRNought, null);
-        cReproductionRate.moveToFirst();
-        Double ReproductionRate = cReproductionRate.getDouble(cReproductionRate.getColumnIndex("reproduction_rate"));
+        Double ReproductionRate = 0d;
+
+        try {
+            cReproductionRate.moveToFirst();
+            ReproductionRate = cReproductionRate.getDouble(cReproductionRate.getColumnIndex("reproduction_rate"));
+        } catch (Exception e) {
+            Log.d("UICountryX", e.toString());
+        }
+
+
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));

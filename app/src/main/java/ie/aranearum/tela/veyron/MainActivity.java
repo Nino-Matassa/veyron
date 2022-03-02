@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         } finally {
             db = Database.getInstance(MainActivity.this, false, true);
         }
+        UIMessage.informationBox(MainActivity.this, "Building UITerra");
         UITerra uiTerra = new UITerra(MainActivity.this);
     }
 
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (stack.size() == 1) {
             this.moveTaskToBack(true);
-            UIMessage.toast(MainActivity.this, "Spirale - Moved to Background", Toast.LENGTH_LONG);
+            //UIMessage.toast(MainActivity.this, "Spirale - Moved to Background", Toast.LENGTH_LONG);
         }
         else {
             stack.pop();
