@@ -24,7 +24,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         formatter = new DecimalFormat("#,###.##");
         UIMessage.informationBox(context, "Terra");
         registerOnStack();
-
         uiHandler();
     }
 
