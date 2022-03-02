@@ -189,7 +189,7 @@ public class UI {
                             defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
                                     metaField.region, metaField.country);
                             new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
-                                    lambdaXHistory, metaField.fieldXName);
+                                    ILambdaXHistory, metaField.fieldXName);
                         }
                     }
                 }
@@ -290,12 +290,12 @@ public class UI {
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
     private ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
     private MetaField metaField = null;
-    private LambdaXHistory lambdaXHistory;
+    private ILambdaXHistory ILambdaXHistory;
     private DecimalFormat formatter = new DecimalFormat("#,###.##");
     private void defineLambda(Constants.FieldXHistoryType fieldXType, String fieldName, Long RegionId, Long CountryId, String Region, String Country) {
         switch (fieldXType) {
             case Simple:
-                lambdaXHistory = () -> {
+                ILambdaXHistory = () -> {
                     String sqlFieldXHistory = "select date, fieldX from Detail where FK_Country = '#1' order by date desc";
                     sqlFieldXHistory = sqlFieldXHistory.replace("#1", String.valueOf(CountryId));
                     sqlFieldXHistory = sqlFieldXHistory.replace("fieldX", fieldName);
@@ -318,7 +318,7 @@ public class UI {
                 };
                 break;
             case RNought:
-                lambdaXHistory = () -> {
+                ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
                     return metaFields;
                 };

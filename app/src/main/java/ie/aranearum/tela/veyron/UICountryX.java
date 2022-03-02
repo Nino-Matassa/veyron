@@ -19,7 +19,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private String Country = null;
     private String lastUpdated = null;
 
-    LambdaXHistory lambdaXHistory;
+    ILambdaXHistory ILambdaXHistory;
 
     public UICountryX(Context context, Long countryId) {
         super(context, Constants.UICountryX);
@@ -207,7 +207,13 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "reproduction_rate";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);

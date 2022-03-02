@@ -12,10 +12,10 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     private String Region = null;
     private String Country = null;
     private String fieldName = null;
-    private LambdaXHistory lambdaXHistory;
+    private ILambdaXHistory ILambdaXHistory;
 
     public UIFieldXHistory(Context context, Long regionId, Long countryId, String region, String country,
-                           LambdaXHistory lambdaXHistory, String fieldName) {
+                           ILambdaXHistory ILambdaXHistory, String fieldName) {
         super(context, Constants.UIFieldXHistory);
         this.context = context;
         this.RegionId = regionId;
@@ -23,7 +23,7 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
         this.Region = region;
         this.Country = country;
         this.fieldName = fieldName;
-        this.lambdaXHistory = lambdaXHistory;
+        this.ILambdaXHistory = ILambdaXHistory;
         formatter = new DecimalFormat("#,###.##");
         UIMessage.informationBox(context, Country + "->" + fieldName);
         registerOnStack();
@@ -43,6 +43,6 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     }
 
     private void populateRegion() {
-        setTableLayout(populateTable(lambdaXHistory.populateHistory(/*fieldName, RegionId, CountryId, Region, Country*/)));
+        setTableLayout(populateTable(ILambdaXHistory.populateHistory(/*fieldName, RegionId, CountryId, Region, Country*/)));
     }
 }

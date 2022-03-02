@@ -20,7 +20,7 @@ import java.util.TimeZone;
 public class CSV extends Thread {
     private boolean invalidate = false;
     private  String csvFileName = null;
-    private static  File csvFile = null;
+    private  File csvFile = null;
 
     public CSV(@NonNull Context context, boolean invalidate) {
         this.invalidate = invalidate;
@@ -37,7 +37,7 @@ public class CSV extends Thread {
         }
     }
 
-    public static boolean outdated() {
+    private boolean outdated() {
         try {
             Timestamp csvTimeStamp = new Timestamp(csvFile.lastModified());
 
