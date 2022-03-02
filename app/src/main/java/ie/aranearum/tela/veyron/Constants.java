@@ -92,4 +92,9 @@ public class Constants {
     public static final String excess_mortality_cumulative = "";
     public static final String excess_mortality = "";
     public static final String excess_mortality_cumulative_per_million = "";
+
+    public static enum lambdaType {
+        Simple,
+        RNought
+    }
 }
