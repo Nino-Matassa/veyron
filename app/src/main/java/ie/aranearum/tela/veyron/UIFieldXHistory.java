@@ -3,7 +3,7 @@ package ie.aranearum.tela.veyron;
 import android.content.Context;
 import android.icu.text.DecimalFormat;
 
-public class FieldXHistory extends UI implements IRegisterOnStack  {
+public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     private Context context = null;
     private DecimalFormat formatter = null;
     private UIHistory uiHistory = null;
@@ -11,18 +11,23 @@ public class FieldXHistory extends UI implements IRegisterOnStack  {
     private Long CountryId = 0l;
     private String Region = null;
     private String Country = null;
+    private String fieldName = null;
+    private LambdaXHistory lambdaXHistory;
 
-    public FieldXHistory(Context context, Long regionId, Long countryId, String region, String country, LambdaXHistory lambdaXHistory, String fieldName) {
+    public UIFieldXHistory(Context context, Long regionId, Long countryId, String region, String country,
+                           LambdaXHistory lambdaXHistory, String fieldName) {
         super(context, Constants.UIFieldXHistory);
         this.context = context;
         this.RegionId = regionId;
         this.CountryId = countryId;
         this.Region = region;
         this.Country = country;
+        this.fieldName = fieldName;
+        this.lambdaXHistory = lambdaXHistory;
         formatter = new DecimalFormat("#,###.##");
         UIMessage.informationBox(context, Country + "->" + fieldName);
         registerOnStack();
-        uiHandler(lambdaXHistory, fieldName);
+        uiHandler();
     }
 
     @Override
@@ -31,13 +36,13 @@ public class FieldXHistory extends UI implements IRegisterOnStack  {
         MainActivity.stack.add(uiHistory);
     }
 
-    private void uiHandler(LambdaXHistory lambdaXHistory, String fieldName) {
-        populateRegion(lambdaXHistory, fieldName);
+    private void uiHandler() {
+        populateRegion();
         setHeader(Region, Country);
         UIMessage.informationBox(context, null);
     }
 
-    private void populateRegion(LambdaXHistory lambdaXHistory, String fieldName) {
-        setTableLayout(populateTable(lambdaXHistory.populateHistory(fieldName)));
+    private void populateRegion() {
+        setTableLayout(populateTable(lambdaXHistory.populateHistory(/*fieldName, RegionId, CountryId, Region, Country*/)));
     }
 }

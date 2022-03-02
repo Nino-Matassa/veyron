@@ -8,6 +8,10 @@ public class MetaField {
     public Long regionId = 0L;
     public Long countryId = 0L;
     public String UI = null;
+    public String region = null;
+    public String country = null;
+    public Constants.FieldXHistoryType fieldXHistoryType;
+    public String fieldXName = null;
 
     public MetaField(Long regionId, Long countryId, String UI) {
         this.regionId = regionId;

@@ -154,7 +154,7 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(invalidate || populate)
+        if(invalidate || (populate && CSV.outdated()))
             populateRequest(context);
         return instance;
     }

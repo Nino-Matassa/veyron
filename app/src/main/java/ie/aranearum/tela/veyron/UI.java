@@ -2,10 +2,12 @@ package ie.aranearum.tela.veyron;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.icu.text.DecimalFormat;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.Gravity;
@@ -183,6 +185,12 @@ public class UI {
                         if(metaField.UI.equals(Constants.UICountryX)) {
                             new UICountryX(context, metaField.countryId);
                         }
+                        if(metaField.UI.equals(Constants.UIFieldXHistory)) {
+                            defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
+                                    metaField.region, metaField.country);
+                            new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
+                                    lambdaXHistory, metaField.fieldXName);
+                        }
                     }
                 }
             });
@@ -277,5 +285,44 @@ public class UI {
         tableRow.addView(textView);
         tableRow.setBackgroundColor(Color.parseColor("#E6E6CA"));
         tableLayoutFooter.addView(tableRow);
+    }
+
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+    private ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
+    private MetaField metaField = null;
+    private LambdaXHistory lambdaXHistory;
+    private DecimalFormat formatter = new DecimalFormat("#,###.##");
+    private void defineLambda(Constants.FieldXHistoryType fieldXType, String fieldName, Long RegionId, Long CountryId, String Region, String Country) {
+        switch (fieldXType) {
+            case Simple:
+                lambdaXHistory = () -> {
+                    String sqlFieldXHistory = "select date, fieldX from Detail where FK_Country = '#1' order by date desc";
+                    sqlFieldXHistory = sqlFieldXHistory.replace("#1", String.valueOf(CountryId));
+                    sqlFieldXHistory = sqlFieldXHistory.replace("fieldX", fieldName);
+                    Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
+                    cFieldXHistory.moveToFirst();
+
+                    do {
+                        String strDate = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("date"));
+                        strDate = LocalDate.parse(strDate, dateTimeFormatter).toString();
+                        Double fieldXValue = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex(fieldName));
+                        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+                        metaField.region = Region;
+                        metaField.country = Country;
+                        metaField.key = strDate;
+                        metaField.value = String.valueOf(formatter.format(fieldXValue));
+                        metaFields.add(metaField);
+                    } while(cFieldXHistory.moveToNext());
+
+                    return metaFields;
+                };
+                break;
+            case RNought:
+                lambdaXHistory = () -> {
+                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
+                    return metaFields;
+                };
+                break;
+        }
     }
 }

@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            db = Database.getInstance(MainActivity.this, false, false); // debugging set populate to false
+            db = Database.getInstance(MainActivity.this, false, true);
         }
         UIMessage.informationBox(MainActivity.this, "Building UITerra");
         UITerra uiTerra = new UITerra(MainActivity.this);
@@ -106,7 +106,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case Constants.UICountry:
                     new UICountry(MainActivity.this, uiHistory.getRegionId());
+                    break;
+                case Constants.UICountryX:
+                    new UICountryX(MainActivity.this, uiHistory.getCountryId());
+                    break;
                 default:
+                    break;
             }
         }
     }

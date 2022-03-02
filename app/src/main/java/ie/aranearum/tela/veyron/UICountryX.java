@@ -33,7 +33,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
 
     @Override
     public void registerOnStack() {
-        uiHistory = new UIHistory(RegionId, CountryId, Constants.UIRegion);
+        uiHistory = new UIHistory(RegionId, CountryId, Constants.UICountryX);
         MainActivity.stack.add(uiHistory);
     }
 
@@ -83,56 +83,104 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Case";
         metaField.value = String.valueOf(formatter.format(TotalCase));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "total_cases";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         Double NewCase = cCountry.getDouble(cCountry.getColumnIndex("new_cases"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Case";
         metaField.value = String.valueOf(formatter.format(NewCase));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "new_cases";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         Double TotalDeath = cCountry.getDouble(cCountry.getColumnIndex("total_deaths"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Death";
         metaField.value = String.valueOf(formatter.format(TotalDeath));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "total_deaths";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         Double NewDeath = cCountry.getDouble(cCountry.getColumnIndex("new_deaths"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Death";
         metaField.value = String.valueOf(formatter.format(NewDeath));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "new_deaths";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         Double TotalCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("total_cases_per_million"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalCasePerMillion));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "total_cases_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         Double TotalDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("total_deaths_per_million"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalDeathPerMillion));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "total_deaths_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         Double NewCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("new_cases_per_million"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "new_cases_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         Double NewDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("new_deaths_per_million"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewDeathPerMillion));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
+        metaField.fieldXName = "new_deaths_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
         metaFields.add(metaField);
 
         String sqlRNought = "select \n" +
@@ -170,29 +218,6 @@ public class UICountryX extends UI implements IRegisterOnStack {
 
         setTableLayout(populateTable(metaFields));
     }
-
-    /*LambdaXHistory lambdaXHistory = (String fieldName)->{
-        ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-        return metaFields;
-    };*/
-
-    private void defineLambda(Constants.lambdaType lambda) {
-        switch (lambda) {
-            case Simple:
-                lambdaXHistory = (String fieldName) -> {
-                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    return metaFields;
-                };
-            case RNought:
-                lambdaXHistory = (String fieldName) -> {
-                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    return metaFields;
-                };
-        }
-    }
 }
 
-interface LambdaXHistory {
-    ArrayList<MetaField> populateHistory(String fieldName);
-}
 
