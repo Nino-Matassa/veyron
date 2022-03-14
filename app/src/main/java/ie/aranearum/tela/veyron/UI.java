@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.sql.Date;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -305,6 +306,7 @@ public class UI {
                     do {
                         String strDate = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("date"));
                         strDate = LocalDate.parse(strDate, dateTimeFormatter).toString();
+                        strDate += " : " + LocalDate.parse(strDate, dateTimeFormatter).getDayOfWeek().toString().substring(0, 3);
                         Double fieldXValue = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex(fieldName));
                         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
                         metaField.region = Region;
