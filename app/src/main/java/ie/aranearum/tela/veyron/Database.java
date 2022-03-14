@@ -142,7 +142,7 @@ class Database {
     private static HashMap<String, Long> hashMapCountry = null;
     private static HashMap<String, LocalDate> hashMapCountryXDate = null;
 
-    public static SQLiteDatabase getInstance(Context context, boolean invalidate, boolean populate) {
+    public static SQLiteDatabase getInstance(Context context, boolean invalidate) {
         if (invalidate) {
             delete(context);
         }
@@ -154,8 +154,9 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(invalidate || populate)
+        if(invalidate || UIMessage.isCsvIsUpdated())
             populateRequest(context);
+        UIMessage.setCsvIsUpdated(false);
         return instance;
     }
 

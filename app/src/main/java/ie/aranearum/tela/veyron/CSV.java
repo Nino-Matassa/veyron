@@ -45,6 +45,7 @@ public class CSV extends Thread {
             LocalDate today = LocalDate.now();
 
             if(today.compareTo(csvLastModified) > 0) {
+                UIMessage.setCsvIsUpdated(true);
                 return true;
             }
         } catch (Exception e) {

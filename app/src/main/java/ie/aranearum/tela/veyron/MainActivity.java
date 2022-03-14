@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            db = Database.getInstance(MainActivity.this, false, true);
+            db = Database.getInstance(MainActivity.this, false);
         }
         UIMessage.informationBox(MainActivity.this, "Building UITerra");
         UITerra uiTerra = new UITerra(MainActivity.this);
