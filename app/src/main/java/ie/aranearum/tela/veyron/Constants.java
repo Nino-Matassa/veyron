@@ -95,6 +95,6 @@ public class Constants {
 
     public static enum FieldXHistoryType {
         Simple,
-        RNought
+        SQLInject
     }
 }

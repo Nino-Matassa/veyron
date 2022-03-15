@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.io.File;
 import java.sql.Date;
@@ -34,6 +36,15 @@ public class UITerra extends UI implements IRegisterOnStack {
     }
 
     private void uiHandler() {
+/*
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, Constants.delayMilliSeconds);
+*/
         populateTerra();
         setHeader("Terra", "Overview");
         UIMessage.informationBox(context, null);
