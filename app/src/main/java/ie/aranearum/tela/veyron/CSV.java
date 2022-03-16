@@ -21,6 +21,16 @@ public class CSV extends Thread {
     private boolean invalidate = false;
     private  String csvFileName = null;
     private  File csvFile = null;
+    private static boolean csvIsUpdated = false;
+
+    public static boolean isCsvIsUpdated() {
+        return csvIsUpdated;
+    }
+
+    public static void setCsvIsUpdated(boolean csvIsUpdated) {
+        csvIsUpdated = csvIsUpdated;
+    }
+
 
     public CSV(@NonNull Context context, boolean invalidate) {
         this.invalidate = invalidate;
@@ -45,7 +55,7 @@ public class CSV extends Thread {
             LocalDate today = LocalDate.now();
 
             if(today.compareTo(csvLastModified) > 0) {
-                UIMessage.setCsvIsUpdated(true);
+                setCsvIsUpdated(true);
                 return true;
             }
         } catch (Exception e) {

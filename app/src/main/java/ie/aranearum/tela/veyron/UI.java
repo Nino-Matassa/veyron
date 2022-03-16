@@ -60,7 +60,7 @@ public class UI {
         LocalDate localDate = LocalDate.of(Integer.valueOf(aDate[0]), Integer.valueOf(aDate[1]), Integer.valueOf(aDate[2]));
         lastUpdated = localDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
         setFooter(lastUpdated);
-        UIMessage.informationBox(context, null);
+        //UIMessage.informationBox(context, null);
     }
 
     private void setTitlebar() {

@@ -155,15 +155,15 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(invalidate || UIMessage.isCsvIsUpdated() || populate)
+        if(invalidate || CSV.isCsvIsUpdated() || populate)
             populateRequest(context);
-        UIMessage.setCsvIsUpdated(false);
+        CSV.setCsvIsUpdated(false);
         return instance;
     }
 
     @SuppressLint("Range")
     private static boolean populateRequest(Context context) {
-        LocalDate countryMaxDate = null;
+        LocalDate DBDate = null;
         Long RegionId = 0L;
         Long CountryId = 0L;
         String Code = null;
@@ -223,18 +223,19 @@ class Database {
                     }
                 }
                 if (hashMapCountryXDate.containsKey(Country)) {
-                    countryMaxDate = hashMapCountryXDate.get(Country);
+                    DBDate = hashMapCountryXDate.get(Country);
                 } else {
-                    countryMaxDate = getLastUpdate(Country);
+                    DBDate = getLastUpdate(Country);
                 }
-                /*if(countryMaxDate.compareTo(LocalDate.parse(strDate, dateTimeFormatter)) >= 0)
-                    continue;*/
                 boolean insertRecord = true;
-                LocalDate countryCurrentRecordDate = LocalDate.parse(strDate, dateTimeFormatter);
-                long nDays = ChronoUnit.DAYS.between(countryCurrentRecordDate, countryMaxDate);
-                if(nDays-Constants.backNDays >= 0 && nDays >= 0)
-                    continue;
-                if(nDays-Constants.backNDays > -Constants.backNDays)
+                // If the CSV record already exists in the database for longer than 10 days continue
+                LocalDate CSVDate = LocalDate.parse(strDate, dateTimeFormatter);
+                long nDays = ChronoUnit.DAYS.between(DBDate, CSVDate);
+                // If it exists in the database for less than 10 days update it otherwise continue
+                if(nDays - Constants.backNDays >= 0)
+                    continue;;
+                // If it doest exist in the database update it
+                if(nDays > 0)
                     insertRecord = false;
 
                 Beanie beanie = new Beanie();

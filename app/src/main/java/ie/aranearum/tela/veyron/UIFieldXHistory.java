@@ -25,7 +25,7 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
         this.fieldName = fieldName;
         this.ILambdaXHistory = ILambdaXHistory;
         formatter = new DecimalFormat("#,###.##");
-        UIMessage.informationBox(context, Country + "->" + fieldName);
+        //UIMessage.informationBox(context, Country + "->" + fieldName);
         registerOnStack();
         uiHandler();
     }
@@ -39,7 +39,7 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     private void uiHandler() {
         populateRegion();
         setHeader(Region, Country);
-        UIMessage.informationBox(context, null);
+        //UIMessage.informationBox(context, null);
     }
 
     private void populateRegion() {

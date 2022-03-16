@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        UIMessage.informationBox(MainActivity.this, "Building UITerra");
+        //UIMessage.informationBox(MainActivity.this, "Building UITerra");
 
         CSV csv = new CSV(MainActivity.this, false);
         csv.start();
