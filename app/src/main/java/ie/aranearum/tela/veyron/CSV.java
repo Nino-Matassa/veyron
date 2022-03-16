@@ -46,7 +46,7 @@ public class CSV extends Thread {
 
             if(today.compareTo(csvLastModified) > 0) {
                 UIMessage.setCsvIsUpdated(true);
-                return false; // debugging, always return false
+                return true;
             }
         } catch (Exception e) {
             Log.d("MainActivity", e.toString());

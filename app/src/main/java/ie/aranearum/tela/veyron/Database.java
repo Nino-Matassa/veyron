@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 class SQLHelper extends SQLiteOpenHelper {
@@ -142,7 +143,7 @@ class Database {
     private static HashMap<String, Long> hashMapCountry = null;
     private static HashMap<String, LocalDate> hashMapCountryXDate = null;
 
-    public static SQLiteDatabase getInstance(Context context, boolean invalidate) {
+    public static SQLiteDatabase getInstance(Context context, boolean invalidate, boolean populate) {
         if (invalidate) {
             delete(context);
         }
@@ -154,7 +155,7 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(invalidate || UIMessage.isCsvIsUpdated())
+        if(invalidate || UIMessage.isCsvIsUpdated() || populate)
             populateRequest(context);
         UIMessage.setCsvIsUpdated(false);
         return instance;
@@ -226,8 +227,16 @@ class Database {
                 } else {
                     countryMaxDate = getLastUpdate(Country);
                 }
-                if(countryMaxDate.compareTo(LocalDate.parse(strDate, dateTimeFormatter)) >= 0)
-                    continue;;
+                /*if(countryMaxDate.compareTo(LocalDate.parse(strDate, dateTimeFormatter)) >= 0)
+                    continue;*/
+                boolean insertRecord = true;
+                LocalDate countryCurrentRecordDate = LocalDate.parse(strDate, dateTimeFormatter);
+                long nDays = ChronoUnit.DAYS.between(countryCurrentRecordDate, countryMaxDate);
+                if(nDays-Constants.backNDays >= 0 && nDays >= 0)
+                    continue;
+                if(nDays-Constants.backNDays > -Constants.backNDays)
+                    insertRecord = false;
+
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
                 beanie.continent = nextRecord[1];
@@ -297,7 +306,7 @@ class Database {
                 beanie.excess_mortality = nextRecord[65].isEmpty() ? 0d : Double.parseDouble(nextRecord[65]);
                 beanie.excess_mortality_cumulative_per_million = nextRecord[66].isEmpty() ? 0d : Double.parseDouble(nextRecord[66]);
 
-                Long Id = addDetail(beanie, CountryId);
+                Long Id = addDetail(beanie, CountryId, insertRecord);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -365,7 +374,7 @@ class Database {
         return Id;
     }
 
-    private static Long addDetail(Beanie beanie, Long FK_Country) {
+    private static Long addDetail(Beanie beanie, Long FK_Country, boolean insertRecord) {
         ContentValues values = new ContentValues();
         values.put("FK_Country", FK_Country);
         values.put("iso_code", beanie.iso_code);
@@ -437,11 +446,23 @@ class Database {
         values.put("excess_mortality_cumulative_per_million", beanie.excess_mortality_cumulative_per_million);
 
         Long Id = null;
-        try {
-            Id = instance.insert("Detail", null, values);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(insertRecord) {
+            try {
+                Id = instance.insert("Detail", null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                String sqlWhereFragment = "FK_Country = #1 and date = '#2'";
+                sqlWhereFragment = sqlWhereFragment.replace("#1", String.valueOf(FK_Country));
+                sqlWhereFragment = sqlWhereFragment.replace("#2", beanie.date);
+                Id = (long)instance.update("Detail", values, "", null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
         return Id;
     }
 }

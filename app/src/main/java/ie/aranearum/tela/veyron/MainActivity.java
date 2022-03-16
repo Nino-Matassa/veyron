@@ -17,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Stack;
+import java.util.concurrent.CountDownLatch;
 
 import ie.aranearum.tela.veyron.databinding.ActivityMainBinding;
 
@@ -31,22 +32,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         UIMessage.informationBox(MainActivity.this, "Building UITerra");
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CSV csv = new CSV(MainActivity.this, false);
-                csv.start();
-                try {
-                    csv.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    db = Database.getInstance(MainActivity.this, false);
-                }
-                UITerra uiTerra = new UITerra(MainActivity.this);
-            }
-        }, Constants.delayMilliSeconds);
+
+        CSV csv = new CSV(MainActivity.this, false);
+        csv.start();
+        try {
+            csv.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            db = Database.getInstance(MainActivity.this, false, true);
+            UITerra uiTerra = new UITerra(MainActivity.this);
+        }
 
     }
 

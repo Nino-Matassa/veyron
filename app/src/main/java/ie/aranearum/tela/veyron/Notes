@@ -19,3 +19,14 @@ Making it show would be nice...
 
 
 https://www.geeksforgeeks.org/lambda-expressions-java-8/
+
+/*
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, Constants.delayMilliSeconds);
+*/
+
