@@ -227,16 +227,17 @@ class Database {
                 } else {
                     DBDate = getLastUpdate(Country);
                 }
-                boolean insertRecord = true;
+
+                /*boolean insertRecord = true;
                 // If the CSV record already exists in the database for longer than 10 days continue
                 LocalDate CSVDate = LocalDate.parse(strDate, dateTimeFormatter);
                 long nDays = ChronoUnit.DAYS.between(DBDate, CSVDate);
                 // If it exists in the database for less than 10 days update it otherwise continue
-                if(nDays - Constants.backNDays >= 0)
+                if(nDays - (-Constants.backNDays) < 0)
                     continue;;
                 // If it doest exist in the database update it
-                if(nDays > 0)
-                    insertRecord = false;
+                if(nDays <= 0)
+                    insertRecord = false;*/
 
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
@@ -307,7 +308,7 @@ class Database {
                 beanie.excess_mortality = nextRecord[65].isEmpty() ? 0d : Double.parseDouble(nextRecord[65]);
                 beanie.excess_mortality_cumulative_per_million = nextRecord[66].isEmpty() ? 0d : Double.parseDouble(nextRecord[66]);
 
-                Long Id = addDetail(beanie, CountryId, insertRecord);
+                Long Id = addDetail(beanie, CountryId);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -375,7 +376,7 @@ class Database {
         return Id;
     }
 
-    private static Long addDetail(Beanie beanie, Long FK_Country, boolean insertRecord) {
+    private static Long addDetail(Beanie beanie, Long FK_Country) {
         ContentValues values = new ContentValues();
         values.put("FK_Country", FK_Country);
         values.put("iso_code", beanie.iso_code);
@@ -447,7 +448,17 @@ class Database {
         values.put("excess_mortality_cumulative_per_million", beanie.excess_mortality_cumulative_per_million);
 
         Long Id = null;
-        if(insertRecord) {
+        try {
+            String sqlWhereFragment = "FK_Country = #1 and date = '#2'";
+            sqlWhereFragment = sqlWhereFragment.replace("#1", String.valueOf(FK_Country));
+            sqlWhereFragment = sqlWhereFragment.replace("#2", beanie.date);
+            Id = (long)instance.update("Detail", values, sqlWhereFragment, null);
+            if(Id == 0L)
+                Id = instance.insert("Detail", null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /*if(insertRecord) {
             try {
                 Id = instance.insert("Detail", null, values);
             } catch (Exception e) {
@@ -462,7 +473,7 @@ class Database {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         return Id;
     }
