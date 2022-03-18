@@ -228,16 +228,12 @@ class Database {
                     DBDate = getLastUpdate(Country);
                 }
 
-                /*boolean insertRecord = true;
-                // If the CSV record already exists in the database for longer than 10 days continue
+                // If the difference between the CSV & DB date is greater than Constants.backNDays then continue
                 LocalDate CSVDate = LocalDate.parse(strDate, dateTimeFormatter);
-                long nDays = ChronoUnit.DAYS.between(DBDate, CSVDate);
-                // If it exists in the database for less than 10 days update it otherwise continue
-                if(nDays - (-Constants.backNDays) < 0)
-                    continue;;
-                // If it doest exist in the database update it
-                if(nDays <= 0)
-                    insertRecord = false;*/
+                long difference = ChronoUnit.DAYS.between(DBDate, CSVDate);
+                if(Math.abs(difference) > Constants.backNDays)
+                    continue;
+
 
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
@@ -316,7 +312,7 @@ class Database {
         return true;
     }
 
-    private static boolean exists(@NonNull Context context) {
+    public static boolean exists(@NonNull Context context) {
         File fPathDB = context.getDatabasePath(Constants.dbName);
         return fPathDB.exists();
     }
@@ -375,6 +371,8 @@ class Database {
         }
         return Id;
     }
+
+    private static boolean buildFromScratch = false;
 
     private static Long addDetail(Beanie beanie, Long FK_Country) {
         ContentValues values = new ContentValues();
@@ -449,33 +447,28 @@ class Database {
 
         Long Id = null;
         try {
-            String sqlWhereFragment = "FK_Country = #1 and date = '#2'";
-            sqlWhereFragment = sqlWhereFragment.replace("#1", String.valueOf(FK_Country));
-            sqlWhereFragment = sqlWhereFragment.replace("#2", beanie.date);
-            Id = (long)instance.update("Detail", values, sqlWhereFragment, null);
-            if(Id == 0L)
+            if(isBuildFromScratch()) {
                 Id = instance.insert("Detail", null, values);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        /*if(insertRecord) {
-            try {
-                Id = instance.insert("Detail", null, values);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
+            } else {
                 String sqlWhereFragment = "FK_Country = #1 and date = '#2'";
                 sqlWhereFragment = sqlWhereFragment.replace("#1", String.valueOf(FK_Country));
                 sqlWhereFragment = sqlWhereFragment.replace("#2", beanie.date);
-                Id = (long)instance.update("Detail", values, "", null);
-            } catch (Exception e) {
-                e.printStackTrace();
+                int nRows = instance.update("Detail", values, sqlWhereFragment, null);
+                if(nRows == 0)
+                    Id = instance.insert("Detail", null, values);
             }
-        }*/
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Id;
+    }
+
+    public static boolean isBuildFromScratch() {
+        return buildFromScratch;
+    }
+
+    public static void setBuildFromScratch(boolean buildFromScratch) {
+        Database.buildFromScratch = buildFromScratch;
     }
 }
 

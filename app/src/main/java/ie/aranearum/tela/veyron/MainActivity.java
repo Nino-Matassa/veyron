@@ -40,11 +40,18 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    db = Database.getInstance(MainActivity.this, false, false);
-                }}).start();
+            if(Database.exists(MainActivity.this)) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Database.setBuildFromScratch(false);
+                        db = Database.getInstance(MainActivity.this, false, false);
+                    }}).start();
+            } else {
+                Database.setBuildFromScratch(true);
+                db = Database.getInstance(MainActivity.this, false, true);
+                Database.setBuildFromScratch(false);
+            }
             UITerra uiTerra = new UITerra(MainActivity.this);
         }
 
