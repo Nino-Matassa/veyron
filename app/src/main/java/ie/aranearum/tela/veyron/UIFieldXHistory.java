@@ -2,6 +2,8 @@ package ie.aranearum.tela.veyron;
 
 import android.content.Context;
 import android.icu.text.DecimalFormat;
+import android.os.Handler;
+import android.os.Looper;
 
 public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     private Context context = null;
@@ -25,9 +27,15 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
         this.fieldName = fieldName;
         this.ILambdaXHistory = ILambdaXHistory;
         formatter = new DecimalFormat("#,###.##");
-        //UIMessage.informationBox(context, Country + "->" + fieldName);
         registerOnStack();
-        uiHandler();
+        UIMessage.eyeCandy(context, fieldName);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uiHandler();
+            }
+        }, Constants.delayMilliSeconds);
     }
 
     @Override
@@ -39,7 +47,7 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     private void uiHandler() {
         populateRegion();
         setHeader(Region, Country);
-        //UIMessage.informationBox(context, null);
+        UIMessage.eyeCandy(context, null);
     }
 
     private void populateRegion() {

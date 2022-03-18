@@ -3,6 +3,8 @@ package ie.aranearum.tela.veyron;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private String Region = null;
     private String Country = null;
     private String lastUpdated = null;
+    Cursor cCountry = null;
 
     ILambdaXHistory ILambdaXHistory;
 
@@ -26,9 +29,33 @@ public class UICountryX extends UI implements IRegisterOnStack {
         this.context = context;
         this.CountryId = countryId;
         formatter = new DecimalFormat("#,###.##");
-        //UIMessage.informationBox(context, Country + " " + lastUpdated);
+
+        String sqlCountry = "select \n" +
+                " Country.Id as CountryId,\n" +
+                " Region.Id as RegionId,\n" +
+                " Country.location as Country,\n" +
+                " Region.continent as Region,\n" +
+                " * from Detail\n" +
+                " join Country on Country.id = Detail.FK_Country\n" +
+                " join Region on Region.Id = Country.FK_Region\n" +
+                " where Country.Id = '#1' order by date desc limit 1";
+        sqlCountry = sqlCountry.replace("#1", String.valueOf(CountryId));
+        cCountry = db.rawQuery(sqlCountry, null);
+        cCountry.moveToFirst();
+        Region = cCountry.getString(cCountry.getColumnIndex("Region"));
+        RegionId = cCountry.getLong(cCountry.getColumnIndex("RegionId"));
+        Country = cCountry.getString(cCountry.getColumnIndex("Country"));
+        CountryId = cCountry.getLong(cCountry.getColumnIndex("CountryId"));
+
+        UIMessage.eyeCandy(context, Country);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uiHandler();
+            }
+        }, Constants.delayMilliSeconds);
         registerOnStack();
-        uiHandler();
     }
 
     @Override
@@ -40,13 +67,13 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private void uiHandler() {
         populateRegion();
         setHeader(Region, Country);
-        //UIMessage.informationBox(context, null);
+        UIMessage.eyeCandy(context, null);
     }
 
     private void populateRegion() {
         ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
         MetaField metaField = null;
-        String sqlCountry = "select \n" +
+        /*String sqlCountry = "select \n" +
                 " Country.Id as CountryId,\n" +
                 " Region.Id as RegionId,\n" +
                 " Country.location as Country,\n" +
@@ -61,7 +88,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         Region = cCountry.getString(cCountry.getColumnIndex("Region"));
         RegionId = cCountry.getLong(cCountry.getColumnIndex("RegionId"));
         Country = cCountry.getString(cCountry.getColumnIndex("Country"));
-        CountryId = cCountry.getLong(cCountry.getColumnIndex("CountryId"));
+        CountryId = cCountry.getLong(cCountry.getColumnIndex("CountryId"));*/
 
         String Date = cCountry.getString(cCountry.getColumnIndex("date"));
         LocalDate localDate = LocalDate.parse(Date);

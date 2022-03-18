@@ -24,9 +24,15 @@ public class UITerra extends UI implements IRegisterOnStack {
         super(context, Constants.UITerra);
         this.context = context;
         formatter = new DecimalFormat("#,###.##");
-        //UIMessage.informationBox(context, "Terra");
         registerOnStack();
-        uiHandler();
+        UIMessage.eyeCandy(context, "Terra");
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uiHandler();
+            }
+        }, Constants.delayMilliSeconds);
     }
 
     @Override
@@ -38,7 +44,7 @@ public class UITerra extends UI implements IRegisterOnStack {
     private void uiHandler() {
         populateTerra();
         setHeader("Terra", "Overview");
-        //UIMessage.informationBox(context, null);
+        UIMessage.eyeCandy(context, null);
     }
 
     private void populateTerra() {

@@ -2,6 +2,8 @@ package ie.aranearum.tela.veyron;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,27 +19,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CSV csv = new CSV(MainActivity.this, false);
-        csv.start();
-        try {
-            csv.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            if(Database.exists(MainActivity.this)) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Database.setBuildFromScratch(false);
+        UIMessage.eyeCandy(MainActivity.this, "Initialising Veyron");
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CSV csv = new CSV(MainActivity.this, false);
+                csv.start();
+                try {
+                    csv.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    if(Database.exists(MainActivity.this)) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Database.setBuildFromScratch(false);
+                                db = Database.getInstance(MainActivity.this, false, false);
+                            }}).start();
+                    } else {
+                        Database.setBuildFromScratch(true);
                         db = Database.getInstance(MainActivity.this, false, false);
-                    }}).start();
-            } else {
-                Database.setBuildFromScratch(true);
-                db = Database.getInstance(MainActivity.this, false, false);
-                Database.setBuildFromScratch(false);
+                        Database.setBuildFromScratch(false);
+                    }
+                    UITerra uiTerra = new UITerra(MainActivity.this);
+                }
             }
-            UITerra uiTerra = new UITerra(MainActivity.this);
-        }
+        }, Constants.delayMilliSeconds);
     }
 
     @Override

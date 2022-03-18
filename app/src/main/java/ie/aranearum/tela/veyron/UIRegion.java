@@ -3,6 +3,8 @@ package ie.aranearum.tela.veyron;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.text.DecimalFormat;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
@@ -21,16 +23,21 @@ public class UIRegion extends UI implements IRegisterOnStack {
         super(context, Constants.UIRegion);
         this.context = context;
         formatter = new DecimalFormat("#,###.##");
-        //UIMessage.informationBox(context, "Regions");
+        UIMessage.eyeCandy(context, "Regions");
         registerOnStack();
-
-        uiHandler();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                uiHandler();
+            }
+        }, Constants.delayMilliSeconds);
     }
 
     private void uiHandler() {
         populateRegion();
         setHeader(Region, "Population");
-        //UIMessage.informationBox(context, null);
+        UIMessage.eyeCandy(context, null);
     }
 
     @Override
