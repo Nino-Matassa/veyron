@@ -2,24 +2,10 @@ package ie.aranearum.tela.veyron;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.Stack;
-import java.util.concurrent.CountDownLatch;
-
-import ie.aranearum.tela.veyron.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,8 +16,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //UIMessage.informationBox(MainActivity.this, "Building UITerra");
 
         CSV csv = new CSV(MainActivity.this, false);
         csv.start();
@@ -49,12 +33,11 @@ public class MainActivity extends AppCompatActivity {
                     }}).start();
             } else {
                 Database.setBuildFromScratch(true);
-                db = Database.getInstance(MainActivity.this, false, true);
+                db = Database.getInstance(MainActivity.this, false, false);
                 Database.setBuildFromScratch(false);
             }
             UITerra uiTerra = new UITerra(MainActivity.this);
         }
-
     }
 
     @Override

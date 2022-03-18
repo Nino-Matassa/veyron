@@ -229,11 +229,12 @@ class Database {
                 }
 
                 // If the difference between the CSV & DB date is greater than Constants.backNDays then continue
-                LocalDate CSVDate = LocalDate.parse(strDate, dateTimeFormatter);
-                long difference = ChronoUnit.DAYS.between(DBDate, CSVDate);
-                if(Math.abs(difference) > Constants.backNDays)
-                    continue;
-
+                if(!Database.isBuildFromScratch()) {
+                    LocalDate CSVDate = LocalDate.parse(strDate, dateTimeFormatter);
+                    long difference = ChronoUnit.DAYS.between(DBDate, CSVDate);
+                    if(Math.abs(difference) > Constants.backNDays)
+                        continue;
+                }
 
                 Beanie beanie = new Beanie();
                 beanie.iso_code = nextRecord[0];
