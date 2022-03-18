@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                             }}).start();
                     } else {
                         Database.setBuildFromScratch(true);
-                        db = Database.getInstance(MainActivity.this, false, false);
+                        db = Database.getInstance(MainActivity.this, false, true);
                         Database.setBuildFromScratch(false);
                     }
                     UITerra uiTerra = new UITerra(MainActivity.this);
