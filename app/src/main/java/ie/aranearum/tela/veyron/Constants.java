@@ -14,8 +14,6 @@ public class Constants {
     public static final int abbreviate = 99;//15; Needs to be based on dynamic column width...
     public static final int delayMilliSeconds = 500;
     public static final String roman100000 = "C\u0305"; // Roman numeral for 100,000
-    //public static final int oneHundredThousand = 100000;
-    //public static final int oneMillion = 1000000;
     public static final Integer backNDays = 21;
 
     // UI translations

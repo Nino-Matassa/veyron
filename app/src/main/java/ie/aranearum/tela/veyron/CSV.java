@@ -27,8 +27,8 @@ public class CSV extends Thread {
         return csvIsUpdated;
     }
 
-    public static void setCsvIsUpdated(boolean csvIsUpdated) {
-        csvIsUpdated = csvIsUpdated;
+    public static void setCsvIsUpdated(boolean setCsvIsUpdated) {
+        csvIsUpdated = setCsvIsUpdated;
     }
 
 
