@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Stack;
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (stack.size() == 1) {
             this.moveTaskToBack(true);
-            //UIMessage.toast(MainActivity.this, "Spirale - Moved to Background", Toast.LENGTH_LONG);
+            Toast.makeText(MainActivity.this, "Exiting Veyron", Toast.LENGTH_SHORT).show();
         } else {
             stack.pop();
             UIHistory uiHistory = stack.pop();
