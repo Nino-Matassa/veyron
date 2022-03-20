@@ -73,22 +73,6 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private void populateRegion() {
         ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
         MetaField metaField = null;
-        /*String sqlCountry = "select \n" +
-                " Country.Id as CountryId,\n" +
-                " Region.Id as RegionId,\n" +
-                " Country.location as Country,\n" +
-                " Region.continent as Region,\n" +
-                " * from Detail\n" +
-                " join Country on Country.id = Detail.FK_Country\n" +
-                " join Region on Region.Id = Country.FK_Region\n" +
-                " where Country.Id = '#1' order by date desc limit 1";
-        sqlCountry = sqlCountry.replace("#1", String.valueOf(CountryId));
-        Cursor cCountry = db.rawQuery(sqlCountry, null);
-        cCountry.moveToFirst();
-        Region = cCountry.getString(cCountry.getColumnIndex("Region"));
-        RegionId = cCountry.getLong(cCountry.getColumnIndex("RegionId"));
-        Country = cCountry.getString(cCountry.getColumnIndex("Country"));
-        CountryId = cCountry.getLong(cCountry.getColumnIndex("CountryId"));*/
 
         String Date = cCountry.getString(cCountry.getColumnIndex("date"));
         LocalDate localDate = LocalDate.parse(Date);
@@ -242,6 +226,188 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.region = Region;
         metaField.country = Country;
         metaFields.add(metaField);
+
+        Double ICUPatients = cCountry.getDouble(cCountry.getColumnIndex("icu_patients"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "ICU Patients";
+        metaField.value = String.valueOf(formatter.format(ICUPatients));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "icu_patients";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double ICUPatientsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("icu_patients_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "ICU Patients" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(ICUPatientsPerMillion));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "icu_patients_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double HospitalPatients = cCountry.getDouble(cCountry.getColumnIndex("hosp_patients"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Hospital Patients";
+        metaField.value = String.valueOf(formatter.format(ICUPatients));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "hosp_patients";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double HospitalPatientsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("hosp_patients_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Hospital Patients" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(HospitalPatientsPerMillion));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "hosp_patients_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double WeeklyICUAdmissions = cCountry.getDouble(cCountry.getColumnIndex("weekly_icu_admissions"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "ICU Admission7D";
+        metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissions));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "weekly_icu_admissions";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double WeeklyICUAdmissionsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("weekly_icu_admissions_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "ICU Admission7D" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionsPerMillion));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "weekly_icu_admissions_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double WeeklyHospitalAdmissions = cCountry.getDouble(cCountry.getColumnIndex("weekly_hosp_admissions"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Hospital Admissions7D";
+        metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissions));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "weekly_hosp_admissions";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double WeeklyHospitalAdmissionsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("weekly_hosp_admissions_per_million"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Hospital Admissions7D" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissionsPerMillion));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "weekly_hosp_admissions_per_million";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double NewTests = cCountry.getDouble(cCountry.getColumnIndex("new_tests"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "New Tests";
+        metaField.value = String.valueOf(formatter.format(NewTests));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "new_tests";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double TotalTests = cCountry.getDouble(cCountry.getColumnIndex("total_tests"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Total Tests";
+        metaField.value = String.valueOf(formatter.format(TotalTests));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "total_tests";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double TotalTestPerThousand = cCountry.getDouble(cCountry.getColumnIndex("total_tests_per_thousand"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Total Test" + Constants.roman1000;
+        metaField.value = String.valueOf(formatter.format(TotalTestPerThousand));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "total_tests_per_thousand";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double NewTestPerThousand = cCountry.getDouble(cCountry.getColumnIndex("new_tests_per_thousand"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "New Test" + Constants.roman1000;
+        metaField.value = String.valueOf(formatter.format(NewTestPerThousand));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "new_tests_per_thousand";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        Double PositivityRate = cCountry.getDouble(cCountry.getColumnIndex("positive_rate"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "Positivity Rate";
+        metaField.value = String.valueOf(formatter.format(PositivityRate));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "positive_rate";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);
+
+        /*Double X = cCountry.getDouble(cCountry.getColumnIndex("fieldX"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "DisplayName" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(X));
+        metaField.underlineKey = true;
+        metaField.fieldXName = "fieldX";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaFields.add(metaField);*/
 
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "";

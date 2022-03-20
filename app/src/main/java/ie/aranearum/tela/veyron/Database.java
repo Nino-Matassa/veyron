@@ -142,6 +142,7 @@ class Database {
     private static HashMap<String, Long> hashMapRegion = null;
     private static HashMap<String, Long> hashMapCountry = null;
     private static HashMap<String, LocalDate> hashMapCountryXDate = null;
+    private static boolean buildFromScratch = false;
 
     public static SQLiteDatabase getInstance(Context context, boolean invalidate, boolean populate) {
         if (invalidate) {
@@ -155,9 +156,11 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(invalidate || CSV.isCsvIsUpdated() || populate)
+        if(invalidate || CSV.isCsvIsUpdated() || populate) {
+            CSV.setCsvIsUpdated(false);
             populateRequest(context);
-        CSV.setCsvIsUpdated(false);
+        }
+
         return instance;
     }
 
@@ -310,6 +313,7 @@ class Database {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setBuildFromScratch(false);
         return true;
     }
 
@@ -372,8 +376,6 @@ class Database {
         }
         return Id;
     }
-
-    private static boolean buildFromScratch = false;
 
     private static Long addDetail(Beanie beanie, Long FK_Country) {
         ContentValues values = new ContentValues();

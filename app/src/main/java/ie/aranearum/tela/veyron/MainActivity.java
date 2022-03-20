@@ -4,20 +4,33 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.ui.AppBarConfiguration;
+
 import java.util.Stack;
+
+import ie.aranearum.tela.veyron.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private SQLiteDatabase db = null;
     public static Stack<UIHistory> stack = new Stack<UIHistory>();
+    private AppBarConfiguration appBarConfiguration;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        //setSupportActionBar(binding.toolbar);
 
         UIMessage.eyeCandy(MainActivity.this, "Initialising Veyron");
         Handler handler = new Handler(Looper.getMainLooper());
@@ -35,13 +48,11 @@ public class MainActivity extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                Database.setBuildFromScratch(false);
                                 db = Database.getInstance(MainActivity.this, false, false);
                             }}).start();
                     } else {
                         Database.setBuildFromScratch(true);
                         db = Database.getInstance(MainActivity.this, false, true);
-                        Database.setBuildFromScratch(false);
                     }
                     UITerra uiTerra = new UITerra(MainActivity.this);
                 }
@@ -74,5 +85,28 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.about) {
+            Toast.makeText(MainActivity.this, "About!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

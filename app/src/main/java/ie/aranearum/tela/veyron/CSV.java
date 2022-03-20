@@ -55,7 +55,6 @@ public class CSV extends Thread {
             LocalDate today = LocalDate.now();
 
             if(today.compareTo(csvLastModified) > 0) {
-                setCsvIsUpdated(true);
                 return true;
             }
         } catch (Exception e) {
@@ -102,6 +101,7 @@ public class CSV extends Thread {
             e.printStackTrace();
             return false;
         }
+        setCsvIsUpdated(true);
         return true;
     }
 }
