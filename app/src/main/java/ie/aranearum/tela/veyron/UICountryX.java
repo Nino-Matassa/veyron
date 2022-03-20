@@ -22,7 +22,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private String lastUpdated = null;
     Cursor cCountry = null;
 
-    ILambdaXHistory ILambdaXHistory;
+    //ILambdaXHistory ILambdaXHistory;
 
     public UICountryX(Context context, Long countryId) {
         super(context, Constants.UICountryX);

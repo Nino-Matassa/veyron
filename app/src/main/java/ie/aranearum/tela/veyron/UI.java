@@ -65,100 +65,24 @@ public class UI {
 
     private void setTitlebar() {
         switch(UIX) {
+            case Constants.UITerra:
+                ((Activity)context).setTitle("Veyron - Terra");
+                break;
+            case Constants.UIRegion:
+                ((Activity)context).setTitle("Veyron - Regions");
+                break;
+            case Constants.UICountry:
+                ((Activity)context).setTitle("Veyron - Region");
+                break;
+            case Constants.UICountryX:
+                ((Activity)context).setTitle("Veyron - Country Details");
+                break;
+            case Constants.UIFieldXHistory:
+                ((Activity)context).setTitle("Veyron - Field X");
+                break;
             default:
             ((Activity)context).setTitle("Veyron");
         }
-        /*switch (UIX) {
-            case Constants.UITerra:
-                ((Activity)context).setTitle("Spirale - Terra");
-                break;
-            case Constants.UIRegion:
-                ((Activity)context).setTitle("Spirale - Regions");
-                break;
-            case Constants.UICountryByRegion:
-                ((Activity)context).setTitle("Spirale - Country by Region");
-                break;
-            case Constants.UICountry:
-                ((Activity)context).setTitle("Spirale - Country");
-                break;
-            case Constants.UICase24Hour:
-                ((Activity)context).setTitle("Spirale - Cases24H");
-                break;
-            case Constants.UIDeath24Hour:
-                ((Activity)context).setTitle("Spirale - Deaths24H");
-                break;
-            case Constants.UITotalPercentInfected:
-                ((Activity)context).setTitle("Spirale - Precentage Infected");
-                break;
-            case Constants.UIRNought:
-                ((Activity)context).setTitle("Spirale - " + Constants.rNought);
-                break;
-            case Constants.UITerraRNought:
-                ((Activity)context).setTitle("Spirale - Terra " + Constants.rNought);
-                break;
-            case Constants.UITerraTotalCases:
-                ((Activity)context).setTitle("Spirale - Terra Total Cases");
-                break;
-            case Constants.UITerraTotalDeaths:
-                ((Activity)context).setTitle("Spirale - Terra Total Deaths");
-                break;
-            case Constants.UITerraCase24H:
-                ((Activity)context).setTitle("Spirale - Terra Case24H");
-                break;
-            case Constants.UITerraCase7D:
-                ((Activity)context).setTitle("Spirale - Terra Case7D");
-                break;
-            case Constants.UITerraDeath24H:
-                ((Activity)context).setTitle("Spirale - Terra Death24H");
-                break;
-            case Constants.UITerraDeath7D:
-                ((Activity)context).setTitle("Spirale - Terra Death7D");
-                break;
-            case Constants.UITerraTotalInfected:
-                ((Activity)context).setTitle("Spirale - Terra Total Infected");
-                break;
-            case Constants.UITotalCase:
-                ((Activity)context).setTitle("Spirale - Total Cases");
-                break;
-            case Constants.UITotalDeath:
-                ((Activity)context).setTitle("Spirale - Total Deaths");
-                break;
-            case Constants.UICasePerX:
-                ((Activity)context).setTitle("Spirale - Case/" + Constants.roman100000);
-                break;
-            case Constants.UIDeathPerX:
-                ((Activity)context).setTitle("Spirale - Death/" + Constants.roman100000);
-                break;
-            case Constants.UICase7Day:
-                ((Activity)context).setTitle("Spirale - Case7D");
-                break;
-            case Constants.UIDeath7Day:
-                ((Activity)context).setTitle("Spirale - Death7D");
-                break;
-            case Constants.UITerraActiveCases:
-                ((Activity)context).setTitle("Spirale - Terra Active Cases");
-                break;
-            case Constants.UITerraActiveCasesPerX:
-                ((Activity)context).setTitle("Spirale - Terra Active Cases/" + Constants.roman100000);
-                break;
-            case Constants.UIActiveCases:
-                ((Activity)context).setTitle("Spirale - Active Cases");
-                break;
-            case Constants.UIRHSTerraRNought:
-                ((Activity)context).setTitle("Spirale - Terra " + Constants.rNought);
-                break;
-            case Constants.UIRHSTerraActiveCases:
-                ((Activity)context).setTitle("Spirale - Terra Active Cases");
-                break;
-            case Constants.UIRHSTerraActiveCasesPerX:
-                ((Activity)context).setTitle("Spirale - Terra Active Cases/" + Constants.roman100000);
-                break;
-            case Constants.UITerraFullyVaccinated:
-                ((Activity)context).setTitle("Fully Vaccinated");
-                break;
-            case Constants.UIActiveCaseAverage:
-                ((Activity)context).setTitle("Active Case Average");
-        }*/
     }
 
     protected ArrayList<TableRow> populateTable(ArrayList<MetaField> metaFields) {
