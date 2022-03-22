@@ -63,7 +63,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Population";
         metaField.value = String.valueOf(formatter.format(Population));
         metaField.underlineKey = true;
-        ////metaField.UI = Constants.UIRegion;
+        //metaField.UI = Constants.UIRegion;
         metaFields.add(metaField);
 
         /*String sqlTotalCase = "select \n" +
@@ -90,8 +90,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalCasePerMillion));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "total_cases_per_million";
+        metaField.executeSQL = "select Detail.location, total_cases_per_million, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by total_cases_per_million desc";
         metaFields.add(metaField);
 
 

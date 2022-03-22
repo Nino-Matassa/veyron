@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.sql.Date;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -113,9 +112,9 @@ public class UI {
                         }
                         if(metaField.UI.equals(Constants.UIFieldXHistory)) {
                             defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
-                                    metaField.region, metaField.country);
+                                    metaField.region, metaField.country, metaField.executeSQL);
                             new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
-                                    ILambdaXHistory, metaField.fieldXName);
+                                    ILambdaXHistory, metaField.fieldXName, metaField.executeSQL);
                         }
                     }
                 }
@@ -214,14 +213,16 @@ public class UI {
     }
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
-    private ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
     private MetaField metaField = null;
     private ILambdaXHistory ILambdaXHistory;
     private DecimalFormat formatter = new DecimalFormat("#,###.##");
-    private void defineLambda(Constants.FieldXHistoryType fieldXType, String fieldName, Long RegionId, Long CountryId, String Region, String Country) {
+    private void defineLambda(Constants.FieldXHistoryType fieldXType, String fieldName,
+                              Long RegionId, Long CountryId, String Region, String Country,
+                              String executeSQL) {
         switch (fieldXType) {
             case Simple:
                 ILambdaXHistory = () -> {
+                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
                     String sqlFieldXHistory = "select date, fieldX from Detail where FK_Country = '#1' order by date desc";
                     sqlFieldXHistory = sqlFieldXHistory.replace("#1", String.valueOf(CountryId));
                     sqlFieldXHistory = sqlFieldXHistory.replace("fieldX", fieldName);
@@ -244,9 +245,26 @@ public class UI {
                     return metaFields;
                 };
                 break;
-            case SQLInject:
+            case ByCountry:
                 ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
+                    String sqlFieldXHistory = executeSQL;
+                    Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
+                    cFieldXHistory.moveToFirst();
+
+                    do {
+                        Double fieldXValue = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex(fieldName));
+                        metaField = new MetaField(RegionId, CountryId, Constants.UICountryX);
+                        metaField.region = Region;
+                        metaField.country = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("location"));
+                        metaField.key = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("location"));
+                        metaField.value = String.valueOf(formatter.format(fieldXValue));
+                        metaField.regionId = cFieldXHistory.getLong(cFieldXHistory.getColumnIndex("FK_Region"));
+                        metaField.countryId = cFieldXHistory.getLong(cFieldXHistory.getColumnIndex("FK_Country"));
+                        metaField.underlineKey = true;
+                        metaFields.add(metaField);
+                    } while(cFieldXHistory.moveToNext());
+
                     return metaFields;
                 };
                 break;

@@ -16,9 +16,10 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     private String Country = null;
     private String fieldName = null;
     private ILambdaXHistory ILambdaXHistory;
+    private String executeSQL = null;
 
     public UIFieldXHistory(Context context, Long regionId, Long countryId, String region, String country,
-                           ILambdaXHistory ILambdaXHistory, String fieldName) {
+                           ILambdaXHistory ILambdaXHistory, String fieldName, String executeSQL) {
         super(context, Constants.UIFieldXHistory);
         this.context = context;
         this.RegionId = regionId;
@@ -27,6 +28,7 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
         this.Country = country;
         this.fieldName = fieldName;
         this.ILambdaXHistory = ILambdaXHistory;
+        this.executeSQL = executeSQL;
         formatter = new DecimalFormat("#,###.##");
         registerOnStack();
         ((Activity)context).setTitle("Veyron - " + fieldName);
@@ -43,6 +45,11 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
     @Override
     public void registerOnStack() {
         uiHistory = new UIHistory(RegionId, CountryId, Constants.UIFieldXHistory);
+        uiHistory.region = Region;
+        uiHistory.country = Country;
+        uiHistory.fieldXName = fieldName;
+        uiHistory.ILambdaXHistory = ILambdaXHistory;
+        uiHistory.executeSQL = executeSQL;
         MainActivity.stack.add(uiHistory);
     }
 

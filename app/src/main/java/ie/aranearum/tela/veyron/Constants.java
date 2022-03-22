@@ -94,6 +94,6 @@ public class Constants {
 
     public static enum FieldXHistoryType {
         Simple,
-        SQLInject
+        ByCountry
     }
 }

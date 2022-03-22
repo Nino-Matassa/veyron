@@ -12,6 +12,7 @@ public class MetaField {
     public String country = null;
     public Constants.FieldXHistoryType fieldXHistoryType;
     public String fieldXName = null;
+    public String executeSQL = null;
 
     public MetaField(Long regionId, Long countryId, String UI) {
         this.regionId = regionId;
