@@ -33,6 +33,11 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
         registerOnStack();
         ((Activity)context).setTitle("Veyron - " + fieldName);
         UIMessage.eyeCandy(context, fieldName);
+        if(RegionId == 0 && CountryId == 0) { // Then the call came from UITerra
+            // Add dummy values for Region & Country for the header
+            Region = "Terra";
+            Country = "Collation";
+        }
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override
