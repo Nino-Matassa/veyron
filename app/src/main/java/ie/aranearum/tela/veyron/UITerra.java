@@ -123,8 +123,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "new_cases_per_million";
+        metaField.executeSQL = "select Detail.location, new_cases_per_million, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by new_cases_per_million desc";
         metaFields.add(metaField);
 
         /*String sqlNewCaseSmoothed = "select \n" +
@@ -179,8 +183,13 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalDeathPerMillion));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "total_deaths_per_million";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "total_deaths_per_million");
         metaFields.add(metaField);
 
         /*String sqlNewDeath = "select \n" +
@@ -208,7 +217,13 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "New Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewDeathPerMillion));
         metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "new_deaths_per_million";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "new_deaths_per_million");
         metaFields.add(metaField);
 
         /*String sqlNewDeathSmoothed = "select \n" +
@@ -250,7 +265,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));
         metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "reproduction_rate";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "reproduction_rate");
         metaFields.add(metaField);
 
         /*String sqlICUPatient = "select \n" +
@@ -278,7 +298,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "ICU Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(ICUPatientPerMillion));
         metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "icu_patients_per_million";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "icu_patients_per_million");
         metaFields.add(metaField);
 
         /*String sqlHospitalPatient = "select \n" +
@@ -306,7 +331,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Hospital Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(HospitalPatientPerMillion));
         metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "hosp_patients_per_million";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "hosp_patients_per_million");
         metaFields.add(metaField);
 
         /*String sqlWeeklyICUAdmission = "select \n" +
@@ -334,7 +364,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.key = "Weekly ICU" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionPerMillion));
         metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "weekly_icu_admissions_per_million";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "weekly_icu_admissions_per_million");
         metaFields.add(metaField);
 
         /*String sqlWeeklyHospitalAdmission = "select \n" +
@@ -403,8 +438,13 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(TotalTestPerThousand));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "total_tests_per_thousand";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "total_tests_per_thousand");
         metaFields.add(metaField);
 
         String sqlNewTestPerThousand = "select \n" +
@@ -417,8 +457,13 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(NewTestPerThousand));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "new_tests_per_thousand";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "new_tests_per_thousand");
         metaFields.add(metaField);
 
         /*String sqlNewTestSmoothed = "select \n" +
@@ -459,8 +504,13 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Positive Rate%";
         metaField.value = String.valueOf(formatter.format(PositiveRate));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXName = "positive_rate";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select date from Detail where positive_rate > 0) order by #X desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#X", "positive_rate");
         metaFields.add(metaField);
 
         String sqlTestPerCase = "select \n" +
