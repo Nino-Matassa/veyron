@@ -55,43 +55,50 @@ public class UITerra extends UI implements IRegisterOnStack {
         LocalDate localDate = LocalDate.of(Integer.valueOf(aDate[0]), Integer.valueOf(aDate[1]), Integer.valueOf(aDate[2]));
         lastUpdated = localDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
 
+        String sqlTerra = "select \n" +
+                " (select sum(population) from Detail where date = (select max(date) from Detail)) as sumPopulation\n" +
+                " , (select sum(total_cases_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where total_cases_per_million > 0)) as avgTotalCasePerMillion\n" +
+                " , (select sum(new_cases_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where new_cases_per_million > 0)) as avgNewCasePerMillion\n" +
+                " , (select sum(total_deaths_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where total_deaths_per_million > 0)) as avgTotalDeathPerMillion\n" +
+                " , (select sum(new_deaths_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where new_deaths_per_million > 0)) as avgNewDeathPerMillion\n" +
+                " , (select sum(reproduction_rate)/(select count(Id) from Detail where reproduction_rate > 0)) as avgReproductionRate\n" +
+                " , (select sum(icu_patients_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where icu_patients_per_million > 0)) as avgICUPatientsPerMillion\n" +
+                " , (select sum(hosp_patients_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where hosp_patients_per_million > 0)) as avgHospitalPatientsPerMillion\n" +
+                " , (select sum(weekly_icu_admissions_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where weekly_icu_admissions_per_million > 0)) as avgWeeklyICUAdmissionsPerMillion\n" +
+                " , (select sum(weekly_hosp_admissions_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where weekly_hosp_admissions_per_million > 0)) as avgWeeklyHospitalAdmissionsPerMillion\n" +
+                " , (select sum(total_tests_per_thousand)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where total_tests_per_thousand > 0)) as avgTotalTestsPerThousand\n" +
+                " , (select sum(new_tests_per_thousand)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where new_tests_per_thousand > 0)) as avgNewTestsPerThousand\n" +
+                " , (select sum(positive_rate)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where positive_rate > 0)) as avgPositivityRate\n" +
+                " , (select sum(tests_per_case)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where tests_per_case > 0)) as avgTestPerCase\n" +
+                " , (select sum(total_vaccinations_per_hundred)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where total_vaccinations_per_hundred > 0)) as avgTotaVvaccinationsPerHundred\n" +
+                " , (select sum(people_vaccinated_per_hundred)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where people_vaccinated_per_hundred > 0)) as avgPeopleVaccinatedPerHundred\n" +
+                " , (select sum(aged_65_older)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where aged_65_older > 0)) as avgAged65Older\n" +
+                " , (select sum(aged_70_older)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where aged_70_older > 0)) as avgAged70Older\n" +
+                " , (select sum(diabetes_prevalence)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where diabetes_prevalence > 0)) as avgDiabetesPrevalence\n" +
+                " , (select sum(female_smokers)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where female_smokers > 0)) as avgFemaleSmokers\n" +
+                " , (select sum(male_smokers)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where male_smokers > 0)) as avgMaleSmokers\n" +
+                " , (select sum(hospital_beds_per_thousand)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where hospital_beds_per_thousand > 0)) as avgHospitalBedsPerThousand\n" +
+                " , (select sum(life_expectancy)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where life_expectancy > 0)) as avgLifeExpectancy\n" +
+                " , * from Detail\n" +
+                " limit 1";
+
+        Cursor cTerra = db.rawQuery(sqlTerra, null);
+        cTerra.moveToFirst();
+
+
         MetaField metaField = new MetaField(0L, 0L, Constants.UIRegion);
-        String sqlPopulation = "select sum(population) as Population from Detail where date = (select max(date) from Detail)";
-        Cursor cPopulation = db.rawQuery(sqlPopulation, null);
-        cPopulation.moveToFirst();
-        @SuppressLint("Range") Double Population = cPopulation.getDouble(cPopulation.getColumnIndex("Population"));
+        @SuppressLint("Range") Double Population = cTerra.getDouble(cTerra.getColumnIndex("sumPopulation"));
         metaField.key = "Population";
         metaField.value = String.valueOf(formatter.format(Population));
         metaField.underlineKey = true;
-        //metaField.UI = Constants.UIRegion;
         metaFields.add(metaField);
 
-        /*String sqlTotalCase = "select \n" +
-                " sum(total_cases) \n" +
-                " as TotalCase\n" +
-                " from Detail where date = (select max(date) from Detail where total_cases > 0)";
-        Cursor cTotalCase = db.rawQuery(sqlTotalCase, null);
-        cTotalCase.moveToFirst();
-        @SuppressLint("Range") Double TotalCase = cTotalCase.getDouble(cTotalCase.getColumnIndex("TotalCase"));
-        metaField = new MetaField(0, 0, Constants.UIFieldXHistory);
-        metaField.key = "Total Case";
-        metaField.value = String.valueOf(formatter.format(TotalCase));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
-        metaFields.add(metaField);*/
-
-        String sqlTotalCasePerMillion = "select \n" +
-                " sum(total_cases_per_million)/(select count(Id) from Country)\n" +
-                " as TotalCasePerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where total_cases_per_million > 0)";
-        Cursor cTotalCasePerMillion = db.rawQuery(sqlTotalCasePerMillion, null);
-        cTotalCasePerMillion.moveToFirst();
-        @SuppressLint("Range") Double TotalCasePerMillion = cTotalCasePerMillion.getDouble(cTotalCasePerMillion.getColumnIndex("TotalCasePerMillion"));
+        @SuppressLint("Range") Double TotalCasePerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgTotalCasePerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalCasePerMillion));
         metaField.underlineKey = true;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "total_cases_per_million";
         metaField.executeSQL = "select Detail.location, total_cases_per_million, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -113,18 +120,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlNewCasePerMillion = "select \n" +
-                " sum(new_cases_per_million)/(select count(Id) from Country)\n" +
-                " as NewCasePerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where new_cases_per_million > 0)";
-        Cursor cNewCasePerMillion = db.rawQuery(sqlNewCasePerMillion, null);
-        cNewCasePerMillion.moveToFirst();
-        @SuppressLint("Range") Double NewCasePerMillion = cNewCasePerMillion.getDouble(cNewCasePerMillion.getColumnIndex("NewCasePerMillion"));
+        @SuppressLint("Range") Double NewCasePerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgNewCasePerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
         metaField.underlineKey = true;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "new_cases_per_million";
         metaField.executeSQL = "select Detail.location, new_cases_per_million, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -173,18 +174,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlTotalDeathPerMillion = "select \n" +
-                " sum(total_deaths_per_million)/(select count(Id) from Country)\n" +
-                " as TotalDeathPerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where total_deaths_per_million > 0)";
-        Cursor cTotalDeathPerMillion = db.rawQuery(sqlTotalDeathPerMillion, null);
-        cTotalDeathPerMillion.moveToFirst();
-        @SuppressLint("Range") Double TotalDeathPerMillion = cTotalDeathPerMillion.getDouble(cTotalDeathPerMillion.getColumnIndex("TotalDeathPerMillion"));
+        @SuppressLint("Range") Double TotalDeathPerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgTotalDeathPerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalDeathPerMillion));
         metaField.underlineKey = true;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "total_deaths_per_million";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -206,19 +201,13 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlNewDeathPerMillion = "select \n" +
-                " sum(new_deaths_per_million)/(select count(Id) from Country)\n" +
-                " as NewDeathPerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where new_deaths_per_million > 0)";
-        Cursor cNewDeathPerMillion = db.rawQuery(sqlNewDeathPerMillion, null);
-        cNewDeathPerMillion.moveToFirst();
-        @SuppressLint("Range") Double NewDeathPerMillion = cNewDeathPerMillion.getDouble(cNewDeathPerMillion.getColumnIndex("NewDeathPerMillion"));
+        @SuppressLint("Range") Double NewDeathPerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgNewDeathPerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewDeathPerMillion));
         metaField.underlineKey = false;
         metaField.underlineKey = true;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "new_deaths_per_million";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -254,18 +243,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlReproductionRate = "select \n" +
-                " sum(reproduction_rate)/(select count(Id) from Detail where reproduction_rate > 0) \n" +
-                " as ReproductionRate\n" +
-                " from Detail ";
-        Cursor cReproductionRate = db.rawQuery(sqlReproductionRate, null);
-        cReproductionRate.moveToFirst();
-        @SuppressLint("Range") Double ReproductionRate = cReproductionRate.getDouble(cReproductionRate.getColumnIndex("ReproductionRate"));
+        @SuppressLint("Range") Double ReproductionRate = cTerra.getDouble(cTerra.getColumnIndex("avgReproductionRate"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));
         metaField.underlineKey = false;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "reproduction_rate";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -287,18 +270,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlICUPatientPerMillion = "select \n" +
-                " sum(icu_patients_per_million)/(select count(Id) from Country)\n" +
-                " as ICUPatientPerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where icu_patients_per_million > 0)";
-        Cursor cICUPatientPerMillion = db.rawQuery(sqlICUPatientPerMillion, null);
-        cICUPatientPerMillion.moveToFirst();
-        @SuppressLint("Range") Double ICUPatientPerMillion = cICUPatientPerMillion.getDouble(cICUPatientPerMillion.getColumnIndex("ICUPatientPerMillion"));
+        @SuppressLint("Range") Double ICUPatientPerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgICUPatientsPerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "ICU Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(ICUPatientPerMillion));
         metaField.underlineKey = false;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "icu_patients_per_million";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -320,18 +297,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlHospitalPatientPerMillion = "select \n" +
-                " sum(hosp_patients_per_million)/(select count(Id) from Country)\n" +
-                " as HospitalPatientPerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where hosp_patients_per_million > 0)";
-        Cursor cHospitalPatientPerMillion = db.rawQuery(sqlHospitalPatientPerMillion, null);
-        cHospitalPatientPerMillion.moveToFirst();
-        @SuppressLint("Range") Double HospitalPatientPerMillion = cHospitalPatientPerMillion.getDouble(cHospitalPatientPerMillion.getColumnIndex("HospitalPatientPerMillion"));
+        @SuppressLint("Range") Double HospitalPatientPerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgHospitalPatientsPerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Hospital Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(HospitalPatientPerMillion));
         metaField.underlineKey = false;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "hosp_patients_per_million";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -353,18 +324,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlWeeklyICUAdmissionPerMillion = "select \n" +
-                " sum(weekly_icu_admissions_per_million)/(select count(Id) from Country)\n" +
-                " as WeeklyICUAdmissionPerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where weekly_icu_admissions_per_million > 0)";
-        Cursor cWeeklyICUAdmissionPerMillion = db.rawQuery(sqlWeeklyICUAdmissionPerMillion, null);
-        cWeeklyICUAdmissionPerMillion.moveToFirst();
-        @SuppressLint("Range") Double WeeklyICUAdmissionPerMillion = cWeeklyICUAdmissionPerMillion.getDouble(cWeeklyICUAdmissionPerMillion.getColumnIndex("WeeklyICUAdmissionPerMillion"));
+        @SuppressLint("Range") Double WeeklyICUAdmissionPerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgWeeklyICUAdmissionsPerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Weekly ICU" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionPerMillion));
         metaField.underlineKey = false;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "weekly_icu_admissions_per_million";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -386,13 +351,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlWeeklyHospitalAdmissionPerMillion = "select \n" +
-                " sum(weekly_hosp_admissions_per_million)/(select count(Id) from Country)\n" +
-                " as WeeklyHospitalAdmissionPerMillion\n" +
-                " from Detail where date = (select max(date) from Detail where weekly_hosp_admissions_per_million > 0)";
-        Cursor cWeeklyHospitalAdmissionPerMillion = db.rawQuery(sqlWeeklyHospitalAdmissionPerMillion, null);
-        cWeeklyHospitalAdmissionPerMillion.moveToFirst();
-        @SuppressLint("Range") Double WeeklyHospitalAdmissionPerMillion = cWeeklyHospitalAdmissionPerMillion.getDouble(cWeeklyHospitalAdmissionPerMillion.getColumnIndex("WeeklyHospitalAdmissionPerMillion"));
+        @SuppressLint("Range") Double WeeklyHospitalAdmissionPerMillion = cTerra.getDouble(cTerra.getColumnIndex("avgWeeklyHospitalAdmissionsPerMillion"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Weekly Hospital" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissionPerMillion));
@@ -428,18 +387,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlTotalTestPerThousand = "select \n" +
-                " sum(total_tests_per_thousand)/(select count(Id) from Country)\n" +
-                " as TotalTestPerThousand\n" +
-                " from Detail where date = (select max(date) from Detail where total_tests_per_thousand > 0)";
-        Cursor cTotalTestPerThousand = db.rawQuery(sqlTotalTestPerThousand, null);
-        cTotalTestPerThousand.moveToFirst();
-        @SuppressLint("Range") Double TotalTestPerThousand = cTotalTestPerThousand.getDouble(cTotalTestPerThousand.getColumnIndex("TotalTestPerThousand"));
+        @SuppressLint("Range") Double TotalTestPerThousand = cTerra.getDouble(cTerra.getColumnIndex("avgTotalTestsPerThousand"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(TotalTestPerThousand));
         metaField.underlineKey = true;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "total_tests_per_thousand";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -447,18 +400,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.executeSQL = metaField.executeSQL.replace("#X", "total_tests_per_thousand");
         metaFields.add(metaField);
 
-        String sqlNewTestPerThousand = "select \n" +
-                " sum(new_tests_per_thousand)/(select count(Id) from Country)\n" +
-                " as NewTestPerThousand\n" +
-                " from Detail where date = (select max(date) from Detail where new_tests_per_thousand > 0)";
-        Cursor cNewTestPerThousand = db.rawQuery(sqlNewTestPerThousand, null);
-        cNewTestPerThousand.moveToFirst();
-        @SuppressLint("Range") Double NewTestPerThousand = cNewTestPerThousand.getDouble(cNewTestPerThousand.getColumnIndex("NewTestPerThousand"));
+        @SuppressLint("Range") Double NewTestPerThousand = cTerra.getDouble(cTerra.getColumnIndex("avgNewTestsPerThousand"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "New Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(NewTestPerThousand));
         metaField.underlineKey = true;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "new_tests_per_thousand";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -494,18 +441,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlPositiveRate = "select \n" +
-                " sum(positive_rate)\n" +
-                " as PositiveRate\n" +
-                " from Detail where date = (select max(date) from Detail where positive_rate > 0)";
-        Cursor cPositiveRate = db.rawQuery(sqlPositiveRate, null);
-        cPositiveRate.moveToFirst();
-        @SuppressLint("Range") Double PositiveRate = cPositiveRate.getDouble(cPositiveRate.getColumnIndex("PositiveRate"));
+        @SuppressLint("Range") Double PositiveRate = cTerra.getDouble(cTerra.getColumnIndex("avgPositivityRate"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Positive Rate%";
         metaField.value = String.valueOf(formatter.format(PositiveRate));
         metaField.underlineKey = true;
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.ByCountry;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "positive_rate";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
@@ -513,13 +454,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.executeSQL = metaField.executeSQL.replace("#X", "positive_rate");
         metaFields.add(metaField);
 
-        String sqlTestPerCase = "select \n" +
-                " sum(tests_per_case)/(select count(Id) from Country)\n" +
-                " as TestPerCase\n" +
-                " from Detail where date = (select max(date) from Detail where tests_per_case > 0)";
-        Cursor cTestPerCase = db.rawQuery(sqlTestPerCase, null);
-        cTestPerCase.moveToFirst();
-        @SuppressLint("Range") Double TestPerCase = cTestPerCase.getDouble(cTestPerCase.getColumnIndex("TestPerCase"));
+        @SuppressLint("Range") Double TestPerCase = cTerra.getDouble(cTerra.getColumnIndex("avgTestPerCase"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Test Per Case";
         metaField.value = String.valueOf(formatter.format(TestPerCase));
@@ -611,13 +546,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlTotalVaccinationPerHundred = "select\n" +
-                " sum(total_vaccinations_per_hundred)/(select count(Id) from Country)\n" +
-                " as TotalVaccinationPerHundred\n" +
-                " from Detail where date = (select max(date) from Detail where total_vaccinations_per_hundred > 0)";
-        Cursor cTotalVaccinationPerHundred = db.rawQuery(sqlTotalVaccinationPerHundred, null);
-        cTotalVaccinationPerHundred.moveToFirst();
-        @SuppressLint("Range") Double TotalVaccinationPerHundred = cTotalVaccinationPerHundred.getDouble(cTotalVaccinationPerHundred.getColumnIndex("TotalVaccinationPerHundred"));
+        @SuppressLint("Range") Double TotalVaccinationPerHundred = cTerra.getDouble(cTerra.getColumnIndex("avgTotaVvaccinationsPerHundred"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Vaccination" + Constants.roman100;
         metaField.value = String.valueOf(formatter.format(TotalVaccinationPerHundred));
@@ -625,13 +554,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlPeopleVaccinatedPerHundred = "select\n" +
-                " sum(people_vaccinated_per_hundred)/(select count(Id) from Country)\n" +
-                " as PeopleVaccinatedPerHundred\n" +
-                " from Detail where date = (select max(date) from Detail where people_vaccinated_per_hundred > 0)";
-        Cursor cPeopleVaccinatedPerHundred = db.rawQuery(sqlPeopleVaccinatedPerHundred, null);
-        cPeopleVaccinatedPerHundred.moveToFirst();
-        @SuppressLint("Range") Double PeopleVaccinatedPerHundred = cPeopleVaccinatedPerHundred.getDouble(cPeopleVaccinatedPerHundred.getColumnIndex("PeopleVaccinatedPerHundred"));
+        @SuppressLint("Range") Double PeopleVaccinatedPerHundred = cTerra.getDouble(cTerra.getColumnIndex("avgPeopleVaccinatedPerHundred"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Vaccinated" + Constants.roman100;
         metaField.value = String.valueOf(formatter.format(PeopleVaccinatedPerHundred));
@@ -681,13 +604,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlAged65Older = "select \n" +
-                " sum(aged_65_older)/(select count(Id) from Country)\n" +
-                " as Aged65Older\n" +
-                " from Detail where date = (select max(date) from Detail where aged_65_older > 0)";
-        Cursor cAged65Older = db.rawQuery(sqlAged65Older, null);
-        cAged65Older.moveToFirst();
-        @SuppressLint("Range") Double Aged65Older = cAged65Older.getDouble(cAged65Older.getColumnIndex("Aged65Older"));
+        @SuppressLint("Range") Double Aged65Older = cTerra.getDouble(cTerra.getColumnIndex("avgAged65Older"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Aged65Older%";
         metaField.value = String.valueOf(formatter.format(Aged65Older));
@@ -695,13 +612,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlAged70Older = "select \n" +
-                " sum(aged_70_older)/(select count(Id) from Country)\n" +
-                " as Aged70Older\n" +
-                " from Detail where date = (select max(date) from Detail where aged_70_older > 0)";
-        Cursor cAged70Older = db.rawQuery(sqlAged70Older, null);
-        cAged70Older.moveToFirst();
-        @SuppressLint("Range") Double Aged70Older = cAged70Older.getDouble(cAged70Older.getColumnIndex("Aged70Older"));
+        @SuppressLint("Range") Double Aged70Older = cTerra.getDouble(cTerra.getColumnIndex("avgAged70Older"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Aged70Older%";
         metaField.value = String.valueOf(formatter.format(Aged70Older));
@@ -751,13 +662,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlDiabetesPrevalence = "select \n" +
-                " sum(diabetes_prevalence)/(select count(Id) from Country)\n" +
-                " as DiabetesPrevalence\n" +
-                " from Detail where date = (select max(date) from Detail where diabetes_prevalence > 0)";
-        Cursor cDiabetesPrevalence = db.rawQuery(sqlDiabetesPrevalence, null);
-        cDiabetesPrevalence.moveToFirst();
-        @SuppressLint("Range") Double DiabetesPrevalence = cDiabetesPrevalence.getDouble(cDiabetesPrevalence.getColumnIndex("DiabetesPrevalence"));
+        @SuppressLint("Range") Double DiabetesPrevalence = cTerra.getDouble(cTerra.getColumnIndex("avgDiabetesPrevalence"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Diabetes Prevalence%";
         metaField.value = String.valueOf(formatter.format(DiabetesPrevalence));
@@ -765,13 +670,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlFemaleSmoker = "select \n" +
-                " sum(female_smokers)/(select count(Id) from Country)\n" +
-                " as FemaleSmoker\n" +
-                " from Detail where date = (select max(date) from Detail where female_smokers > 0)";
-        Cursor cFemaleSmoker = db.rawQuery(sqlFemaleSmoker, null);
-        cFemaleSmoker.moveToFirst();
-        @SuppressLint("Range") Double FemaleSmoker = cFemaleSmoker.getDouble(cFemaleSmoker.getColumnIndex("FemaleSmoker"));
+        @SuppressLint("Range") Double FemaleSmoker = cTerra.getDouble(cTerra.getColumnIndex("avgFemaleSmokers"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Female Smoker%";
         metaField.value = String.valueOf(formatter.format(FemaleSmoker));
@@ -779,13 +678,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlMaleSmoker = "select \n" +
-                " sum(male_smokers)/(select count(Id) from Country)\n" +
-                " as MaleSmoker\n" +
-                " from Detail where date = (select max(date) from Detail where male_smokers > 0)";
-        Cursor cMaleSmoker = db.rawQuery(sqlMaleSmoker, null);
-        cMaleSmoker.moveToFirst();
-        @SuppressLint("Range") Double MaleSmoker = cMaleSmoker.getDouble(cMaleSmoker.getColumnIndex("MaleSmoker"));
+        @SuppressLint("Range") Double MaleSmoker = cTerra.getDouble(cTerra.getColumnIndex("avgMaleSmokers"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Male Smoker%";
         metaField.value = String.valueOf(formatter.format(MaleSmoker));
@@ -807,13 +700,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);*/
 
-        String sqlHospitalBedsPerThousand = "select \n" +
-                " sum(hospital_beds_per_thousand)/(select count(Id) from Country)\n" +
-                " as HospitalBedsPerThousand\n" +
-                " from Detail where date = (select max(date) from Detail where hospital_beds_per_thousand > 0)";
-        Cursor cHospitalBedsPerThousand = db.rawQuery(sqlHospitalBedsPerThousand, null);
-        cHospitalBedsPerThousand.moveToFirst();
-        @SuppressLint("Range") Double HospitalBedsPerThousand = cHospitalBedsPerThousand.getDouble(cHospitalBedsPerThousand.getColumnIndex("HospitalBedsPerThousand"));
+        @SuppressLint("Range") Double HospitalBedsPerThousand = cTerra.getDouble(cTerra.getColumnIndex("avgHospitalBedsPerThousand"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "HospitalBeds" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(HospitalBedsPerThousand));
@@ -821,13 +708,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         //metaField.UI = Constants.UIFieldXHistory;
         metaFields.add(metaField);
 
-        String sqlLifeExpectancy = "select \n" +
-                " sum(life_expectancy)/(select count(Id) from Country)\n" +
-                " as LifeExpectancy\n" +
-                " from Detail where date = (select max(date) from Detail where life_expectancy > 0)";
-        Cursor cLifeExpectancy = db.rawQuery(sqlLifeExpectancy, null);
-        cLifeExpectancy.moveToFirst();
-        @SuppressLint("Range") Double LifeExpectancy = cLifeExpectancy.getDouble(cLifeExpectancy.getColumnIndex("LifeExpectancy"));
+        @SuppressLint("Range") Double LifeExpectancy = cTerra.getDouble(cTerra.getColumnIndex("avgLifeExpectancy"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Life Expectancy";
         metaField.value = String.valueOf(formatter.format(LifeExpectancy));

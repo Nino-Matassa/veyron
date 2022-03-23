@@ -36,7 +36,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
                 " Country.location as Country,\n" +
                 " Region.continent as Region,\n" +
                 "(select count(Id) from Detail where FK_Country = '#1') as countId,\n" +
-                " sum(icu_patients) as sumICUPatient," +
+                " sum(icu_patients) as sumICUPatient," + // or (select icu_patients from detail where FK_Country = '96' and icu_patients > 0 order by date desc limit 1) as lastReportedICUPatient
                 " sum(icu_patients_per_million) as sumICUPatientPerMillion," +
                 " sum(hosp_patients) as sumHospitalPatient," +
                 " sum(hosp_patients_per_million) as sumHospitalPatientPerMillion," +
@@ -99,6 +99,8 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private void populateRegion() {
         ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
         MetaField metaField = null;
+        Long CountId = cCountry.getLong(cCountry.getColumnIndex("countId"));
+
 
         String Date = cCountry.getString(cCountry.getColumnIndex("date"));
         LocalDate localDate = LocalDate.parse(Date);
@@ -122,7 +124,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalCase));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_cases";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -135,7 +137,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewCase));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_cases";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -148,7 +150,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalDeath));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_deaths";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -161,7 +163,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewDeath));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_deaths";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -174,7 +176,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalCasePerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_cases_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -187,7 +189,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalDeathPerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_deaths_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -200,7 +202,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_cases_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -213,7 +215,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewDeathPerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_deaths_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -246,7 +248,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(ReproductionRate));
         metaField.underlineKey = true;
         metaField.fieldXName = "reproduction_rate";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -254,14 +256,13 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaFields.add(metaField);
 
         //Double ICUPatients = cCountry.getDouble(cCountry.getColumnIndex("icu_patients"));
-        Long CountId = cCountry.getLong(cCountry.getColumnIndex("countId"));
         Double ICUPatients = cCountry.getDouble(cCountry.getColumnIndex("sumICUPatient"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "*ICU Patients";
         metaField.value = String.valueOf(formatter.format(ICUPatients/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "icu_patients";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -274,7 +275,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(ICUPatientsPerMillion/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "icu_patients_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -287,7 +288,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(HospitalPatients/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "hosp_patients";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -300,7 +301,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(HospitalPatientsPerMillion/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "hosp_patients_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -313,7 +314,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissions/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_icu_admissions";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -326,7 +327,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionsPerMillion/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_icu_admissions_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -339,7 +340,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissions/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_hosp_admissions";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -352,7 +353,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissionsPerMillion/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_hosp_admissions_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -365,7 +366,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewTests));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_tests";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -378,7 +379,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalTests));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_tests";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -391,7 +392,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalTestPerThousand));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_tests_per_thousand";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -404,7 +405,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewTestPerThousand));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_tests_per_thousand";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -417,7 +418,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(PositivityRate/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "positive_rate";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -430,7 +431,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TestPerCase/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "tests_per_case";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -443,7 +444,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(UnitTests/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "tests_units";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -456,7 +457,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalVaccinations/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_vaccinations";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -469,7 +470,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(PeopleVaccinated/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_vaccinated";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -482,7 +483,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(PeopleFullyVaccinated/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_fully_vaccinated";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -495,7 +496,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(TotalBoosters/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_boosters";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -508,7 +509,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(NewVaccinations/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_vaccinations";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -521,7 +522,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(total_vaccinations_per_hundred/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_vaccinations_per_hundred";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -534,7 +535,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(people_vaccinated_per_hundred/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_vaccinated_per_hundred";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -547,7 +548,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(people_fully_vaccinated_per_hundred/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_fully_vaccinated_per_hundred";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -560,7 +561,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(total_boosters_per_hundred/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_boosters_per_hundred";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -573,7 +574,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(stringency_index/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "stringency_index";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -586,7 +587,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(population_density));
         metaField.underlineKey = false;
         metaField.fieldXName = "population_density";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -599,7 +600,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(median_age));
         metaField.underlineKey = false;
         metaField.fieldXName = "median_age";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -612,7 +613,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(aged_65_older));
         metaField.underlineKey = false;
         metaField.fieldXName = "aged_65_older";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -625,7 +626,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(aged_70_older));
         metaField.underlineKey = false;
         metaField.fieldXName = "aged_70_older";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -638,7 +639,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(gdp_per_capita));
         metaField.underlineKey = false;
         metaField.fieldXName = "gdp_per_capita";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -651,7 +652,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(extreme_poverty));
         metaField.underlineKey = false;
         metaField.fieldXName = "extreme_poverty";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -664,7 +665,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(cardiovasc_death_rate));
         metaField.underlineKey = false;
         metaField.fieldXName = "cardiovasc_death_rate";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -677,7 +678,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(diabetes_prevalence));
         metaField.underlineKey = false;
         metaField.fieldXName = "diabetes_prevalence";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -690,7 +691,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(female_smokers));
         metaField.underlineKey = false;
         metaField.fieldXName = "female_smokers";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -703,7 +704,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(male_smokers));
         metaField.underlineKey = false;
         metaField.fieldXName = "male_smokers";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -716,7 +717,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(handwashing_facilities));
         metaField.underlineKey = false;
         metaField.fieldXName = "handwashing_facilities";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -729,7 +730,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(hospital_beds_per_thousand));
         metaField.underlineKey = false;
         metaField.fieldXName = "hospital_beds_per_thousand";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -742,7 +743,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(life_expectancy));
         metaField.underlineKey = false;
         metaField.fieldXName = "life_expectancy";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -755,7 +756,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(human_development_index));
         metaField.underlineKey = false;
         metaField.fieldXName = "human_development_index";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -768,7 +769,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative_absolute/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality_cumulative_absolute";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -781,7 +782,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality_cumulative";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -794,7 +795,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(excess_mortality/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;
@@ -807,7 +808,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative_per_million/CountId));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality_cumulative_per_million";
-        metaField.fieldXHistoryType = Constants.FieldXHistoryType.Simple;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
         metaField.regionId = RegionId;
         metaField.countryId = CountryId;
         metaField.region = Region;

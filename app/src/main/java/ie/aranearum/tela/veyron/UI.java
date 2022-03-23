@@ -220,7 +220,7 @@ public class UI {
                               Long RegionId, Long CountryId, String Region, String Country,
                               String executeSQL) {
         switch (fieldXType) {
-            case Simple:
+            case DateAndField:
                 ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
                     String sqlFieldXHistory = "select date, fieldX from Detail where FK_Country = '#1' order by date desc";
@@ -245,7 +245,7 @@ public class UI {
                     return metaFields;
                 };
                 break;
-            case ByCountry:
+            case CountryAndField:
                 ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
                     String sqlFieldXHistory = executeSQL;

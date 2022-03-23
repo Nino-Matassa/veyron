@@ -93,7 +93,7 @@ public class Constants {
     public static final String excess_mortality_cumulative_per_million = "";
 
     public static enum FieldXHistoryType {
-        Simple,
-        ByCountry
+        DateAndField,
+        CountryAndField
     }
 }
