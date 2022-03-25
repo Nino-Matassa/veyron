@@ -94,6 +94,8 @@ public class Constants {
 
     public static enum FieldXHistoryType {
         DateAndField,
-        CountryAndField
+        CountryAndField,
+        PercentInfectedCountryX,
+        PercentInfectedTerra
     }
 }

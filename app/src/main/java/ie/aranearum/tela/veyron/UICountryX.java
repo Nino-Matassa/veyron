@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.icu.text.DecimalFormat;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,8 +21,6 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private String lastUpdated = null;
     Cursor cCountry = null;
 
-    //ILambdaXHistory ILambdaXHistory;
-
     public UICountryX(Context context, Long countryId) {
         super(context, Constants.UICountryX);
         this.context = context;
@@ -35,33 +32,45 @@ public class UICountryX extends UI implements IRegisterOnStack {
                 " Region.Id as RegionId,\n" +
                 " Country.location as Country,\n" +
                 " Region.continent as Region,\n" +
-                "(select count(Id) from Detail where FK_Country = '#1') as countId,\n" +
-                " sum(icu_patients) as sumICUPatient," + // or (select icu_patients from detail where FK_Country = '96' and icu_patients > 0 order by date desc limit 1) as lastReportedICUPatient
-                " sum(icu_patients_per_million) as sumICUPatientPerMillion," +
-                " sum(hosp_patients) as sumHospitalPatient," +
-                " sum(hosp_patients_per_million) as sumHospitalPatientPerMillion," +
-                " sum(weekly_icu_admissions) as sumWeeklyICUAdmissions," +
-                " sum(weekly_icu_admissions_per_million) as sumWeeklyICUAdmissionsPerMillion," +
-                " sum(weekly_hosp_admissions) as sumWeeklyHospitalAdmissions," +
-                " sum(weekly_hosp_admissions_per_million) as sumWeeklyHospitalAdmissionsPerMillion," +
-                " sum(positive_rate) as sumPositivityRate," +
-                " sum(tests_per_case) as sumTestPerCase," +
-                " sum(tests_units) as sumUnitTests," +
-                " sum(total_vaccinations) as sumTotalVaccinations," +
-                " sum(people_vaccinated) as sumPeopleVaccinated," +
-                " sum(people_fully_vaccinated) as sumPeopleFullyVaccinated," +
-                " sum(total_boosters) as sumTotalBoosters," +
-                " sum(new_vaccinations) as sumNewVaccinations," +
-                " sum(total_vaccinations_per_hundred) as sumtotal_vaccinations_per_hundred," +
-                " sum(people_vaccinated_per_hundred) as sumpeople_vaccinated_per_hundred," +
-                " sum(people_fully_vaccinated_per_hundred) as sumpeople_fully_vaccinated_per_hundred," +
-                " sum(total_boosters_per_hundred) as sumtotal_boosters_per_hundred," +
-                " sum(stringency_index) as sumstringency_index," +
-                " sum(excess_mortality_cumulative_absolute) as sumexcess_mortality_cumulative_absolute," +
-                " sum(excess_mortality_cumulative) as sumexcess_mortality_cumulative," +
-                " sum(excess_mortality) as sumexcess_mortality," +
-                " sum(excess_mortality_cumulative_per_million) as sumexcess_mortality_cumulative_per_million," +
-                " * from Detail\n" +
+                "(select reproduction_rate from Detail where reproduction_rate > 0 and FK_Country = '#1' order by date desc limit 1) as rNought\n" +
+                ", (select total_cases from Detail where total_cases > 0 and FK_Country = '#1' order by date desc limit 1) as TotalCase\n" +
+                ", (select new_cases from Detail where new_cases > 0 and FK_Country = '#1' order by date desc limit 1) as NewCase\n" +
+                ", (select total_deaths from Detail where total_deaths > 0 and FK_Country = '#1' order by date desc limit 1) as TotalDeath\n" +
+                ", (select new_deaths from Detail where new_deaths > 0 and FK_Country = '#1' order by date desc limit 1) as NewDeath\n" +
+                ", (select total_cases_per_million from Detail where total_cases_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as TotalCasePerMillion\n" +
+                ", (select total_deaths_per_million from Detail where total_deaths_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as TotalDeathPerMillion\n" +
+                ", (select new_cases_per_million from Detail where new_cases_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as NewCasePerMillion\n" +
+                ", (select new_deaths_per_million from Detail where new_deaths_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as NewDeathPerMillion\n" +
+                ", (select icu_patients from Detail where icu_patients > 0 and FK_Country = '#1' order by date desc limit 1) as ICUPatients\n" +
+                ", (select icu_patients_per_million from Detail where icu_patients_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as ICUPatientsPerMillion\n" +
+                ", (select hosp_patients from Detail where hosp_patients > 0 and FK_Country = '#1' order by date desc limit 1) as HospitalPatients\n" +
+                ", (select hosp_patients_per_million from Detail where hosp_patients_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as HospitalPatientsPerMillion\n" +
+                ", (select weekly_icu_admissions from Detail where weekly_icu_admissions > 0 and FK_Country = '#1' order by date desc limit 1) as WeeklyICUAdmissions\n" +
+                ", (select weekly_icu_admissions_per_million from Detail where weekly_icu_admissions_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as WeeklyICUAdmissionsPerMillion\n" +
+                ", (select weekly_hosp_admissions from Detail where weekly_hosp_admissions > 0 and FK_Country = '#1' order by date desc limit 1) as WeeklyHospitalAdmissions\n" +
+                ", (select weekly_hosp_admissions_per_million from Detail where weekly_hosp_admissions_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as WeeklyHospitalAdmissionsPerMillion\n" +
+                ", (select positive_rate from Detail where positive_rate > 0 and FK_Country = '#1' order by date desc limit 1) as PositivityRate\n" +
+                ", (select tests_per_case from Detail where tests_per_case > 0 and FK_Country = '#1' order by date desc limit 1) as TestPerCase\n" +
+                "--, (select tests_units from Detail where tests_units > 0 and FK_Country = '#1' order by date desc limit 1) as tests_units\n" +
+                ", (select total_vaccinations from Detail where total_vaccinations > 0 and FK_Country = '#1' order by date desc limit 1) as TotalVaccination\n" +
+                ", (select people_vaccinated from Detail where people_vaccinated > 0 and FK_Country = '#1' order by date desc limit 1) as PeopleVaccinated\n" +
+                ", (select people_fully_vaccinated from Detail where people_fully_vaccinated > 0 and FK_Country = '#1' order by date desc limit 1) as PeopleFullyVaccinated\n" +
+                ", (select total_boosters from Detail where total_boosters > 0 and FK_Country = '#1' order by date desc limit 1) as TotalBooster\n" +
+                ", (select new_vaccinations from Detail where new_vaccinations > 0 and FK_Country = '#1' order by date desc limit 1) as NewVaccination\n" +
+                ", (select total_vaccinations_per_hundred from Detail where total_vaccinations_per_hundred > 0 and FK_Country = '#1' order by date desc limit 1) as TotalVaccinationPerHundred\n" +
+                ", (select people_vaccinated_per_hundred from Detail where people_vaccinated_per_hundred > 0 and FK_Country = '#1' order by date desc limit 1) as PeopleVaccinatedPerHundred\n" +
+                ", (select people_fully_vaccinated_per_hundred from Detail where people_fully_vaccinated_per_hundred > 0 and FK_Country = '#1' order by date desc limit 1) as PeopleFullyVaccinatedPerHundred\n" +
+                ", (select total_boosters_per_hundred from Detail where total_boosters_per_hundred > 0 and FK_Country = '#1' order by date desc limit 1) as TotalBoostersPerHundred\n" +
+                ", (select stringency_index from Detail where stringency_index > 0 and FK_Country = '#1' order by date desc limit 1) as StringencyIndex\n" +
+                ", (select excess_mortality_cumulative_absolute from Detail where excess_mortality_cumulative_absolute > 0 and FK_Country = '#1' order by date desc limit 1) as ExcessMortalityCumulativeAbsolute\n" +
+                ", (select excess_mortality_cumulative from Detail where excess_mortality_cumulative > 0 and FK_Country = '#1' order by date desc limit 1) as ExcessMortalityCumulative\n" +
+                ", (select excess_mortality from Detail where excess_mortality > 0 and FK_Country = '#1' order by date desc limit 1) as ExcessMortality\n" +
+                ", (select excess_mortality_cumulative_per_million from Detail where excess_mortality_cumulative_per_million > 0 and FK_Country = '#1' order by date desc limit 1) as ExcessMortalityCumulativePerMillion\n" +
+                ", (select new_tests from Detail where new_tests > 0 and FK_Country = '#1' order by date desc limit 1) as NewTest\n" +
+                ", (select total_tests from Detail where total_tests > 0 and FK_Country = '#1' order by date desc limit 1) as TotalTest\n" +
+                ", (select new_tests_per_thousand from Detail where new_tests_per_thousand > 0 and FK_Country = '#1' order by date desc limit 1) as NewTestPerThousand\n" +
+                ", (select total_tests_per_thousand from Detail where total_tests_per_thousand > 0 and FK_Country = '#1' order by date desc limit 1) as TotalTestsPerThousand\n" +
+                ", * from Detail\n" +
                 " join Country on Country.id = Detail.FK_Country\n" +
                 " join Region on Region.Id = Country.FK_Region\n" +
                 " where Country.Id = '#1' order by date desc limit 1";
@@ -99,8 +108,6 @@ public class UICountryX extends UI implements IRegisterOnStack {
     private void populateRegion() {
         ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
         MetaField metaField = null;
-        Long CountId = cCountry.getLong(cCountry.getColumnIndex("countId"));
-
 
         String Date = cCountry.getString(cCountry.getColumnIndex("date"));
         LocalDate localDate = LocalDate.parse(Date);
@@ -118,7 +125,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.underlineKey = false;
         metaFields.add(metaField);
 
-        Double TotalCase = cCountry.getDouble(cCountry.getColumnIndex("total_cases"));
+        Double TotalCase = cCountry.getDouble(cCountry.getColumnIndex("TotalCase"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Case";
         metaField.value = String.valueOf(formatter.format(TotalCase));
@@ -131,7 +138,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double NewCase = cCountry.getDouble(cCountry.getColumnIndex("new_cases"));
+        Double NewCase = cCountry.getDouble(cCountry.getColumnIndex("NewCase"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Case";
         metaField.value = String.valueOf(formatter.format(NewCase));
@@ -144,7 +151,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double TotalDeath = cCountry.getDouble(cCountry.getColumnIndex("total_deaths"));
+        Double TotalDeath = cCountry.getDouble(cCountry.getColumnIndex("TotalDeath"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Death";
         metaField.value = String.valueOf(formatter.format(TotalDeath));
@@ -157,7 +164,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double NewDeath = cCountry.getDouble(cCountry.getColumnIndex("new_deaths"));
+        Double NewDeath = cCountry.getDouble(cCountry.getColumnIndex("NewDeath"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Death";
         metaField.value = String.valueOf(formatter.format(NewDeath));
@@ -170,7 +177,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double TotalCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("total_cases_per_million"));
+        Double TotalCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("TotalCasePerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalCasePerMillion));
@@ -183,7 +190,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double TotalDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("total_deaths_per_million"));
+        Double TotalDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("TotalDeathPerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(TotalDeathPerMillion));
@@ -196,7 +203,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double NewCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("new_cases_per_million"));
+        Double NewCasePerMillion = cCountry.getDouble(cCountry.getColumnIndex("NewCasePerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Case" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewCasePerMillion));
@@ -209,7 +216,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double NewDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("new_deaths_per_million"));
+        Double NewDeathPerMillion = cCountry.getDouble(cCountry.getColumnIndex("NewDeathPerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Death" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(NewDeathPerMillion));
@@ -222,27 +229,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        String sqlRNought = "select \n" +
-                " Country.Id as CountryId,\n" +
-                " Region.Id as RegionId,\n" +
-                " Country.location as Country,\n" +
-                " Region.continent as Region,\n" +
-                " * from Detail\n" +
-                " join Country on Country.id = Detail.FK_Country\n" +
-                " join Region on Region.Id = Country.FK_Region\n" +
-                " where Country.Id = '#1' and reproduction_rate > 0 order by date desc limit 1";
-        sqlRNought = sqlRNought.replace("#1", String.valueOf(CountryId));
-        Cursor cReproductionRate = db.rawQuery(sqlRNought, null);
-        Double ReproductionRate = 0d;
-
-        try {
-            cReproductionRate.moveToFirst();
-            ReproductionRate = cReproductionRate.getDouble(cReproductionRate.getColumnIndex("reproduction_rate"));
-        } catch (Exception e) {
-            Log.d("UICountryX", e.toString());
-        }
-
-
+        Double ReproductionRate = cCountry.getDouble(cCountry.getColumnIndex("rNought"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));
@@ -255,11 +242,25 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        //Double ICUPatients = cCountry.getDouble(cCountry.getColumnIndex("icu_patients"));
-        Double ICUPatients = cCountry.getDouble(cCountry.getColumnIndex("sumICUPatient"));
+        Double PercentInfected = TotalCase/Population*100;
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*ICU Patients";
-        metaField.value = String.valueOf(formatter.format(ICUPatients/CountId));
+        metaField.key = "Percent Infected";
+        metaField.value = String.valueOf(formatter.format(PercentInfected));
+        metaField.underlineKey = false;
+        metaField.fieldXName = "Percent Infected";
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.PercentInfectedCountryX;
+        metaField.regionId = RegionId;
+        metaField.countryId = CountryId;
+        metaField.region = Region;
+        metaField.country = Country;
+        metaField.executeSQL = "select date, total_cases, population from Detail where FK_Country = '#1' and total_cases > 0 order by date desc";
+        metaField.executeSQL = metaField.executeSQL.replace("#1", String.valueOf(CountryId));
+        metaFields.add(metaField);
+
+        Double ICUPatients = cCountry.getDouble(cCountry.getColumnIndex("ICUPatients"));
+        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
+        metaField.key = "ICU Patients";
+        metaField.value = String.valueOf(formatter.format(ICUPatients));
         metaField.underlineKey = true;
         metaField.fieldXName = "icu_patients";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -269,10 +270,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double ICUPatientsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("sumICUPatientPerMillion"));
+        Double ICUPatientsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("ICUPatientsPerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*ICU Patients" + Constants.roman1000000;
-        metaField.value = String.valueOf(formatter.format(ICUPatientsPerMillion/CountId));
+        metaField.key = "ICU Patients" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(ICUPatientsPerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "icu_patients_per_million";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -282,10 +283,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double HospitalPatients = cCountry.getDouble(cCountry.getColumnIndex("sumHospitalPatient"));
+        Double HospitalPatients = cCountry.getDouble(cCountry.getColumnIndex("HospitalPatients"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Hospital Patients";
-        metaField.value = String.valueOf(formatter.format(HospitalPatients/CountId));
+        metaField.key = "Hospital Patients";
+        metaField.value = String.valueOf(formatter.format(HospitalPatients));
         metaField.underlineKey = true;
         metaField.fieldXName = "hosp_patients";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -295,10 +296,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double HospitalPatientsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("sumHospitalPatientPerMillion"));
+        Double HospitalPatientsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("HospitalPatientsPerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Hospital Patients" + Constants.roman1000000;
-        metaField.value = String.valueOf(formatter.format(HospitalPatientsPerMillion/CountId));
+        metaField.key = "Hospital Patients" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(HospitalPatientsPerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "hosp_patients_per_million";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -308,10 +309,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double WeeklyICUAdmissions = cCountry.getDouble(cCountry.getColumnIndex("sumWeeklyICUAdmissions"));
+        Double WeeklyICUAdmissions = cCountry.getDouble(cCountry.getColumnIndex("WeeklyICUAdmissions"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*ICU Admission7D";
-        metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissions/CountId));
+        metaField.key = "ICU Admission7D";
+        metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissions));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_icu_admissions";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -321,10 +322,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double WeeklyICUAdmissionsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("sumWeeklyICUAdmissionsPerMillion"));
+        Double WeeklyICUAdmissionsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("WeeklyICUAdmissionsPerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*ICU Admission7D" + Constants.roman1000000;
-        metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionsPerMillion/CountId));
+        metaField.key = "ICU Admission7D" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionsPerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_icu_admissions_per_million";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -334,10 +335,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double WeeklyHospitalAdmissions = cCountry.getDouble(cCountry.getColumnIndex("sumWeeklyHospitalAdmissions"));
+        Double WeeklyHospitalAdmissions = cCountry.getDouble(cCountry.getColumnIndex("WeeklyHospitalAdmissions"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Hospital Admissions7D";
-        metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissions/CountId));
+        metaField.key = "Hospital Admissions7D";
+        metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissions));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_hosp_admissions";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -347,10 +348,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double WeeklyHospitalAdmissionsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("sumWeeklyHospitalAdmissionsPerMillion"));
+        Double WeeklyHospitalAdmissionsPerMillion = cCountry.getDouble(cCountry.getColumnIndex("WeeklyHospitalAdmissionsPerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Hospital Admissions7D" + Constants.roman1000000;
-        metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissionsPerMillion/CountId));
+        metaField.key = "Hospital Admissions7D" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissionsPerMillion));
         metaField.underlineKey = true;
         metaField.fieldXName = "weekly_hosp_admissions_per_million";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -360,7 +361,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double NewTests = cCountry.getDouble(cCountry.getColumnIndex("new_tests"));
+        Double NewTests = cCountry.getDouble(cCountry.getColumnIndex("NewTest"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Tests";
         metaField.value = String.valueOf(formatter.format(NewTests));
@@ -373,7 +374,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double TotalTests = cCountry.getDouble(cCountry.getColumnIndex("total_tests"));
+        Double TotalTests = cCountry.getDouble(cCountry.getColumnIndex("TotalTest"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Tests";
         metaField.value = String.valueOf(formatter.format(TotalTests));
@@ -386,7 +387,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double TotalTestPerThousand = cCountry.getDouble(cCountry.getColumnIndex("total_tests_per_thousand"));
+        Double TotalTestPerThousand = cCountry.getDouble(cCountry.getColumnIndex("TotalTestsPerThousand"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "Total Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(TotalTestPerThousand));
@@ -399,7 +400,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double NewTestPerThousand = cCountry.getDouble(cCountry.getColumnIndex("new_tests_per_thousand"));
+        Double NewTestPerThousand = cCountry.getDouble(cCountry.getColumnIndex("NewTestPerThousand"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
         metaField.key = "New Test" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(NewTestPerThousand));
@@ -412,10 +413,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double PositivityRate = cCountry.getDouble(cCountry.getColumnIndex("sumPositivityRate"));
+        Double PositivityRate = cCountry.getDouble(cCountry.getColumnIndex("PositivityRate"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Positivity Rate";
-        metaField.value = String.valueOf(formatter.format(PositivityRate/CountId));
+        metaField.key = "Positivity Rate";
+        metaField.value = String.valueOf(formatter.format(PositivityRate));
         metaField.underlineKey = true;
         metaField.fieldXName = "positive_rate";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -425,10 +426,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double TestPerCase = cCountry.getDouble(cCountry.getColumnIndex("sumTestPerCase"));
+        Double TestPerCase = cCountry.getDouble(cCountry.getColumnIndex("TestPerCase"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Test/Case";
-        metaField.value = String.valueOf(formatter.format(TestPerCase/CountId));
+        metaField.key = "Test/Case";
+        metaField.value = String.valueOf(formatter.format(TestPerCase));
         metaField.underlineKey = true;
         metaField.fieldXName = "tests_per_case";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -438,10 +439,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double UnitTests = cCountry.getDouble(cCountry.getColumnIndex("sumUnitTests"));
+        /*Double UnitTests = cCountry.getDouble(cCountry.getColumnIndex("tests_units"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Unit Test";
-        metaField.value = String.valueOf(formatter.format(UnitTests/CountId));
+        metaField.key = "Unit Test";
+        metaField.value = String.valueOf(formatter.format(UnitTests));
         metaField.underlineKey = true;
         metaField.fieldXName = "tests_units";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -449,12 +450,12 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.countryId = CountryId;
         metaField.region = Region;
         metaField.country = Country;
-        metaFields.add(metaField);
+        metaFields.add(metaField);*/
 
-        Double TotalVaccinations = cCountry.getDouble(cCountry.getColumnIndex("sumTotalVaccinations"));
+        Double TotalVaccinations = cCountry.getDouble(cCountry.getColumnIndex("TotalVaccination"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Total Vaccinations";
-        metaField.value = String.valueOf(formatter.format(TotalVaccinations/CountId));
+        metaField.key = "Total Vaccinations";
+        metaField.value = String.valueOf(formatter.format(TotalVaccinations));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_vaccinations";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -464,10 +465,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double PeopleVaccinated = cCountry.getDouble(cCountry.getColumnIndex("sumPeopleVaccinated"));
+        Double PeopleVaccinated = cCountry.getDouble(cCountry.getColumnIndex("PeopleVaccinated"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Vaccinated";
-        metaField.value = String.valueOf(formatter.format(PeopleVaccinated/CountId));
+        metaField.key = "Vaccinated";
+        metaField.value = String.valueOf(formatter.format(PeopleVaccinated));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_vaccinated";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -477,10 +478,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double PeopleFullyVaccinated = cCountry.getDouble(cCountry.getColumnIndex("sumPeopleFullyVaccinated"));
+        Double PeopleFullyVaccinated = cCountry.getDouble(cCountry.getColumnIndex("PeopleFullyVaccinated"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Fully Vaccinated";
-        metaField.value = String.valueOf(formatter.format(PeopleFullyVaccinated/CountId));
+        metaField.key = "Fully Vaccinated";
+        metaField.value = String.valueOf(formatter.format(PeopleFullyVaccinated));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_fully_vaccinated";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -490,10 +491,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double TotalBoosters = cCountry.getDouble(cCountry.getColumnIndex("sumTotalBoosters"));
+        Double TotalBoosters = cCountry.getDouble(cCountry.getColumnIndex("TotalBooster"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Total Boosters";
-        metaField.value = String.valueOf(formatter.format(TotalBoosters/CountId));
+        metaField.key = "Total Boosters";
+        metaField.value = String.valueOf(formatter.format(TotalBoosters));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_boosters";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -503,10 +504,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double NewVaccinations = cCountry.getDouble(cCountry.getColumnIndex("sumNewVaccinations"));
+        Double NewVaccinations = cCountry.getDouble(cCountry.getColumnIndex("NewVaccination"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*New Vaccinations" + Constants.roman1000000;
-        metaField.value = String.valueOf(formatter.format(NewVaccinations/CountId));
+        metaField.key = "New Vaccinations" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(NewVaccinations));
         metaField.underlineKey = true;
         metaField.fieldXName = "new_vaccinations";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -516,10 +517,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double total_vaccinations_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("sumtotal_vaccinations_per_hundred"));
+        Double total_vaccinations_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("TotalVaccinationPerHundred"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Total Vaccinations" + Constants.roman100;
-        metaField.value = String.valueOf(formatter.format(total_vaccinations_per_hundred/CountId));
+        metaField.key = "Total Vaccinations" + Constants.roman100;
+        metaField.value = String.valueOf(formatter.format(total_vaccinations_per_hundred));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_vaccinations_per_hundred";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -529,10 +530,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double people_vaccinated_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("sumpeople_vaccinated_per_hundred"));
+        Double people_vaccinated_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("PeopleVaccinatedPerHundred"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*People Vaccinated" + Constants.roman1000;
-        metaField.value = String.valueOf(formatter.format(people_vaccinated_per_hundred/CountId));
+        metaField.key = "People Vaccinated" + Constants.roman1000;
+        metaField.value = String.valueOf(formatter.format(people_vaccinated_per_hundred));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_vaccinated_per_hundred";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -542,10 +543,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double people_fully_vaccinated_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("sumpeople_fully_vaccinated_per_hundred"));
+        Double people_fully_vaccinated_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("PeopleFullyVaccinatedPerHundred"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Fully Vaccinated" + Constants.roman100;
-        metaField.value = String.valueOf(formatter.format(people_fully_vaccinated_per_hundred/CountId));
+        metaField.key = "Fully Vaccinated" + Constants.roman100;
+        metaField.value = String.valueOf(formatter.format(people_fully_vaccinated_per_hundred));
         metaField.underlineKey = true;
         metaField.fieldXName = "people_fully_vaccinated_per_hundred";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -555,10 +556,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double total_boosters_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("sumtotal_boosters_per_hundred"));
+        Double total_boosters_per_hundred = cCountry.getDouble(cCountry.getColumnIndex("TotalBoostersPerHundred"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Total Boosters" + Constants.roman100;
-        metaField.value = String.valueOf(formatter.format(total_boosters_per_hundred/CountId));
+        metaField.key = "Total Boosters" + Constants.roman100;
+        metaField.value = String.valueOf(formatter.format(total_boosters_per_hundred));
         metaField.underlineKey = true;
         metaField.fieldXName = "total_boosters_per_hundred";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -568,10 +569,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double stringency_index = cCountry.getDouble(cCountry.getColumnIndex("sumstringency_index"));
+        Double stringency_index = cCountry.getDouble(cCountry.getColumnIndex("StringencyIndex"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Stringency Index";
-        metaField.value = String.valueOf(formatter.format(stringency_index/CountId));
+        metaField.key = "Stringency Index";
+        metaField.value = String.valueOf(formatter.format(stringency_index));
         metaField.underlineKey = true;
         metaField.fieldXName = "stringency_index";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -763,10 +764,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double excess_mortality_cumulative_absolute = cCountry.getDouble(cCountry.getColumnIndex("sumexcess_mortality_cumulative_absolute"));
+        Double excess_mortality_cumulative_absolute = cCountry.getDouble(cCountry.getColumnIndex("ExcessMortalityCumulativeAbsolute"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Excess Mortality Cumulative Absolute";
-        metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative_absolute/CountId));
+        metaField.key = "Excess Mortality Cumulative Absolute";
+        metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative_absolute));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality_cumulative_absolute";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -776,10 +777,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double excess_mortality_cumulative = cCountry.getDouble(cCountry.getColumnIndex("sumexcess_mortality_cumulative"));
+        Double excess_mortality_cumulative = cCountry.getDouble(cCountry.getColumnIndex("ExcessMortalityCumulative"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Excess Mortality Cumulative";
-        metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative/CountId));
+        metaField.key = "Excess Mortality Cumulative";
+        metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality_cumulative";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -789,10 +790,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double excess_mortality = cCountry.getDouble(cCountry.getColumnIndex("sumexcess_mortality"));
+        Double excess_mortality = cCountry.getDouble(cCountry.getColumnIndex("ExcessMortality"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Excess Mortality";
-        metaField.value = String.valueOf(formatter.format(excess_mortality/CountId));
+        metaField.key = "Excess Mortality";
+        metaField.value = String.valueOf(formatter.format(excess_mortality));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;
@@ -802,10 +803,10 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.country = Country;
         metaFields.add(metaField);
 
-        Double excess_mortality_cumulative_per_million = cCountry.getDouble(cCountry.getColumnIndex("sumexcess_mortality_cumulative_per_million"));
+        Double excess_mortality_cumulative_per_million = cCountry.getDouble(cCountry.getColumnIndex("ExcessMortalityCumulativePerMillion"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "*Excess Mortality Cumulative" + Constants.roman1000000;
-        metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative_per_million/CountId));
+        metaField.key = "Excess Mortality Cumulative" + Constants.roman1000000;
+        metaField.value = String.valueOf(formatter.format(excess_mortality_cumulative_per_million));
         metaField.underlineKey = true;
         metaField.fieldXName = "excess_mortality_cumulative_per_million";
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.DateAndField;

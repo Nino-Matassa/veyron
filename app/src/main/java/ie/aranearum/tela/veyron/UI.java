@@ -33,6 +33,7 @@ public class UI {
     protected SQLiteDatabase db = null;
     private Vibrator vibrator = null;
 
+
     public UI(Context context, String UIX) {
         this.context = context;
         this.UIX = UIX;
@@ -111,10 +112,10 @@ public class UI {
                             new UICountryX(context, metaField.countryId);
                         }
                         if(metaField.UI.equals(Constants.UIFieldXHistory)) {
-                            defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
+                            ILambdaXHistory iLambdaXHistory = new LXHistory(context).defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
                                     metaField.region, metaField.country, metaField.executeSQL);
                             new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
-                                    ILambdaXHistory, metaField.fieldXName, metaField.executeSQL);
+                                    iLambdaXHistory, metaField.fieldXName, metaField.executeSQL);
                         }
                     }
                 }
@@ -210,64 +211,5 @@ public class UI {
         tableRow.addView(textView);
         tableRow.setBackgroundColor(Color.parseColor("#E6E6CA"));
         tableLayoutFooter.addView(tableRow);
-    }
-
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
-    private MetaField metaField = null;
-    private ILambdaXHistory ILambdaXHistory;
-    private DecimalFormat formatter = new DecimalFormat("#,###.##");
-    private void defineLambda(Constants.FieldXHistoryType fieldXType, String fieldName,
-                              Long RegionId, Long CountryId, String Region, String Country,
-                              String executeSQL) {
-        switch (fieldXType) {
-            case DateAndField:
-                ILambdaXHistory = () -> {
-                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    String sqlFieldXHistory = "select date, fieldX from Detail where FK_Country = '#1' order by date desc";
-                    sqlFieldXHistory = sqlFieldXHistory.replace("#1", String.valueOf(CountryId));
-                    sqlFieldXHistory = sqlFieldXHistory.replace("fieldX", fieldName);
-                    Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
-                    cFieldXHistory.moveToFirst();
-
-                    do {
-                        String strDate = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("date"));
-                        strDate = LocalDate.parse(strDate, dateTimeFormatter).toString();
-                        strDate += " : " + LocalDate.parse(strDate, dateTimeFormatter).getDayOfWeek().toString().substring(0, 3);
-                        Double fieldXValue = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex(fieldName));
-                        metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-                        metaField.region = Region;
-                        metaField.country = Country;
-                        metaField.key = strDate;
-                        metaField.value = String.valueOf(formatter.format(fieldXValue));
-                        metaFields.add(metaField);
-                    } while(cFieldXHistory.moveToNext());
-
-                    return metaFields;
-                };
-                break;
-            case CountryAndField:
-                ILambdaXHistory = () -> {
-                    ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    String sqlFieldXHistory = executeSQL;
-                    Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
-                    cFieldXHistory.moveToFirst();
-
-                    do {
-                        Double fieldXValue = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex(fieldName));
-                        metaField = new MetaField(RegionId, CountryId, Constants.UICountryX);
-                        metaField.region = Region;
-                        metaField.country = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("location"));
-                        metaField.key = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("location"));
-                        metaField.value = String.valueOf(formatter.format(fieldXValue));
-                        metaField.regionId = cFieldXHistory.getLong(cFieldXHistory.getColumnIndex("FK_Region"));
-                        metaField.countryId = cFieldXHistory.getLong(cFieldXHistory.getColumnIndex("FK_Country"));
-                        metaField.underlineKey = true;
-                        metaFields.add(metaField);
-                    } while(cFieldXHistory.moveToNext());
-
-                    return metaFields;
-                };
-                break;
-        }
     }
 }

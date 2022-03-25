@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //setSupportActionBar(binding.toolbar);
-
         UIMessage.eyeCandy(MainActivity.this, "Initialising Veyron");
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {

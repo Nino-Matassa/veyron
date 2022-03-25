@@ -79,8 +79,7 @@ public class UITerra extends UI implements IRegisterOnStack {
                 " , (select sum(male_smokers)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where male_smokers > 0)) as avgMaleSmokers\n" +
                 " , (select sum(hospital_beds_per_thousand)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where hospital_beds_per_thousand > 0)) as avgHospitalBedsPerThousand\n" +
                 " , (select sum(life_expectancy)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where life_expectancy > 0)) as avgLifeExpectancy\n" +
-                " , * from Detail\n" +
-                " limit 1";
+                " , * from Detail\n";
 
         Cursor cTerra = db.rawQuery(sqlTerra, null);
         cTerra.moveToFirst();
@@ -255,6 +254,20 @@ public class UITerra extends UI implements IRegisterOnStack {
                 "where date = (select max(date) from Detail) order by #X desc";
         metaField.executeSQL = metaField.executeSQL.replace("#X", "reproduction_rate");
         metaFields.add(metaField);
+
+        /*Double TotalCase = TotalCasePerMillion*100000;
+        Double PercentageInfected = TotalCase/Population*100;
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
+        metaField.key = "Percentage Infected";
+        metaField.value = String.valueOf(formatter.format(PercentageInfected));
+        metaField.underlineKey = false;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.PercentInfectedTerra;
+        metaField.fieldXName = "reproduction_rate";
+        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
+                "join Country on Country.id = Detail.FK_Country\n" +
+                "where date = (select max(date) from Detail) order by #X desc";
+        metaFields.add(metaField);*/
+
 
         /*String sqlICUPatient = "select \n" +
                 " sum(icu_patients)\n" +
@@ -444,7 +457,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         @SuppressLint("Range") Double PositiveRate = cTerra.getDouble(cTerra.getColumnIndex("avgPositivityRate"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Positive Rate%";
-        metaField.value = String.valueOf(formatter.format(PositiveRate));
+        metaField.value = PositiveRate.toString().substring(0, 4);//String.valueOf(formatter.format(PositiveRate));
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "positive_rate";
