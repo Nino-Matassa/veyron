@@ -255,18 +255,18 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.executeSQL = metaField.executeSQL.replace("#X", "reproduction_rate");
         metaFields.add(metaField);
 
-        /*Double TotalCase = TotalCasePerMillion*100000;
+        Double TotalCase = TotalCasePerMillion*100;
         Double PercentageInfected = TotalCase/Population*100;
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Percentage Infected";
         metaField.value = String.valueOf(formatter.format(PercentageInfected));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.PercentInfectedTerra;
-        metaField.fieldXName = "reproduction_rate";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaFields.add(metaField);*/
+        metaField.fieldXName = "Percentage Infected";
+        metaField.executeSQL = "select continent, Country.location, Country.FK_Region, FK_Country, total_cases, population\n" +
+                " from Detail join Country on Detail.FK_Country = Country.Id\n" +
+                " where date = (select max(date) from Detail where total_cases > 0)";
+        metaFields.add(metaField);
 
 
         /*String sqlICUPatient = "select \n" +
