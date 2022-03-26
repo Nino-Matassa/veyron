@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -43,11 +44,17 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } finally {
                     if(Database.exists(MainActivity.this)) {
-                        new Thread(new Runnable() {
+                        Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 db = Database.getInstance(MainActivity.this, false, false);
-                            }}).start();
+                            }});
+                        thread.start();
+                        try {
+                            thread.join();
+                        } catch (Exception e) {
+                            Log.d("MainActivity.onCreate", e.toString());
+                        }
                     } else {
                         Database.setBuildFromScratch(true);
                         db = Database.getInstance(MainActivity.this, false, true);

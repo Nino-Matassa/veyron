@@ -134,7 +134,6 @@ class sortStats implements Comparator<MetaField>
 {
     @Override
     public int compare(MetaField mfA, MetaField mfB) {
-        // TODO: Implement this method
         Double dA = Double.parseDouble(mfA.value.replace(",", ""));
         Double dB = Double.parseDouble(mfB.value.replace(",", ""));
         return dB.compareTo(dA);
