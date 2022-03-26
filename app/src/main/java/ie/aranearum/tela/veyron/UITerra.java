@@ -246,12 +246,12 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = Constants.rNought;
         metaField.value = String.valueOf(formatter.format(ReproductionRate));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "reproduction_rate";
         metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
                 "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
+                "where date = (select max(date) from Detail where #X > 0) order by #X desc";
         metaField.executeSQL = metaField.executeSQL.replace("#X", "reproduction_rate");
         metaFields.add(metaField);
 
