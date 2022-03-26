@@ -143,6 +143,7 @@ class Database {
     private static HashMap<String, Long> hashMapCountry = null;
     private static HashMap<String, LocalDate> hashMapCountryXDate = null;
     private static boolean buildFromScratch = false;
+    private static boolean ignoreAlreadyBuilding = false;
 
     public static SQLiteDatabase getInstance(Context context, boolean invalidate, boolean populate) {
         if (invalidate) {
@@ -473,6 +474,15 @@ class Database {
     public static void setBuildFromScratch(boolean buildFromScratch) {
         Database.buildFromScratch = buildFromScratch;
     }
+
+    public static boolean isIgnoreAlreadyBuilding() {
+        return ignoreAlreadyBuilding;
+    }
+
+    public static void setIgnoreAlreadyBuilding(boolean ignoreAlreadyBuilding) {
+        Database.ignoreAlreadyBuilding = ignoreAlreadyBuilding;
+    }
+
 }
 
 class Beanie {

@@ -41,27 +41,32 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     csv.join();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    if(Database.exists(MainActivity.this)) {
+                    Log.d("MainActivity.CSV", e.toString());
+                }
+                if(!Database.isIgnoreAlreadyBuilding()) {
+                    Database.setIgnoreAlreadyBuilding(true);
+                    if (Database.exists(MainActivity.this)) {
                         Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 db = Database.getInstance(MainActivity.this, false, false);
-                            }});
+                            }
+                        });
                         thread.start();
                         try {
                             thread.join();
                         } catch (Exception e) {
-                            Log.d("MainActivity.onCreate", e.toString());
+                            Log.d("MainActivity.Database", e.toString());
                         }
                     } else {
                         Database.setBuildFromScratch(true);
                         db = Database.getInstance(MainActivity.this, false, true);
                     }
+                    Database.setIgnoreAlreadyBuilding(false);
                     UITerra uiTerra = new UITerra(MainActivity.this);
                 }
             }
+
         }, Constants.delayMilliSeconds);
     }
 
