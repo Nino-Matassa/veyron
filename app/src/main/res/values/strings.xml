@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Veyron</string>
     <string name="about">About</string>
+    <string name="invalidate">Invalidate</string>
+    <string name="home">Home</string>
+    <string name="update">Update</string>
 </resources>

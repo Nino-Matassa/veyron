@@ -7,4 +7,19 @@
         android:orderInCategory="100"
         android:title="@string/about"
         app:showAsAction="never" />
+    <!--<item
+        android:id="@+id/invalidate"
+        android:orderInCategory="100"
+        android:title="@string/invalidate"
+        app:showAsAction="never" />-->
+    <item
+        android:id="@+id/home"
+        android:orderInCategory="100"
+        android:title="@string/home"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/update"
+        android:orderInCategory="100"
+        android:title="@string/update"
+        app:showAsAction="never" />
 </menu>

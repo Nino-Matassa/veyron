@@ -326,7 +326,9 @@ class Database {
     private static boolean delete(@NonNull Context context) {
         File fPathDB = context.getDatabasePath(Constants.dbName);
         if (fPathDB.exists()) {
-            return fPathDB.delete();
+            fPathDB.delete();
+            instance = null;
+            return true;
         } else {
             return false;
         }

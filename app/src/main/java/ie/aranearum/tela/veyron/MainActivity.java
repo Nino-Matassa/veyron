@@ -1,5 +1,7 @@
 package ie.aranearum.tela.veyron;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 
 import java.util.Stack;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import ie.aranearum.tela.veyron.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (stack.size() == 1) {
             this.moveTaskToBack(true);
-            Toast.makeText(MainActivity.this, "Exiting Veyron", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Veyron is in the background now.", Toast.LENGTH_SHORT).show();
         } else {
             stack.pop();
             UIHistory uiHistory = stack.pop();
@@ -117,8 +120,57 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.about) {
-            Toast.makeText(MainActivity.this, "About!", Toast.LENGTH_SHORT).show();
+            String title = "Project Veron";
+            String message = "COVID-19 statistical analysis using OWID data.";
+            message += "\n Written: January 1, 2022";
+            message += "\nBy: Nino Matassa";
+            try {
+                PackageInfo pInfo = MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(), 0);
+                message += "\nVersion: " + pInfo.versionName + " " + Constants.beta;
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.d("About", e.toString());
+            }
+            new SweetAlertDialog(this)
+                    .setTitleText(title)
+                    .setContentText(message)
+                    .show();
             return true;
+        }
+
+        /*if(id == R.id.invalidate) {
+            UIMessage.eyeCandy(MainActivity.this, "Rebuilding Veyron");
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    db = Database.getInstance(MainActivity.this, true, false);
+                    UITerra uiTerra = new UITerra(MainActivity.this);
+                }
+            }, Constants.delayMilliSeconds);
+        }*/
+
+        if(id == R.id.home) {
+            UIMessage.eyeCandy(MainActivity.this, "Home " + Constants.house);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stack.clear();
+                    new UITerra(MainActivity.this);
+                }
+            }, Constants.delayMilliSeconds);
+        }
+
+        if(id == R.id.update) {
+            UIMessage.eyeCandy(MainActivity.this, "Repopulating Veyron");
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    db = Database.getInstance(MainActivity.this, false, true);
+                    UITerra uiTerra = new UITerra(MainActivity.this);
+                }
+            }, Constants.delayMilliSeconds);
         }
 
         return super.onOptionsItemSelected(item);
