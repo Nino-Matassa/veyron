@@ -25,21 +25,18 @@ public class MainActivity extends AppCompatActivity {
     public static Stack<UIHistory> stack = new Stack<UIHistory>();
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private static boolean restartingFromBackground = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(restartingFromBackground)
-            return;
-
-        restartingFromBackground = true;
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+    }
 
+    @Override
+    public void onStart() {
         UIMessage.eyeCandy(MainActivity.this, "Initialising Veyron");
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
@@ -53,25 +50,32 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MainActivity.CSV", e.toString());
                 }
                 if (Database.exists(MainActivity.this)) {
-                    Thread thread = new Thread(new Runnable() {
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            db = Database.getInstance(MainActivity.this, false, false);
+                            db = Database.getInstance(MainActivity.this, false);
                         }
-                    });
-                    thread.start();
-                    try {
-                        thread.join();
-                    } catch (Exception e) {
-                        Log.d("MainActivity.Database", e.toString());
-                    }
+                    }).start();
                 } else {
                     Database.setBuildFromScratch(true);
-                    db = Database.getInstance(MainActivity.this, false, true);
+                    db = Database.getInstance(MainActivity.this, true);
                 }
+            }
+        }, Constants.delayMilliSeconds);
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        UIMessage.eyeCandy(MainActivity.this, "Resuming Veyron");
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
                 UITerra uiTerra = new UITerra(MainActivity.this);
             }
         }, Constants.delayMilliSeconds);
+        super.onResume();
     }
 
     @Override
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             stack.pop();
             UIHistory uiHistory = stack.pop();
+            UIMessage.eyeCandy(MainActivity.this, uiHistory.getUIX());
             switch (uiHistory.getUIX()) {
                 case Constants.UITerra:
                     new UITerra(MainActivity.this);
@@ -138,17 +143,20 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        /*if(id == R.id.invalidate) {
+        if(id == R.id.invalidate) {
             UIMessage.eyeCandy(MainActivity.this, "Rebuilding Veyron");
+            Database.delete(MainActivity.this);
+            Database.setBuildFromScratch(true);
+
             Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    db = Database.getInstance(MainActivity.this, true, false);
+                    db = Database.getInstance(MainActivity.this,  true);
                     UITerra uiTerra = new UITerra(MainActivity.this);
                 }
             }, Constants.delayMilliSeconds);
-        }*/
+        }
 
         if (id == R.id.home) {
             UIMessage.eyeCandy(MainActivity.this, "Home " + Constants.house);
@@ -168,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    db = Database.getInstance(MainActivity.this, false, true);
+                    db = Database.getInstance(MainActivity.this,  true);
                     UITerra uiTerra = new UITerra(MainActivity.this);
                 }
             }, Constants.delayMilliSeconds);

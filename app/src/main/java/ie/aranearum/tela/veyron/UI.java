@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.icu.text.DecimalFormat;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.Gravity;
@@ -39,14 +41,11 @@ public class UI {
         this.UIX = UIX;
 
         setTitlebar();
-//        if (UIX.equals(Constants.UITerra)) {
-//            MainActivity.stack.clear();
-//        }
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE) ;
         vibrator.vibrate(VibrationEffect.createOneShot(80, VibrationEffect.DEFAULT_AMPLITUDE)); // guess work
 
-        db = Database.getInstance(context, false, false);
+        db = Database.getInstance(context, false);
         ((Activity)context).setContentView(R.layout.ui_table);
 
         tableLayout = (TableLayout) ((Activity)context).findViewById(R.id.layoutTable);
@@ -101,23 +100,30 @@ public class UI {
             textViewKey.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(metaField.underlineKey) {
-                        if (metaField.UI.equals(Constants.UIRegion)) {
-                            new UIRegion(context);
+                    UIMessage.eyeCandy(context, metaField.country);
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(metaField.underlineKey) {
+                                if (metaField.UI.equals(Constants.UIRegion)) {
+                                    new UIRegion(context);
+                                }
+                                if(metaField.UI.equals(Constants.UICountry)) {
+                                    new UICountry(context, metaField.regionId);
+                                }
+                                if(metaField.UI.equals(Constants.UICountryX)) {
+                                    new UICountryX(context, metaField.countryId);
+                                }
+                                if(metaField.UI.equals(Constants.UIFieldXHistory)) {
+                                    ILambdaXHistory iLambdaXHistory = new LXHistory(context).defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
+                                            metaField.region, metaField.country, metaField.executeSQL);
+                                    new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
+                                            iLambdaXHistory, metaField.fieldXName, metaField.executeSQL);
+                                }
+                            }
                         }
-                        if(metaField.UI.equals(Constants.UICountry)) {
-                            new UICountry(context, metaField.regionId);
-                        }
-                        if(metaField.UI.equals(Constants.UICountryX)) {
-                            new UICountryX(context, metaField.countryId);
-                        }
-                        if(metaField.UI.equals(Constants.UIFieldXHistory)) {
-                            ILambdaXHistory iLambdaXHistory = new LXHistory(context).defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
-                                    metaField.region, metaField.country, metaField.executeSQL);
-                            new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
-                                    iLambdaXHistory, metaField.fieldXName, metaField.executeSQL);
-                        }
-                    }
+                    }, Constants.delayMilliSeconds);
                 }
             });
             textViewValue.setOnClickListener(new View.OnClickListener() {

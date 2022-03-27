@@ -28,7 +28,7 @@ public class CSV extends Thread {
     }
 
     public static void setCsvIsUpdated(boolean setCsvIsUpdated) {
-        csvIsUpdated = setCsvIsUpdated;
+        CSV.csvIsUpdated = setCsvIsUpdated;
     }
 
 

@@ -144,10 +144,7 @@ class Database {
     private static HashMap<String, LocalDate> hashMapCountryXDate = null;
     private static boolean buildFromScratch = false;
 
-    public static SQLiteDatabase getInstance(Context context, boolean invalidate, boolean populate) {
-        if (invalidate) {
-            delete(context);
-        }
+    public static SQLiteDatabase getInstance(Context context, boolean populate) {
         if (instance == null) {
             if (exists(context)) {
                 File fPathDB = context.getDatabasePath(Constants.dbName);
@@ -156,7 +153,7 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(invalidate || CSV.isCsvIsUpdated() || populate) {
+        if(CSV.isCsvIsUpdated() || populate) {
             CSV.setCsvIsUpdated(false);
             populateRequest(context);
         }
@@ -164,8 +161,12 @@ class Database {
         return instance;
     }
 
-    @SuppressLint("Range")
+    //@SuppressLint("Range")
+    private static boolean populating = false;
     private static boolean populateRequest(Context context) {
+        if(populating)
+            return false;
+        populating = true;
         LocalDate DBDate = null;
         Long RegionId = 0L;
         Long CountryId = 0L;
@@ -314,6 +315,7 @@ class Database {
             e.printStackTrace();
         }
         setBuildFromScratch(false);
+        populating = false;
         return true;
     }
 
@@ -322,15 +324,10 @@ class Database {
         return fPathDB.exists();
     }
 
-    private static boolean delete(@NonNull Context context) {
+    public static boolean delete(@NonNull Context context) {
         File fPathDB = context.getDatabasePath(Constants.dbName);
-        if (fPathDB.exists()) {
-            fPathDB.delete();
-            instance = null;
-            return true;
-        } else {
-            return false;
-        }
+        Database.instance = null;
+        return SQLiteDatabase.deleteDatabase(fPathDB);
     }
 
     @SuppressLint("Range")
