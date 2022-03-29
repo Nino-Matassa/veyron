@@ -26,8 +26,7 @@ public class LXHistory {
     }
 
     public ILambdaXHistory defineLambda(@NonNull Constants.FieldXHistoryType fieldXType, String fieldName,
-                                        Long RegionId, Long CountryId, String Region, String Country,
-                                        String executeSQL) {
+                                        Long RegionId, Long CountryId, String Region, String Country) {
         switch (fieldXType) {
             case DateAndField:
                 ILambdaXHistory = () -> {
@@ -87,7 +86,8 @@ public class LXHistory {
             case PercentInfected:
                 ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    String sqlFieldXHistory = executeSQL;
+                    String sqlFieldXHistory = "select date, total_cases, population from Detail where FK_Country = '#1' and total_cases > 0 order by date desc";
+                    sqlFieldXHistory = sqlFieldXHistory.replace("#1", String.valueOf(CountryId));
                     Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
                     cFieldXHistory.moveToFirst();
                     Double Population = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex("population"));
@@ -110,7 +110,9 @@ public class LXHistory {
             case PercentInfectedTerra:
                 ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    String sqlFieldXHistory = executeSQL;
+                    String sqlFieldXHistory = "select continent, Country.location, Country.FK_Region, FK_Country, total_cases, population\n" +
+                            " from Detail join Country on Detail.FK_Country = Country.Id\n" +
+                            " where date = (select max(date) from Detail where total_cases > 0)";
                     Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
                     cFieldXHistory.moveToFirst();
                     do {

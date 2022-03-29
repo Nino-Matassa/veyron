@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case Constants.UIFieldXHistory:
                     new UIFieldXHistory(MainActivity.this, uiHistory.getRegionId(), uiHistory.getCountryId(),
-                            uiHistory.region, uiHistory.country, uiHistory.ILambdaXHistory, uiHistory.fieldXName, uiHistory.executeSQL);
+                            uiHistory.region, uiHistory.country, uiHistory.ILambdaXHistory, uiHistory.fieldXName);
                     break;
                 default:
                     break;

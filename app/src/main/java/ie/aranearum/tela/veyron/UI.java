@@ -117,9 +117,9 @@ public class UI {
                                 }
                                 if(metaField.UI.equals(Constants.UIFieldXHistory)) {
                                     ILambdaXHistory iLambdaXHistory = new LXHistory(context).defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
-                                            metaField.region, metaField.country, metaField.executeSQL);
+                                            metaField.region, metaField.country);
                                     new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
-                                            iLambdaXHistory, metaField.fieldXName, metaField.executeSQL);
+                                            iLambdaXHistory, metaField.fieldXName);
                                 }
                             }
                         }

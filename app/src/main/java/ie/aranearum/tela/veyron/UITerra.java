@@ -146,9 +146,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.PercentInfectedTerra;
         metaField.fieldXName = "Percentage Infected";
-        metaField.executeSQL = "select continent, Country.location, Country.FK_Region, FK_Country, total_cases, population\n" +
-                " from Detail join Country on Detail.FK_Country = Country.Id\n" +
-                " where date = (select max(date) from Detail where total_cases > 0)";
         metaFields.add(metaField);
 
 

@@ -233,8 +233,6 @@ public class UICountryX extends UI implements IRegisterOnStack {
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.PercentInfected;
         metaField.region = Region;
         metaField.country = Country;
-        metaField.executeSQL = "select date, total_cases, population from Detail where FK_Country = '#1' and total_cases > 0 order by date desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#1", String.valueOf(CountryId));
         metaFields.add(metaField);
 
         Double ICUPatients = cCountry.getDouble(cCountry.getColumnIndex("ICUPatients"));
