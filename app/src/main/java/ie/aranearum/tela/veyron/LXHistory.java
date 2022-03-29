@@ -56,18 +56,21 @@ public class LXHistory {
             case CountryAndField:
                 ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    String sqlFieldXHistory = "select * from \n" +
-                            "(select Detail.location, #1, Country.FK_Region, FK_Country, continent, date from Detail\n" +
-                            "join Country on Country.id = Detail.FK_Country\n" +
-                            "where #1 > 0\n" +
-                            "order by date desc)\n" +
-                            "group by location\n" +
-                            "order by #1 desc";
-                    sqlFieldXHistory = sqlFieldXHistory.replace("#1", fieldName);
-                    Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
-                    cFieldXHistory.moveToFirst();
+                    String sqlCountryList = "select distinct FK_Country from Detail where #1 > 0";
+                    sqlCountryList = sqlCountryList.replace("#1", fieldName);
+                    Cursor cCountryList = db.rawQuery(sqlCountryList, null);
+                    cCountryList.moveToFirst();
 
                     do {
+                        String sqlFieldXHistory = "select Detail.location, #1, Country.FK_Region, FK_Country, continent, date from Detail\n" +
+                                "join Country on Country.id = Detail.FK_Country\n" +
+                                "where #1 > 0 and FK_Country = #2\n" +
+                                "order by date DESC\n" +
+                                "limit 1";
+                        sqlFieldXHistory = sqlFieldXHistory.replace("#1", fieldName);
+                        sqlFieldXHistory = sqlFieldXHistory.replace("#2", String.valueOf(cCountryList.getLong(cCountryList.getColumnIndex("FK_Country"))));
+                        Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
+                        cFieldXHistory.moveToFirst();
                         Double fieldXValue = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex(fieldName));
                         metaField = new MetaField(RegionId, CountryId, Constants.UICountryX);
                         metaField.region = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("continent"));
@@ -78,8 +81,8 @@ public class LXHistory {
                         metaField.countryId = cFieldXHistory.getLong(cFieldXHistory.getColumnIndex("FK_Country"));
                         metaField.underlineKey = true;
                         metaFields.add(metaField);
-                    } while (cFieldXHistory.moveToNext());
-
+                    } while (cCountryList.moveToNext());
+                    metaFields.sort(new sortStats());
                     return metaFields;
                 };
                 break;

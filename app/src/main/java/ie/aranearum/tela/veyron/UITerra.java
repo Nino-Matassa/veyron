@@ -162,7 +162,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Hospital Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(HospitalPatientPerMillion));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "hosp_patients_per_million";
         metaFields.add(metaField);
@@ -171,7 +171,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Weekly ICU" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(WeeklyICUAdmissionPerMillion));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "weekly_icu_admissions_per_million";
         metaFields.add(metaField);
@@ -180,8 +180,9 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Weekly Hospital" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(WeeklyHospitalAdmissionPerMillion));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "weekly_hosp_admissions_per_million";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double TotalTestPerThousand = cTerra.getDouble(cTerra.getColumnIndex("avgTotalTestsPerThousand"));
@@ -215,80 +216,90 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Test Per Case";
         metaField.value = String.valueOf(formatter.format(TestPerCase));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "tests_per_case";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double TotalVaccinationPerHundred = cTerra.getDouble(cTerra.getColumnIndex("avgTotaVvaccinationsPerHundred"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Total Vaccination" + Constants.roman100;
         metaField.value = String.valueOf(formatter.format(TotalVaccinationPerHundred));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "total_vaccinations_per_hundred";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double PeopleVaccinatedPerHundred = cTerra.getDouble(cTerra.getColumnIndex("avgPeopleVaccinatedPerHundred"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Vaccinated" + Constants.roman100;
         metaField.value = String.valueOf(formatter.format(PeopleVaccinatedPerHundred));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "people_vaccinated_per_hundred";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double Aged65Older = cTerra.getDouble(cTerra.getColumnIndex("avgAged65Older"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Aged65Older%";
         metaField.value = String.valueOf(formatter.format(Aged65Older));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "aged_65_older";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double Aged70Older = cTerra.getDouble(cTerra.getColumnIndex("avgAged70Older"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Aged70Older%";
         metaField.value = String.valueOf(formatter.format(Aged70Older));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "aged_70_older";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double DiabetesPrevalence = cTerra.getDouble(cTerra.getColumnIndex("avgDiabetesPrevalence"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Diabetes Prevalence%";
         metaField.value = String.valueOf(formatter.format(DiabetesPrevalence));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "diabetes_prevalence";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double FemaleSmoker = cTerra.getDouble(cTerra.getColumnIndex("avgFemaleSmokers"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Female Smoker%";
         metaField.value = String.valueOf(formatter.format(FemaleSmoker));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "female_smokers";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double MaleSmoker = cTerra.getDouble(cTerra.getColumnIndex("avgMaleSmokers"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Male Smoker%";
         metaField.value = String.valueOf(formatter.format(MaleSmoker));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "male_smokers";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double HospitalBedsPerThousand = cTerra.getDouble(cTerra.getColumnIndex("avgHospitalBedsPerThousand"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "HospitalBeds" + Constants.roman1000;
         metaField.value = String.valueOf(formatter.format(HospitalBedsPerThousand));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "hospital_beds_per_thousand";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double LifeExpectancy = cTerra.getDouble(cTerra.getColumnIndex("avgLifeExpectancy"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "Life Expectancy";
         metaField.value = String.valueOf(formatter.format(LifeExpectancy));
-        metaField.underlineKey = false;
-        //metaField.UI = Constants.UIFieldXHistory;
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "life_expectancy";
         metaFields.add(metaField);
 
         metaField = new MetaField(0L, 0L, Constants.UITerra);
