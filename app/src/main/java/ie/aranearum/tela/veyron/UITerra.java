@@ -99,9 +99,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "total_cases_per_million";
-        metaField.executeSQL = "select Detail.location, total_cases_per_million, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by total_cases_per_million desc";
         metaFields.add(metaField);
 
 
@@ -126,9 +123,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "new_cases_per_million";
-        metaField.executeSQL = "select Detail.location, new_cases_per_million, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by new_cases_per_million desc";
         metaFields.add(metaField);
 
         /*String sqlNewCaseSmoothed = "select \n" +
@@ -180,10 +174,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "total_deaths_per_million";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "total_deaths_per_million");
         metaFields.add(metaField);
 
         /*String sqlNewDeath = "select \n" +
@@ -208,10 +198,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "new_deaths_per_million";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "new_deaths_per_million");
         metaFields.add(metaField);
 
         /*String sqlNewDeathSmoothed = "select \n" +
@@ -249,10 +235,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "reproduction_rate";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail where #X > 0) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "reproduction_rate");
         metaFields.add(metaField);
 
         Double TotalCase = TotalCasePerMillion*100;
@@ -287,13 +269,9 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
         metaField.key = "ICU Patients" + Constants.roman1000000;
         metaField.value = String.valueOf(formatter.format(ICUPatientPerMillion));
-        metaField.underlineKey = false;
+        metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "icu_patients_per_million";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "icu_patients_per_million");
         metaFields.add(metaField);
 
         /*String sqlHospitalPatient = "select \n" +
@@ -317,10 +295,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = false;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "hosp_patients_per_million";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "hosp_patients_per_million");
         metaFields.add(metaField);
 
         /*String sqlWeeklyICUAdmission = "select \n" +
@@ -344,10 +318,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = false;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "weekly_icu_admissions_per_million";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "weekly_icu_admissions_per_million");
         metaFields.add(metaField);
 
         /*String sqlWeeklyHospitalAdmission = "select \n" +
@@ -407,10 +377,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "total_tests_per_thousand";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "total_tests_per_thousand");
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double NewTestPerThousand = cTerra.getDouble(cTerra.getColumnIndex("avgNewTestsPerThousand"));
@@ -420,10 +386,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "new_tests_per_thousand";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select max(date) from Detail) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "new_tests_per_thousand");
         metaFields.add(metaField);
 
         /*String sqlNewTestSmoothed = "select \n" +
@@ -461,10 +423,6 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "positive_rate";
-        metaField.executeSQL = "select Detail.location, #X, Country.FK_Region, FK_Country, continent from Detail\n" +
-                "join Country on Country.id = Detail.FK_Country\n" +
-                "where date = (select date from Detail where positive_rate > 0) order by #X desc";
-        metaField.executeSQL = metaField.executeSQL.replace("#X", "positive_rate");
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double TestPerCase = cTerra.getDouble(cTerra.getColumnIndex("avgTestPerCase"));

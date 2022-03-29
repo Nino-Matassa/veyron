@@ -12,7 +12,7 @@ public class Constants {
     public static final String copyright = "\u00A9";
     public static final String smoothed = "\u03D0"; // Use \beta to show smoothed data
     public static final int abbreviate = 99;//15; Needs to be based on dynamic column width...
-    public static final int delayMilliSeconds = 500;
+    public static final int delayMilliSeconds = 1000;
     public static final String roman100000 = "C\u0305"; // Roman numeral for 100,000
     public static final Integer backNDays = 21;
     public static final String beta = "\u03D0";

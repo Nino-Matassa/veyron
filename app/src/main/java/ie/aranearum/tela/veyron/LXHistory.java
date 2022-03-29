@@ -57,14 +57,21 @@ public class LXHistory {
             case CountryAndField:
                 ILambdaXHistory = () -> {
                     ArrayList<MetaField> metaFields = new ArrayList<MetaField>();
-                    String sqlFieldXHistory = executeSQL;
+                    String sqlFieldXHistory = "select * from \n" +
+                            "(select Detail.location, #1, Country.FK_Region, FK_Country, continent, date from Detail\n" +
+                            "join Country on Country.id = Detail.FK_Country\n" +
+                            "where #1 > 0\n" +
+                            "order by date desc)\n" +
+                            "group by location\n" +
+                            "order by #1 desc";
+                    sqlFieldXHistory = sqlFieldXHistory.replace("#1", fieldName);
                     Cursor cFieldXHistory = db.rawQuery(sqlFieldXHistory, null);
                     cFieldXHistory.moveToFirst();
 
                     do {
                         Double fieldXValue = cFieldXHistory.getDouble(cFieldXHistory.getColumnIndex(fieldName));
                         metaField = new MetaField(RegionId, CountryId, Constants.UICountryX);
-                        metaField.region = Region;
+                        metaField.region = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("continent"));
                         metaField.country = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("location"));
                         metaField.key = cFieldXHistory.getString(cFieldXHistory.getColumnIndex("location"));
                         metaField.value = String.valueOf(formatter.format(fieldXValue));
