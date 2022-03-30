@@ -6,7 +6,7 @@ public class Constants {
     public static final String dbName = "OWID.db";
     public static final String roman1000000 = "M\u0305";
     public static final String roman1000 = "M";
-    public static final String roman100 = "C";
+    public static final String percent = "%";
     public static final String rNought = "R\u2080";
     public static final String house = "\u2302";
     public static final String copyright = "\u00A9";

@@ -60,7 +60,11 @@ public class MainActivity extends AppCompatActivity {
                     Database.setBuildFromScratch(true);
                     db = Database.getInstance(MainActivity.this, true);
                 }
-                UITerra uiTerra = new UITerra(MainActivity.this);
+                if(stack.empty()) {
+                    UITerra uiTerra = new UITerra(MainActivity.this);
+                } else {
+                    UIMessage.eyeCandy(MainActivity.this, null);
+                }
             }
         }, Constants.delayMilliSeconds);
         super.onStart();
@@ -68,14 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        /*UIMessage.eyeCandy(MainActivity.this, "Resuming Veyron");
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                UITerra uiTerra = new UITerra(MainActivity.this);
-            }
-        }, Constants.delayMilliSeconds);*/
         super.onResume();
     }
 
@@ -90,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             UIMessage.eyeCandy(MainActivity.this, uiHistory.getUIX());
             switch (uiHistory.getUIX()) {
                 case Constants.UITerra:
+                    stack.clear();
                     new UITerra(MainActivity.this);
                     break;
                 case Constants.UIRegion:

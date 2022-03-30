@@ -223,7 +223,7 @@ public class UITerra extends UI implements IRegisterOnStack {
 
         @SuppressLint("Range") Double TotalVaccinationPerHundred = cTerra.getDouble(cTerra.getColumnIndex("avgTotaVvaccinationsPerHundred"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
-        metaField.key = "Total Vaccination" + Constants.roman100;
+        metaField.key = "Total Vaccination" + Constants.percent;
         metaField.value = String.valueOf(formatter.format(TotalVaccinationPerHundred));
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
@@ -232,7 +232,7 @@ public class UITerra extends UI implements IRegisterOnStack {
 
         @SuppressLint("Range") Double PeopleVaccinatedPerHundred = cTerra.getDouble(cTerra.getColumnIndex("avgPeopleVaccinatedPerHundred"));
         metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
-        metaField.key = "Vaccinated" + Constants.roman100;
+        metaField.key = "Vaccinated" + Constants.percent;
         metaField.value = String.valueOf(formatter.format(PeopleVaccinatedPerHundred));
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
