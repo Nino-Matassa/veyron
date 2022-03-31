@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        if(!stack.empty()) {
+            stack.clear();
+            UITerra uiTerra = new UITerra(MainActivity.this);
+        }
     }
 
     @Override
