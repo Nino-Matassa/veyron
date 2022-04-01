@@ -54,13 +54,21 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     Log.d("MainActivity.CSV", e.toString());
                 }
+                Thread thread;
                 if (Database.exists(MainActivity.this)) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            db = Database.getInstance(MainActivity.this, false);
-                        }
-                    }).start();
+                    try {
+                        thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                db = Database.getInstance(MainActivity.this, false);
+                            }
+                        });
+                        thread.start();
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Log.d("MainActivityThread", e.toString());
+                    }
                 } else {
                     Database.setBuildFromScratch(true);
                     db = Database.getInstance(MainActivity.this, true);
