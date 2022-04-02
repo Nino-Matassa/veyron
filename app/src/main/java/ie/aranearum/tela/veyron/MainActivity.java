@@ -42,12 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStart() {
+        initialise();
+        super.onStart();
+    }
+
+    public void initialise() {
         UIMessage.eyeCandy(MainActivity.this, "Initialising Veyron");
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                CSV csv = new CSV(MainActivity.this, false);
+                CSV csv = new CSV(MainActivity.this);
                 csv.start();
                 try {
                     csv.join();
@@ -80,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }, Constants.delayMilliSeconds);
-        super.onStart();
     }
 
     @Override
@@ -155,18 +159,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(id == R.id.invalidate) {
-            UIMessage.eyeCandy(MainActivity.this, "Rebuilding Veyron");
+            CSV.setInvalidate(true);
             Database.delete(MainActivity.this);
             Database.setBuildFromScratch(true);
-
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    db = Database.getInstance(MainActivity.this,  true);
-                    UITerra uiTerra = new UITerra(MainActivity.this);
-                }
-            }, Constants.delayMilliSeconds);
+            initialise();
         }
 
         if (id == R.id.home) {

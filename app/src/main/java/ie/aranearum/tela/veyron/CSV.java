@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.TimeZone;
 
 public class CSV extends Thread {
-    private boolean invalidate = false;
+    private static boolean invalidate = false;
     private  String csvFileName = null;
     private  File csvFile = null;
     private static boolean csvIsUpdated = false;
@@ -26,16 +26,23 @@ public class CSV extends Thread {
     public static boolean isCsvIsUpdated() {
         return csvIsUpdated;
     }
-
     public static void setCsvIsUpdated(boolean setCsvIsUpdated) {
         CSV.csvIsUpdated = setCsvIsUpdated;
     }
+    public static boolean isInvalidate() { return invalidate; }
+    public static void setInvalidate(boolean invalidate) {
+        CSV.invalidate = invalidate;
+    }
 
 
-    public CSV(@NonNull Context context, boolean invalidate) {
-        this.invalidate = invalidate;
+
+    public CSV(@NonNull Context context) {
         this.csvFileName = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         this.csvFile = new File(csvFileName);
+        if(invalidate) {
+            setInvalidate(false);
+            delete();
+        }
     }
 
     public void run() {
