@@ -100,7 +100,7 @@ public class UI {
             textViewKey.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UIMessage.eyeCandy(context, metaField.country);
+                    UIMessage.eyeCandy(context, "seeking...");
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.postDelayed(new Runnable() {
                         @Override

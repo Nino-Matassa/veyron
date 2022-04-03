@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         thread.start();
-                        thread.join();
+                        thread.join(); // remove when the phone can handle it
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         Log.d("MainActivityThread", e.toString());

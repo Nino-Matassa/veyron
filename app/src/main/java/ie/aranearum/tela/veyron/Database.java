@@ -17,7 +17,9 @@ import com.opencsv.CSVReaderBuilder;
 
 import java.io.File;
 import java.io.FileReader;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -232,11 +234,21 @@ class Database {
                     DBDate = getLastUpdate(Country);
                 }
 
+                Long csvDaysSince = 0L;
+                Long dbDaysSince = 0L;
+                Long difference = 0L;
+                Instant instantCSVDate;
+                Instant instantDBDate;
                 // If the difference between the CSV & DB date is greater than Constants.backNDays then continue
                 if(!Database.isBuildFromScratch()) {
+                    LocalDate baseDate = LocalDate.now();
                     LocalDate CSVDate = LocalDate.parse(strDate, dateTimeFormatter);
-                    long difference = ChronoUnit.DAYS.between(DBDate, CSVDate);
-                    if(Math.abs(difference) > Constants.backNDays)
+
+                    csvDaysSince = ChronoUnit.DAYS.between(baseDate, CSVDate);
+                    dbDaysSince = ChronoUnit.DAYS.between(baseDate, DBDate);
+
+                    difference = Math.abs(csvDaysSince - dbDaysSince);
+                    if(difference > Constants.backNDays)
                         continue;
                 }
 
