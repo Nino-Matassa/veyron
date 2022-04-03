@@ -73,6 +73,7 @@ public class UITerra extends UI implements IRegisterOnStack {
                 " , (select sum(total_vaccinations_per_hundred)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where total_vaccinations_per_hundred > 0)) as avgTotaVvaccinationsPerHundred\n" +
                 " , (select sum(people_vaccinated_per_hundred)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where people_vaccinated_per_hundred > 0)) as avgPeopleVaccinatedPerHundred\n" +
                 " , (select sum(people_fully_vaccinated_per_hundred)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where people_fully_vaccinated_per_hundred > 0)) as avgPeopleFullyVaccinatedPerHundred\n" +
+                " , (select sum(stringency_index)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where stringency_index > 0)) as avgStringencyIndex\n" +
                 " , (select sum(aged_65_older)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where aged_65_older > 0)) as avgAged65Older\n" +
                 " , (select sum(aged_70_older)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where aged_70_older > 0)) as avgAged70Older\n" +
                 " , (select sum(diabetes_prevalence)/(select count(Id) from Country)  from Detail where date = (select max(date) from Detail where diabetes_prevalence > 0)) as avgDiabetesPrevalence\n" +
@@ -211,6 +212,15 @@ public class UITerra extends UI implements IRegisterOnStack {
         metaField.underlineKey = true;
         metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
         metaField.fieldXName = "positive_rate";
+        metaFields.add(metaField);
+
+        @SuppressLint("Range") Double StringencyIndex = cTerra.getDouble(cTerra.getColumnIndex("avgStringencyIndex"));
+        metaField = new MetaField(0L, 0L, Constants.UIFieldXHistory);
+        metaField.key = "Stringency Index";
+        metaField.value = String.valueOf(formatter.format(StringencyIndex));
+        metaField.underlineKey = true;
+        metaField.fieldXHistoryType = Constants.FieldXHistoryType.CountryAndField;
+        metaField.fieldXName = "stringency_index";
         metaFields.add(metaField);
 
         @SuppressLint("Range") Double TestPerCase = cTerra.getDouble(cTerra.getColumnIndex("avgTestPerCase"));

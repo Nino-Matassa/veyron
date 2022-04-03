@@ -35,3 +35,4 @@ new Thread(new Runnable() {
 	public void run() {
 	}).start();
 
+https://stackoverflow.com/questions/21405457/autoincrement-versioncode-with-gradle-extra-properties

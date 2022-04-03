@@ -393,7 +393,7 @@ public class UICountryX extends UI implements IRegisterOnStack {
 
         Double TestPerCase = cCountry.getDouble(cCountry.getColumnIndex("TestPerCase"));
         metaField = new MetaField(RegionId, CountryId, Constants.UIFieldXHistory);
-        metaField.key = "Test/Case";
+        metaField.key = "Test Per Case";
         metaField.value = String.valueOf(formatter.format(TestPerCase));
         metaField.underlineKey = true;
         metaField.fieldXName = "tests_per_case";
