@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         thread.start();
-                        thread.join(); // remove when the phone can handle it
-                    } catch (InterruptedException e) {
+                        //thread.join(); // remove when the phone can handle it
+                    } catch (Exception /*| InterruptedException*/ e) {
                         e.printStackTrace();
                         Log.d("MainActivityThread", e.toString());
                     }
@@ -178,15 +178,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.update) {
-            UIMessage.eyeCandy(MainActivity.this, "Repopulating Veyron");
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     db = Database.getInstance(MainActivity.this,  true);
-                    UITerra uiTerra = new UITerra(MainActivity.this);
-                }
-            }, Constants.delayMilliSeconds);
+                }}).start();
         }
 
         return super.onOptionsItemSelected(item);
