@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
             message += "\nBy: Nino Matassa";
             try {
                 PackageInfo pInfo = MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(), 0);
-                message += "\nVersion: " + pInfo.versionName + " " + Constants.beta;
+                message += "\nVersion: " + pInfo.versionName + "." + pInfo.getLongVersionCode() + " " + Constants.beta;
             } catch (PackageManager.NameNotFoundException e) {
                 Log.d("About", e.toString());
             }

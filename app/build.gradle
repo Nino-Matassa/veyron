@@ -9,20 +9,32 @@ plugins {
  * This lets us upload a new build at most every 10 seconds for the
  * next 680 years.
  */
-def vcode = (int)(((new Date().getTime()/1000) - 1451606400) / 10)
-
 android {
     compileSdk 32
 
-    defaultConfig {
-        applicationId "ie.aranearum.tela.veyron"
-        minSdk 28
-        targetSdk 32
-        //versionCode 1
-        versionCode = vcode
-        versionName "1.0"
+    def versionPropsFile = file('version.properties')
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+        versionProps['VERSION_CODE'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        defaultConfig {
+            applicationId "ie.aranearum.tela.veyron"
+            minSdk 28
+            targetSdk 32
+            versionCode = code
+            versionName "1.0"
+
+            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        }
+    } else {
+        throw new GradleException("Could not read version.properties!")
     }
 
     buildTypes {
