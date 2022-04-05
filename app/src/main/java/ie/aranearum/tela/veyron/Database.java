@@ -145,6 +145,7 @@ class Database {
     private static HashMap<String, Long> hashMapCountry = null;
     private static HashMap<String, LocalDate> hashMapCountryXDate = null;
     private static boolean buildFromScratch = false;
+    private static boolean populating = false;
 
     public static SQLiteDatabase getInstance(Context context, boolean populate) {
         if (instance == null) {
@@ -163,8 +164,6 @@ class Database {
         return instance;
     }
 
-    //@SuppressLint("Range")
-    private static boolean populating = false;
     private static boolean populateRequest(Context context) {
         if(populating)
             return false;
@@ -480,6 +479,7 @@ class Database {
     public static boolean isBuildFromScratch() {
         return buildFromScratch;
     }
+    public static boolean isPopulating() { return populating; }
 
     public static void setBuildFromScratch(boolean buildFromScratch) {
         Database.buildFromScratch = buildFromScratch;

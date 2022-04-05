@@ -29,7 +29,12 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
         this.ILambdaXHistory = ILambdaXHistory;
         formatter = new DecimalFormat("#,###.##");
         registerOnStack();
-        ((Activity)context).setTitle("Veyron - " + fieldName);
+        String title = "";
+        if(Database.isPopulating())
+            title += UI.UpdatingSymbol + "Veyron - ";
+        else
+            title += "Veyron - ";
+        ((Activity)context).setTitle(title + fieldName);
         UIMessage.eyeCandy(context, fieldName);
         if(RegionId == 0 && CountryId == 0) { // Then the call came from UITerra
             // Add dummy values for Region & Country for the header

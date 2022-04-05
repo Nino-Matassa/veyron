@@ -34,6 +34,7 @@ public class UI {
     private TableLayout tableLayoutFooter = null;
     protected SQLiteDatabase db = null;
     private Vibrator vibrator = null;
+    public static String UpdatingSymbol = Constants.delta + ": ";
 
 
     public UI(Context context, String UIX) {
@@ -63,21 +64,26 @@ public class UI {
     }
 
     private void setTitlebar() {
+        String title = "";
+        if(Database.isPopulating())
+            title += UI.UpdatingSymbol + "Veyron - ";
+        else
+            title += "Veyron - ";
         switch(UIX) {
             case Constants.UITerra:
-                ((Activity)context).setTitle("Veyron - Terra");
+                ((Activity)context).setTitle(title += "Terra");
                 break;
             case Constants.UIRegion:
-                ((Activity)context).setTitle("Veyron - Regions");
+                ((Activity)context).setTitle(title += "Regions");
                 break;
             case Constants.UICountry:
-                ((Activity)context).setTitle("Veyron - Region");
+                ((Activity)context).setTitle(title += "Region");
                 break;
             case Constants.UICountryX:
-                ((Activity)context).setTitle("Veyron - Country Details");
+                ((Activity)context).setTitle(title += "Country Details");
                 break;
             case Constants.UIFieldXHistory:
-                ((Activity)context).setTitle("Veyron - Field X");
+                ((Activity)context).setTitle(title += "Field X");
                 break;
             default:
             ((Activity)context).setTitle("Veyron");
