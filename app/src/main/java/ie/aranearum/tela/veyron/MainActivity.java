@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if(!stack.empty()) {
+        if (!stack.empty()) {
             stack.clear();
             UITerra uiTerra = new UITerra(MainActivity.this);
         }
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     Database.setBuildFromScratch(true);
                     db = Database.getInstance(MainActivity.this, true);
                 }
-                if(stack.empty()) {
+                if (stack.empty()) {
                     UITerra uiTerra = new UITerra(MainActivity.this);
                 } else {
                     UIMessage.eyeCandy(MainActivity.this, null);
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        if(id == R.id.invalidate) {
+        if (id == R.id.invalidate) {
             CSV.setInvalidate(true);
             Database.delete(MainActivity.this);
             Database.setBuildFromScratch(true);
@@ -178,11 +178,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.update) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    db = Database.getInstance(MainActivity.this,  true);
-                }}).start();
+            CSV.setInvalidate(true);
+            initialise();
         }
 
         return super.onOptionsItemSelected(item);
