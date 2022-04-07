@@ -1,5 +1,6 @@
 package ie.aranearum.tela.veyron;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public static Stack<UIHistory> stack = new Stack<UIHistory>();
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private SweetAlertDialog dialogCon = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,10 +161,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.invalidate) {
-            CSV.setInvalidate(true);
-            Database.delete(MainActivity.this);
-            Database.setBuildFromScratch(true);
-            initialise();
+            dialogCon = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
+                    .setContentText("Invalidate Database?")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dialogCon.dismiss();
+                            CSV.setInvalidate(true);
+                            Database.delete(MainActivity.this);
+                            Database.setBuildFromScratch(true);
+                            initialise();
+                        }
+                    });
+            dialogCon.show();
         }
 
         if (id == R.id.home) {
@@ -178,8 +189,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.update) {
-            CSV.setInvalidate(true);
-            initialise();
+            dialogCon = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
+                    .setContentText("Update CSV?")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dialogCon.dismiss();
+                            CSV.setInvalidate(true);
+                            initialise();
+                        }
+                    });
+            dialogCon.show();
         }
 
         return super.onOptionsItemSelected(item);

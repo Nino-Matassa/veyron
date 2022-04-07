@@ -10,7 +10,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class UIMessage {
     private static SweetAlertDialog dialogMsg = null;
 
-
     public static void eyeCandy(Context context, String message) {
         ((AppCompatActivity)context).runOnUiThread(new Runnable() {
             @Override
