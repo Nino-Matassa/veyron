@@ -153,10 +153,17 @@ public class MainActivity extends AppCompatActivity {
             } catch (PackageManager.NameNotFoundException e) {
                 Log.d("About", e.toString());
             }
-            new SweetAlertDialog(this)
+            dialogCon = new SweetAlertDialog(this)
                     .setTitleText(title)
                     .setContentText(message)
-                    .show();
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener(){
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            dialogCon.dismiss();
+                            Toast.makeText(MainActivity.this, "Website Link?", Toast.LENGTH_LONG).show();
+                        }
+                    });
+            dialogCon.show();
             return true;
         }
 
