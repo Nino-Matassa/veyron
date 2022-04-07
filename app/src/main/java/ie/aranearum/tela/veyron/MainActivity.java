@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            UI.toggleMenubarTitle(MainActivity.this);
                             dialogCon.dismiss();
                             CSV.setInvalidate(true);
                             initialise();

@@ -2,12 +2,10 @@ package ie.aranearum.tela.veyron;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.icu.text.DecimalFormat;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
@@ -35,6 +33,8 @@ public class UI {
     protected SQLiteDatabase db = null;
     private Vibrator vibrator = null;
     public static String UpdatingSymbol = Constants.delta + ": ";
+    private static String menubarTitle = "";
+
 
 
     public UI(Context context, String UIX) {
@@ -63,27 +63,35 @@ public class UI {
         //UIMessage.informationBox(context, null);
     }
 
+    public static void toggleMenubarTitle(Context context) {
+        if(menubarTitle.contains(Constants.delta)) {
+            menubarTitle = menubarTitle.replace(Constants.delta, "");
+        } else {
+            menubarTitle = Constants.delta + menubarTitle;
+        }
+        ((Activity)context).setTitle(menubarTitle);
+    }
+
     private void setTitlebar() {
-        String title = "";
         if(Database.isPopulating())
-            title += UI.UpdatingSymbol + "Veyron - ";
+            menubarTitle = UI.UpdatingSymbol + "Veyron - ";
         else
-            title += "Veyron - ";
+            menubarTitle = "Veyron - ";
         switch(UIX) {
             case Constants.UITerra:
-                ((Activity)context).setTitle(title += "Terra");
+                ((Activity)context).setTitle(menubarTitle += "Terra");
                 break;
             case Constants.UIRegion:
-                ((Activity)context).setTitle(title += "Regions");
+                ((Activity)context).setTitle(menubarTitle += "Regions");
                 break;
             case Constants.UICountry:
-                ((Activity)context).setTitle(title += "Region");
+                ((Activity)context).setTitle(menubarTitle += "Region");
                 break;
             case Constants.UICountryX:
-                ((Activity)context).setTitle(title += "Country Details");
+                ((Activity)context).setTitle(menubarTitle += "Country Details");
                 break;
             case Constants.UIFieldXHistory:
-                ((Activity)context).setTitle(title += "Field X");
+                ((Activity)context).setTitle(menubarTitle += "Field X");
                 break;
             default:
             ((Activity)context).setTitle("Veyron");
