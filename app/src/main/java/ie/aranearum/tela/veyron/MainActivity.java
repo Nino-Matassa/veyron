@@ -1,6 +1,5 @@
 package ie.aranearum.tela.veyron;
 
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static Stack<UIHistory> stack = new Stack<UIHistory>();
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private SweetAlertDialog dialogCon = null;
+    private SweetAlertDialog dialogConfirmation = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +80,18 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("MainActivityThread", e.toString());
                     }
                 } else {
-                    Database.setBuildFromScratch(true);
-                    db = Database.getInstance(MainActivity.this);
+                    Thread threadFullBuild = new Thread(new Runnable() { // Thread it so the system doesn't ask wait/cancel
+                        @Override
+                        public void run() {
+                            Database.setBuildFromScratch(true);
+                            db = Database.getInstance(MainActivity.this);
+                        }});
+                    threadFullBuild.start();
+                    try {
+                        threadFullBuild.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (stack.empty()) {
                     UITerra uiTerra = new UITerra(MainActivity.this);
@@ -157,34 +166,34 @@ public class MainActivity extends AppCompatActivity {
             } catch (PackageManager.NameNotFoundException e) {
                 Log.d("About", e.toString());
             }
-            dialogCon = new SweetAlertDialog(this)
+            dialogConfirmation = new SweetAlertDialog(this)
                     .setTitleText(title)
                     .setContentText(message)
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            dialogCon.dismiss();
+                            dialogConfirmation.dismiss();
                             Toast.makeText(MainActivity.this, "Website Link?", Toast.LENGTH_LONG).show();
                         }
                     });
-            dialogCon.show();
+            dialogConfirmation.show();
             return true;
         }
 
         if (id == R.id.invalidate) {
-            dialogCon = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
+            dialogConfirmation = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
                     .setContentText("Invalidate Database?")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            dialogCon.dismiss();
+                            dialogConfirmation.dismiss();
                             new CSV(MainActivity.this).delete();
                             Database.delete(MainActivity.this);
                             Database.setBuildFromScratch(true);
                             initialise();
                         }
                     });
-            dialogCon.show();
+            dialogConfirmation.show();
         }
 
         if (id == R.id.home) {
@@ -200,18 +209,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.update) {
-            dialogCon = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
+            dialogConfirmation = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
                     .setContentText("Update CSV?")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             UI.toggleMenubarTitle(MainActivity.this);
-                            dialogCon.dismiss();
+                            dialogConfirmation.dismiss();
                             new CSV(MainActivity.this).delete();
                             initialise();
                         }
                     });
-            dialogCon.show();
+            dialogConfirmation.show();
         }
 
         return super.onOptionsItemSelected(item);
