@@ -22,7 +22,7 @@ public class LXHistory {
 
     public LXHistory(Context context) {
         this.context = context;
-        db = Database.getInstance(context,  false);
+        db = Database.getInstance(context);
     }
 
     public ILambdaXHistory defineLambda(@NonNull Constants.FieldXHistoryType fieldXType, String fieldName,

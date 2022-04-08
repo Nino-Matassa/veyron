@@ -46,7 +46,7 @@ public class UI {
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE) ;
         vibrator.vibrate(VibrationEffect.createOneShot(80, VibrationEffect.DEFAULT_AMPLITUDE)); // guess work
 
-        db = Database.getInstance(context, false);
+        db = Database.getInstance(context);
         ((Activity)context).setContentView(R.layout.ui_table);
 
         tableLayout = (TableLayout) ((Activity)context).findViewById(R.id.layoutTable);

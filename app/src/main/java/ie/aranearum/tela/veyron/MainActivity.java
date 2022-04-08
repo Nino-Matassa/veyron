@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                db = Database.getInstance(MainActivity.this, false);
+                                db = Database.getInstance(MainActivity.this);
                             }
                         }).start();
                     } catch (Exception /*| InterruptedException*/ e) {
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     Database.setBuildFromScratch(true);
-                    db = Database.getInstance(MainActivity.this, true);
+                    db = Database.getInstance(MainActivity.this);
                 }
                 if (stack.empty()) {
                     UITerra uiTerra = new UITerra(MainActivity.this);

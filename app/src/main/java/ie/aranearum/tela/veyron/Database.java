@@ -147,7 +147,7 @@ class Database {
     private static boolean buildFromScratch = false;
     private static boolean populating = false;
 
-    public static SQLiteDatabase getInstance(Context context, boolean populate) {
+    public static SQLiteDatabase getInstance(Context context) {
         if (instance == null) {
             if (exists(context)) {
                 File fPathDB = context.getDatabasePath(Constants.dbName);
@@ -156,7 +156,7 @@ class Database {
                 instance = new SQLHelper(context, Constants.dbName, null, 1).getWritableDatabase();
             }
         }
-        if(CSV.isCsvIsUpdated() || populate) {
+        if(CSV.isCsvIsUpdated()) {
             CSV.setCsvIsUpdated(false);
             populateRequest(context);
         }
