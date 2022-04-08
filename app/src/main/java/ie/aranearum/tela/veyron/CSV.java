@@ -54,14 +54,16 @@ public class CSV {
             LocalDate csvLastModified = csvTimeStamp.toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate();
             LocalDate today = LocalDate.now();
 
-            if(today.compareTo(csvLastModified) > 0) {
-                return true;
+            Long difference = ChronoUnit.DAYS.between(csvLastModified, today);
+
+            if(difference == 0) {
+                return false;
             }
         } catch (Exception e) {
             Log.d("MainActivity", e.toString());
-            return false;
+            return true; // download anyway...
         }
-        return false;
+        return true;
     }
 
     private boolean downloadRequest() {
