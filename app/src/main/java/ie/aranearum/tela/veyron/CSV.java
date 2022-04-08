@@ -13,12 +13,16 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.TimeZone;
 
-public class CSV extends Thread {
-    private static boolean invalidate = false;
+public class CSV {
     private  String csvFileName = null;
     private  File csvFile = null;
     private static boolean csvIsUpdated = false;
@@ -29,28 +33,17 @@ public class CSV extends Thread {
     public static void setCsvIsUpdated(boolean setCsvIsUpdated) {
         CSV.csvIsUpdated = setCsvIsUpdated;
     }
-    public static boolean isInvalidate() { return invalidate; }
-    public static void setInvalidate(boolean invalidate) {
-        CSV.invalidate = invalidate;
-    }
-
-
 
     public CSV(@NonNull Context context) {
         this.csvFileName = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         this.csvFile = new File(csvFileName);
-        if(invalidate) {
-            setInvalidate(false);
-            delete();
-        }
     }
 
-    public void run() {
-        super.run();
+    public boolean initialise() {
         if(!csvFile.exists()){
-            boolean b = download();
+            return download();
         } else {
-            boolean b = downloadRequest();
+            return downloadRequest();
         }
     }
 
@@ -72,7 +65,7 @@ public class CSV extends Thread {
     }
 
     private boolean downloadRequest() {
-        if (invalidate || outdated()) {
+        if (outdated()) {
             boolean b = archive();
             b = delete();
             b = download();
@@ -84,16 +77,16 @@ public class CSV extends Thread {
         return true;
     } // Cannot read/write to external storage so archiving unresolved for now
 
-    private boolean delete() {
+    public boolean delete() {
         if (csvFile.exists()) {
             try {
-                boolean b = csvFile.delete();
+                return csvFile.delete();
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
         }
-        return true;
+        return false;
     }
 
     private boolean download() {

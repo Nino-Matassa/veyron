@@ -54,24 +54,28 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                CSV csv = new CSV(MainActivity.this);
-                csv.start();
+                Thread csvThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CSV csv = new CSV(MainActivity.this);
+                        csv.initialise();
+                    }
+                });
+                csvThread.start();
                 try {
-                    csv.join();
+                    csvThread.join();
                 } catch (InterruptedException e) {
-                    Log.d("MainActivity.CSV", e.toString());
+                    e.printStackTrace();
                 }
-                Thread thread;
+
                 if (Database.exists(MainActivity.this)) {
                     try {
-                        thread = new Thread(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 db = Database.getInstance(MainActivity.this, false);
                             }
-                        });
-                        thread.start();
-                        //thread.join(); // remove when the phone can handle it
+                        }).start();
                     } catch (Exception /*| InterruptedException*/ e) {
                         e.printStackTrace();
                         Log.d("MainActivityThread", e.toString());
@@ -156,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
             dialogCon = new SweetAlertDialog(this)
                     .setTitleText(title)
                     .setContentText(message)
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener(){
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             dialogCon.dismiss();
@@ -174,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             dialogCon.dismiss();
-                            CSV.setInvalidate(true);
+                            new CSV(MainActivity.this).delete();
                             Database.delete(MainActivity.this);
                             Database.setBuildFromScratch(true);
                             initialise();
@@ -203,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             UI.toggleMenubarTitle(MainActivity.this);
                             dialogCon.dismiss();
-                            CSV.setInvalidate(true);
+                            new CSV(MainActivity.this).delete();
                             initialise();
                         }
                     });
