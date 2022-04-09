@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.invalidate) {
             dialogConfirmation = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
                     .setContentText("Invalidate Database?")
+                    .setCancelText("Cancel")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -217,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.update) {
             dialogConfirmation = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
                     .setContentText("Update CSV?")
+                    .setCancelText("Cancel")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
