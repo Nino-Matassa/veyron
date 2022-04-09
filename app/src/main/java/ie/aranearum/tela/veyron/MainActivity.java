@@ -115,28 +115,34 @@ public class MainActivity extends AppCompatActivity {
         } else {
             stack.pop();
             UIHistory uiHistory = stack.pop();
-            UIMessage.eyeCandy(MainActivity.this, uiHistory.getUIX());
-            switch (uiHistory.getUIX()) {
-                case Constants.UITerra:
-                    stack.clear();
-                    new UITerra(MainActivity.this);
-                    break;
-                case Constants.UIRegion:
-                    new UIRegion(MainActivity.this);
-                    break;
-                case Constants.UICountry:
-                    new UICountry(MainActivity.this, uiHistory.getRegionId());
-                    break;
-                case Constants.UICountryX:
-                    new UICountryX(MainActivity.this, uiHistory.getCountryId());
-                    break;
-                case Constants.UIFieldXHistory:
-                    new UIFieldXHistory(MainActivity.this, uiHistory.getRegionId(), uiHistory.getCountryId(),
-                            uiHistory.region, uiHistory.country, uiHistory.ILambdaXHistory, uiHistory.fieldXName);
-                    break;
-                default:
-                    break;
-            }
+            UIMessage.eyeCandy(MainActivity.this, "...finding");
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    switch (uiHistory.getUIX()) {
+                        case Constants.UITerra:
+                            stack.clear();
+                            new UITerra(MainActivity.this);
+                            break;
+                        case Constants.UIRegion:
+                            new UIRegion(MainActivity.this);
+                            break;
+                        case Constants.UICountry:
+                            new UICountry(MainActivity.this, uiHistory.getRegionId());
+                            break;
+                        case Constants.UICountryX:
+                            new UICountryX(MainActivity.this, uiHistory.getCountryId());
+                            break;
+                        case Constants.UIFieldXHistory:
+                            new UIFieldXHistory(MainActivity.this, uiHistory.getRegionId(), uiHistory.getCountryId(),
+                                    uiHistory.region, uiHistory.country, uiHistory.ILambdaXHistory, uiHistory.fieldXName);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }, Constants.delayMilliSeconds);
         }
     }
 
@@ -214,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            UI.toggleMenubarTitle(MainActivity.this);
+                            UI.setMenubarTitleToUpdating(MainActivity.this, true);
                             dialogConfirmation.dismiss();
                             new CSV(MainActivity.this).delete();
                             initialise();

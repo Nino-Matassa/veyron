@@ -36,22 +36,22 @@ public class UI {
     private static String menubarTitle = "";
 
 
-
     public UI(Context context, String UIX) {
         this.context = context;
         this.UIX = UIX;
 
         setTitlebar();
+        setMenubarTitleToUpdating(context, false);
 
-        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE) ;
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(VibrationEffect.createOneShot(80, VibrationEffect.DEFAULT_AMPLITUDE)); // guess work
 
         db = Database.getInstance(context);
-        ((Activity)context).setContentView(R.layout.ui_table);
+        ((Activity) context).setContentView(R.layout.ui_table);
 
-        tableLayout = (TableLayout) ((Activity)context).findViewById(R.id.layoutTable);
-        tableLayoutHeader = (TableLayout)((Activity)context).findViewById(R.id.layoutTableHeader);
-        tableLayoutFooter = (TableLayout)((Activity)context).findViewById(R.id.layoutTableFooter);
+        tableLayout = (TableLayout) ((Activity) context).findViewById(R.id.layoutTable);
+        tableLayoutHeader = (TableLayout) ((Activity) context).findViewById(R.id.layoutTableHeader);
+        tableLayoutFooter = (TableLayout) ((Activity) context).findViewById(R.id.layoutTableFooter);
 
         String filePath = context.getFilesDir().getPath().toString() + "/" + Constants.NameCSV;
         File csv = new File(filePath);
@@ -60,48 +60,46 @@ public class UI {
         LocalDate localDate = LocalDate.of(Integer.valueOf(aDate[0]), Integer.valueOf(aDate[1]), Integer.valueOf(aDate[2]));
         lastUpdated = localDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
         setFooter(lastUpdated);
-        //UIMessage.informationBox(context, null);
     }
 
-    public static void toggleMenubarTitle(Context context) {
-        if(menubarTitle.contains(Constants.delta)) {
-            menubarTitle = menubarTitle.replace(Constants.delta, "");
+    public static void setMenubarTitleToUpdating(Context context, boolean on) {
+        menubarTitle = ((Activity) context).getTitle().toString();
+        if (Database.isPopulating() || on) {
+            if (!menubarTitle.contains(Constants.delta))
+                menubarTitle = Constants.delta + menubarTitle;
         } else {
-            menubarTitle = Constants.delta + menubarTitle;
+            if (menubarTitle.contains(Constants.delta))
+                menubarTitle = menubarTitle.replace(Constants.delta, "");
         }
-        ((Activity)context).setTitle(menubarTitle);
+        ((Activity) context).setTitle(menubarTitle);
     }
 
     private void setTitlebar() {
-        if(Database.isPopulating())
-            menubarTitle = UI.UpdatingSymbol + "Veyron - ";
-        else
-            menubarTitle = "Veyron - ";
-        switch(UIX) {
+        switch (UIX) {
             case Constants.UITerra:
-                ((Activity)context).setTitle(menubarTitle += "Terra");
+                ((Activity) context).setTitle("Veyron - Terra");
                 break;
             case Constants.UIRegion:
-                ((Activity)context).setTitle(menubarTitle += "Regions");
+                ((Activity) context).setTitle("Veyron - Regions");
                 break;
             case Constants.UICountry:
-                ((Activity)context).setTitle(menubarTitle += "Region");
+                ((Activity) context).setTitle("Veyron - Region");
                 break;
             case Constants.UICountryX:
-                ((Activity)context).setTitle(menubarTitle += "Country Details");
+                ((Activity) context).setTitle("Veyron - Country Details");
                 break;
             case Constants.UIFieldXHistory:
-                ((Activity)context).setTitle(menubarTitle += "Field X");
+                ((Activity) context).setTitle("Veyron - Field X");
                 break;
             default:
-            ((Activity)context).setTitle("Veyron");
+                ((Activity) context).setTitle("Veyron - Veyron");
         }
     }
 
     protected ArrayList<TableRow> populateTable(ArrayList<MetaField> metaFields) {
         ArrayList<TableRow> tableRows = new ArrayList<TableRow>();
         boolean bColourSwitch = true;
-        for (final MetaField metaField: metaFields) {
+        for (final MetaField metaField : metaFields) {
             TableRow tableRow = new TableRow(context);
             LinearLayout.LayoutParams tableRowParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             tableRow.setLayoutParams(tableRowParams);
@@ -119,17 +117,17 @@ public class UI {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if(metaField.underlineKey) {
+                            if (metaField.underlineKey) {
                                 if (metaField.UI.equals(Constants.UIRegion)) {
                                     new UIRegion(context);
                                 }
-                                if(metaField.UI.equals(Constants.UICountry)) {
+                                if (metaField.UI.equals(Constants.UICountry)) {
                                     new UICountry(context, metaField.regionId);
                                 }
-                                if(metaField.UI.equals(Constants.UICountryX)) {
+                                if (metaField.UI.equals(Constants.UICountryX)) {
                                     new UICountryX(context, metaField.countryId);
                                 }
-                                if(metaField.UI.equals(Constants.UIFieldXHistory)) {
+                                if (metaField.UI.equals(Constants.UIFieldXHistory)) {
                                     ILambdaXHistory iLambdaXHistory = new LXHistory(context).defineLambda(metaField.fieldXHistoryType, metaField.fieldXName, metaField.regionId, metaField.countryId,
                                             metaField.region, metaField.country);
                                     new UIFieldXHistory(context, metaField.regionId, metaField.countryId, metaField.region, metaField.country,
@@ -147,7 +145,7 @@ public class UI {
 
                     }
                     /*if (metaField.underlineValue) {
-                        *//*metaField.UI is always set to lhs, so when control arrives here the rhs field has been clicked*//*
+                     *//*metaField.UI is always set to lhs, so when control arrives here the rhs field has been clicked*//*
                         if (metaField.UI.equals(Constants.UITerraRNought)) {
                             new UIRHSTerraRNought(context, metaField.regionId, metaField.countryId);
                         }
@@ -176,8 +174,7 @@ public class UI {
             if (bColourSwitch) {
                 bColourSwitch = !bColourSwitch;
                 tableRow.setBackgroundColor(Color.parseColor("#F7FAFD"));
-            }
-            else {
+            } else {
                 bColourSwitch = !bColourSwitch;
                 tableRow.setBackgroundColor(Color.parseColor("#ECF8F6"));
             }
@@ -210,10 +207,11 @@ public class UI {
     }
 
     protected void setTableLayout(ArrayList<TableRow> tableRows) {
-        for (TableRow tableRow: tableRows) {
+        for (TableRow tableRow : tableRows) {
             tableLayout.addView(tableRow);
         }
     }
+
     private void setFooter(String lastUpdated) {
         TableRow tableRow = new TableRow(context);
         LinearLayout.LayoutParams tableRowParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
