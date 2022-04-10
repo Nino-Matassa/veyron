@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             stack.pop();
             UIHistory uiHistory = stack.pop();
-            UIMessage.eyeCandy(MainActivity.this, "...finding");
+            UIMessage.eyeCandy(MainActivity.this, "Querying database");
             Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(new Runnable() {
                 @Override
@@ -188,7 +188,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.invalidate) {
             dialogConfirmation = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
-                    .setContentText("Invalidate Database?")
+                    .setTitleText("Invalidate Database")
+                    .setContentText("Rebuild the database?")
                     .setCancelText("Cancel")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
@@ -217,7 +218,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.update) {
             dialogConfirmation = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.BUTTON_CONFIRM)
-                    .setContentText("Update CSV?")
+                    .setTitleText("Update Database")
+                    .setContentText("Get new updates?")
                     .setCancelText("Cancel")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override

@@ -112,7 +112,7 @@ public class UI {
             textViewKey.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UIMessage.eyeCandy(context, "seeking...");
+                    UIMessage.eyeCandy(context, "Querying database");
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.postDelayed(new Runnable() {
                         @Override
