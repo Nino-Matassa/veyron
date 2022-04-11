@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    public interface ThreadListener { public void threadListener(); }
-    private final ThreadListener dbUpdateFinished = new ThreadListener() {
+    public interface ThreadListener { public void onThreadExit(); }
+    private final ThreadListener threadListener = new ThreadListener() {
         @Override
-        public void threadListener() {
+        public void onThreadExit() {
             (MainActivity.this).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 db = Database.getInstance(MainActivity.this);
-                                dbUpdateFinished.threadListener();
+                                threadListener.onThreadExit();
                             }
                         }).start();
                     } catch (Exception /*| InterruptedException*/ e) {
