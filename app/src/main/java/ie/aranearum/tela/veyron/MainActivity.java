@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     private SweetAlertDialog dialogConfirmation = null;
+    boolean updateMenubarTitle = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,19 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    public interface ThreadListener { public void threadListener(); }
+    private final ThreadListener dbUpdateFinished = new ThreadListener() {
+        @Override
+        public void threadListener() {
+            (MainActivity.this).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    UI.setMenubarTitleToUpdating(MainActivity.this, false);
+                }
+            });
+        }
+    };
+
     public void initialise() {
         UIMessage.eyeCandy(MainActivity.this, "Initialising Veyron");
         Handler handler = new Handler(Looper.getMainLooper());
@@ -67,12 +81,17 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                if(CSV.isCsvIsUpdated()) {
+                    updateMenubarTitle = true;
+                }
+
                 if (Database.exists(MainActivity.this)) {
                     try {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 db = Database.getInstance(MainActivity.this);
+                                dbUpdateFinished.threadListener();
                             }
                         }).start();
                     } catch (Exception /*| InterruptedException*/ e) {
@@ -97,6 +116,10 @@ public class MainActivity extends AppCompatActivity {
                     UITerra uiTerra = new UITerra(MainActivity.this);
                 } else {
                     UIMessage.eyeCandy(MainActivity.this, null);
+                }
+                if(updateMenubarTitle) {
+                    updateMenubarTitle = false;
+                    UI.setMenubarTitleToUpdating(MainActivity.this, true);
                 }
             }
         }, Constants.delayMilliSeconds);
