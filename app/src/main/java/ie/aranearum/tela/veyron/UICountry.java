@@ -31,7 +31,7 @@ public class UICountry extends UI implements IRegisterOnStack {
         String sqlCountry = "select Region.continent as Region, Country.location as Country, Country.id as CountryId, population as Population from Detail\n" +
                 " join Country on Country.Id = Detail.FK_Country\n" +
                 " join Region on Region.Id = Country.FK_Region\n" +
-                " where Region.Id = '#1' and date = (select max(date) from Detail)";
+                " where Region.Id = '#1' group by Country.Id";
         sqlCountry = sqlCountry.replace("#1", String.valueOf(regionId));
         cCountry = db.rawQuery(sqlCountry, null);
         cCountry.moveToFirst();
