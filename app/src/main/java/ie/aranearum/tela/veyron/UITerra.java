@@ -56,7 +56,7 @@ public class UITerra extends UI implements IRegisterOnStack {
         lastUpdated = localDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
 
         String sqlTerra = "select \n" +
-                " (select sum(population) from Detail where date = (select max(date) from Detail)) as sumPopulation\n" +
+                " (select sum(population) from (select population from Detail group by FK_Country)) as sumPopulation\n" +
                 " , (select sum(total_cases_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where total_cases_per_million > 0)) as avgTotalCasePerMillion\n" +
                 " , (select sum(new_cases_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where new_cases_per_million > 0)) as avgNewCasePerMillion\n" +
                 " , (select sum(total_deaths_per_million)/(select count(Id) from Country) from Detail where date = (select max(date) from Detail where total_deaths_per_million > 0)) as avgTotalDeathPerMillion\n" +
