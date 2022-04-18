@@ -57,11 +57,11 @@ public class UIRegion extends UI implements IRegisterOnStack {
             metaField.key = cRegion.getString(cRegion.getColumnIndex("Region"));
             metaField.underlineKey = true;
             metaField.regionId = cRegion.getLong(cRegion.getColumnIndex("Id"));
-            String sqlOverview = "select\n" +
-                    " sum(population) as population from Detail\n" +
+            String sqlOverview = "select \n" +
+                    " sum(population)/(select count(Id) from Detail where FK_Country = 1) as population from Detail\n" +
                     " join Country on Country.Id = Detail.FK_Country\n" +
                     " join Region on Region.Id = Country.FK_Region\n" +
-                    " where Region.Id = '#1' and date = (select max(date) from Detail)".replace("#1", String.valueOf(metaField.regionId));
+                    " where Region.Id = '#1'".replace("#1", String.valueOf(metaField.regionId));
             Cursor cOverview = db.rawQuery(sqlOverview, null);
             cOverview.moveToFirst();
             double population = cOverview.getDouble(cOverview.getColumnIndex("population"));
