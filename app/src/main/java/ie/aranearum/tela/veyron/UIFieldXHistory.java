@@ -29,11 +29,7 @@ public class UIFieldXHistory extends UI implements IRegisterOnStack  {
         this.ILambdaXHistory = ILambdaXHistory;
         formatter = new DecimalFormat("#,###.##");
         registerOnStack();
-        String title = "";
-        if(Database.isPopulating())
-            title = UI.UpdatingSymbol + "Veyron - ";
-        else
-            title = "Veyron - ";
+        String title =  "Veyron - ";
         ((Activity)context).setTitle(title + fieldName);
         UIMessage.eyeCandy(context, fieldName);
         UI.setMenubarTitleToUpdating(context, false);

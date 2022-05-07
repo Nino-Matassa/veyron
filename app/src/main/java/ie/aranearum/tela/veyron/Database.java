@@ -138,8 +138,7 @@ class SQLHelper extends SQLiteOpenHelper {
 }
 
 class Database {
-    private Database() {
-    }
+    private Database() {}
 
     private static SQLiteDatabase instance = null;
     private static HashMap<String, Long> hashMapRegion = null;
